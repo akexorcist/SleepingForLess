@@ -1,8 +1,9 @@
-package com.akexorcist.sleepingforless;
+package com.akexorcist.sleepingforless.view.feed;
 
 import android.os.Bundle;
 import android.util.Log;
 
+import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Blog;
