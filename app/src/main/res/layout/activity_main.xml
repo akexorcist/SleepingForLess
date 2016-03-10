@@ -10,8 +10,9 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="190dp"
-        app:elevation="5dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="5dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/ctl_title"
@@ -39,17 +40,17 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:src="@mipmap/ic_launcher"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                android:src="@mipmap/ic_launcher" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_feed_list"
-        android:fillViewport="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!--<include layout="@layout/content_main" />-->

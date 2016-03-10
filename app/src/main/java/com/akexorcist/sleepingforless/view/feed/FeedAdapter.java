@@ -1,36 +1,42 @@
 package com.akexorcist.sleepingforless.view.feed;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.Resource;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+    private ItemListener itemListener;
     private List<PostList.Item> itemList;
+
+    public FeedAdapter() {
+    }
 
     public FeedAdapter(List<PostList.Item> itemList) {
         this.itemList = itemList;
+    }
+
+    public void setPostListItem(List<PostList.Item> itemList) {
+        this.itemList = itemList;
+    }
+
+    public void setItemListener(ItemListener listener) {
+        this.itemListener = listener;
     }
 
     @Override
@@ -39,18 +45,57 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(FeedViewHolder holder, int position) {
-        String title = removeLabelFromTitle(itemList.get(position).getTitle());
-        holder.tvTitle.setText(title);
+    public void onBindViewHolder(final FeedViewHolder holder, int position) {
         PostList.Item postItem = itemList.get(position);
+        setTitle(holder.tvTitle, postItem.getTitle());
+        setLabel(holder.tvLabel, postItem.getLabels());
+        setPublishedDate(holder.tvPublishedDate, postItem.getPublished());
         if (postItem.isImageAvailable()) {
             String url = postItem.getImages().get(0).getUrl();
             loadItemResource(holder, url);
         } else {
             // TODO Do something
         }
-        holder.itemView.setOnClickListener(onClickListener);
-        holder.tvTitle.setOnTouchListener(onTouchListener);
+        holder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemListener != null) {
+                    itemListener.onItemClick(holder, itemList.get(holder.getAdapterPosition()));
+                }
+            }
+        });
+        holder.mrlFeedButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (itemListener != null) {
+                    itemListener.onItemLongClick(holder, itemList.get(holder.getAdapterPosition()));
+                }
+                return true;
+            }
+        });
+    }
+
+    private void setTitle(TextView tvTitle, String title) {
+        title = removeLabelFromTitle(title);
+        tvTitle.setText(title);
+    }
+
+    private void setLabel(TextView tvLabel, List<String> labelList) {
+        if (labelList != null) {
+            String label = "";
+            for (int i = 0; i < labelList.size(); i++) {
+                label += labelList.get(i);
+                if (i < labelList.size() - 1) {
+                    label += ", ";
+                }
+            }
+            tvLabel.setText(label);
+        }
+    }
+
+    private void setPublishedDate(TextView tvPublishedDate, String publishedDate) {
+        String[] date = publishedDate.split("T")[0].split("-");
+        tvPublishedDate.setText("Published " + date[2] + "/" + date[1] + "/" + date[0]);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -63,11 +108,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 AnimationUtility.getInstance().fadeIn(v);
-            } else if(event.getAction() == MotionEvent.ACTION_UP) {
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 AnimationUtility.getInstance().fadeOut(v);
-            } else if(event.getAction() == MotionEvent.ACTION_CANCEL) {
+            } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
                 AnimationUtility.getInstance().fadeOut(v);
             }
             return true;
@@ -82,13 +127,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     }
 
     private void loadItemResource(final FeedViewHolder holder, String url) {
-        Glide.with(holder.getIvTitle().getContext())
+        Glide.with(holder.ivTitle.getContext())
                 .load(url)
                 .asBitmap()
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        holder.getIvTitle().setImageBitmap(resource);
+                        holder.ivTitle.setImageBitmap(resource);
                     }
                 });
     }
@@ -96,5 +141,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     @Override
     public int getItemCount() {
         return itemList.size();
+    }
+
+    public interface ItemListener {
+        void onItemClick(FeedViewHolder holder, PostList.Item item);
+
+        void onItemLongClick(FeedViewHolder holder, PostList.Item item);
     }
 }
