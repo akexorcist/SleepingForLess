@@ -38,6 +38,7 @@ public class PostList {
         String selfLink;
         String title;
         String content;
+        List<Image> images;
         Author author;
         Reply replies;
         List<String> labels;
@@ -86,6 +87,14 @@ public class PostList {
             return content != null;
         }
 
+        public List<Image> getImages() {
+            return images;
+        }
+
+        public boolean isImageAvailable() {
+            return images != null && !images.isEmpty() && images.size() > 0;
+        }
+
         public Author getAuthor() {
             return author;
         }
@@ -128,13 +137,13 @@ public class PostList {
         public Image getImage() {
             return image;
         }
+    }
 
-        public static class Image {
-            String url;
+    public static class Image {
+        String url;
 
-            public String getUrl() {
-                return url;
-            }
+        public String getUrl() {
+            return url;
         }
     }
 

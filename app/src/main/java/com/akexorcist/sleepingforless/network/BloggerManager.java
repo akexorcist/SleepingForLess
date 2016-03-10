@@ -1,8 +1,10 @@
 package com.akexorcist.sleepingforless.network;
 
 import com.akexorcist.sleepingforless.bus.BusProvider;
+import com.akexorcist.sleepingforless.constant.BloggerConstant;
 import com.akexorcist.sleepingforless.network.model.Blog;
 import com.akexorcist.sleepingforless.network.model.Failure;
+import com.akexorcist.sleepingforless.network.model.PostList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +32,20 @@ public class BloggerManager {
 
             @Override
             public void onFailure(Call<Blog> call, Throwable t) {
+                BusProvider.getInstance().post(new Failure(t));
+            }
+        });
+    }
+
+    public void getPostList() {
+        BloggerConnection.getInstance().getConnection().getPostList(BloggerConstant.BLOG_ID, 10, false, true).enqueue(new Callback<PostList>() {
+            @Override
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
+                BusProvider.getInstance().post(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<PostList> call, Throwable t) {
                 BusProvider.getInstance().post(new Failure(t));
             }
         });
