@@ -7,9 +7,10 @@
     <color name="white">#FFFFFF</color>
     <color name="alpha_white">#70FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="alpha_black">#7F000000</color>
+    <color name="gray">#555555</color>
     <color name="alpha_gray">#70555555</color>
     <color name="dark_gray">#222222</color>
-    <color name="gray">#555555</color>
     <color name="light_gray">#999999</color>
     <color name="extra_light_gray">#DDDDDD</color>
     <color name="alpha_dark_gray">#DD222222</color>

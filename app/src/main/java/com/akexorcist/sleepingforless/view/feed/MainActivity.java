@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
+import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Blog;
 import com.akexorcist.sleepingforless.network.model.Failure;
@@ -20,6 +21,8 @@ import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.view.post.PostReaderActivity;
 import com.squareup.otto.Subscribe;
+
+import org.parceler.Parcels;
 
 public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener {
     private Toolbar tbTitle;
@@ -94,7 +97,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
-        openActivity(PostReaderActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        openActivity(PostReaderActivity.class, bundle);
     }
 
     @Override

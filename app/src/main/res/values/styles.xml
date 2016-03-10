@@ -10,6 +10,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="DraggerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
     <style name="CollapsedTitleTextView" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/default_text_size_large</item>
@@ -29,14 +37,6 @@
         <item name="mrl_rippleAlpha">0.1</item>
         <item name="mrl_rippleColor">@color/dark_gray</item>
         <item name="mrl_rippleOverlay">true</item>
-    </style>
-
-    <style name="DraggerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

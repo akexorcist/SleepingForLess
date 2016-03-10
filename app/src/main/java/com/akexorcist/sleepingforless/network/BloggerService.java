@@ -1,6 +1,7 @@
 package com.akexorcist.sleepingforless.network;
 
 import com.akexorcist.sleepingforless.network.model.Blog;
+import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
 
 import retrofit2.Call;
@@ -17,4 +18,7 @@ public interface BloggerService {
 
     @GET(BloggerUrl.POST_LIST)
     Call<PostList> getPostList(@Path("blogId") String blogId, @Query("maxResults") int max, @Query("fetchBodies") boolean includeBody, @Query("fetchImages") boolean includeImage);
+
+    @GET(BloggerUrl.POST)
+    Call<Post> getPost(@Path("blogId") String blogId, @Path("postId") String postId);
 }

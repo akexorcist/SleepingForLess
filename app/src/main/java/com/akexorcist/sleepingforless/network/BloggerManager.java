@@ -4,6 +4,7 @@ import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.constant.BloggerConstant;
 import com.akexorcist.sleepingforless.network.model.Blog;
 import com.akexorcist.sleepingforless.network.model.Failure;
+import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
 
 import retrofit2.Call;
@@ -46,6 +47,20 @@ public class BloggerManager {
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
+                BusProvider.getInstance().post(new Failure(t));
+            }
+        });
+    }
+
+    public void getPost(String postId) {
+        BloggerConnection.getInstance().getConnection().getPost(BloggerConstant.BLOG_ID, postId).enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                BusProvider.getInstance().post(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
                 BusProvider.getInstance().post(new Failure(t));
             }
         });

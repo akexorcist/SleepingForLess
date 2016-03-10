@@ -1,15 +1,22 @@
 package com.akexorcist.sleepingforless.network.model;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
+
+@Parcel(parcelsIndex = false)
 public class PostList {
     String kind;
     String nextPageToken;
     String etag;
     List<Item> items;
+
+    public PostList() {
+    }
 
     public String getKind() {
         return kind;
@@ -27,6 +34,7 @@ public class PostList {
         return items;
     }
 
+    @Parcel(parcelsIndex = false)
     public static class Item {
         String kind;
         String id;
@@ -42,6 +50,9 @@ public class PostList {
         Author author;
         Reply replies;
         List<String> labels;
+
+        public Item() {
+        }
 
         public String getKind() {
             return kind;
@@ -108,19 +119,27 @@ public class PostList {
         }
     }
 
+    @Parcel(parcelsIndex = false)
     public static class Blog {
         String id;
+
+        public Blog() {
+        }
 
         public String getId() {
             return id;
         }
     }
 
+    @Parcel(parcelsIndex = false)
     public static class Author {
         String id;
         String displayName;
         String url;
         Image image;
+
+        public Author() {
+        }
 
         public String getId() {
             return id;
@@ -139,17 +158,25 @@ public class PostList {
         }
     }
 
+    @Parcel(parcelsIndex = false)
     public static class Image {
         String url;
+
+        public Image() {
+        }
 
         public String getUrl() {
             return url;
         }
     }
 
+    @Parcel(parcelsIndex = false)
     public static class Reply {
         String totalItems;
         String selfLink;
+
+        public Reply() {
+        }
 
         public String getTotalItems() {
             return totalItems;
