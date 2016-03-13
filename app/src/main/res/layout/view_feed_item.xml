@@ -28,8 +28,7 @@
                 android:layout_height="190dp"
                 android:background="@null"
                 android:contentDescription="@null"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/tv_feed_label"

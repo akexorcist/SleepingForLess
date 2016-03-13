@@ -8,20 +8,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
-import com.akexorcist.sleepingforless.common.SFLDraggerActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
@@ -52,8 +49,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
 
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
-
-
+        
         if (savedInstanceState == null) {
             setupFirstRun();
         }
@@ -75,7 +71,14 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
 
     private void setToolbar(String title) {
         setSupportActionBar(tbTitle);
-        setTitle(title);
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(title));
+        tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
+        tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void setupFirstRun() {

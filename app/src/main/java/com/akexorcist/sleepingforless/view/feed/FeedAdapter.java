@@ -1,6 +1,7 @@
 package com.akexorcist.sleepingforless.view.feed;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
+import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
@@ -50,6 +53,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
         setTitle(holder.tvTitle, postItem.getTitle());
         setLabel(holder.tvLabel, postItem.getLabels());
         setPublishedDate(holder.tvPublishedDate, postItem.getPublished());
+        holder.ivTitle.setImageDrawable(null);
         if (postItem.isImageAvailable()) {
             String url = postItem.getImages().get(0).getUrl();
             loadItemResource(holder, url);
@@ -76,7 +80,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
     }
 
     private void setTitle(TextView tvTitle, String title) {
-        title = removeLabelFromTitle(title);
+        title = ContentUtility.getInstance().removeLabelFromTitle(title);
         tvTitle.setText(title);
     }
 
@@ -119,23 +123,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
         }
     };
 
-    private String removeLabelFromTitle(String title) {
-        return title.replace("[Android Code]", "")
-                .replace("[Android Design]", "")
-                .replace("[Android Dev Tips]", "")
-                .trim();
-    }
-
     private void loadItemResource(final FeedViewHolder holder, String url) {
         Glide.with(holder.ivTitle.getContext())
                 .load(url)
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        holder.ivTitle.setImageBitmap(resource);
-                    }
-                });
+                .crossFade(200)
+                .centerCrop()
+                .into(holder.ivTitle);
     }
 
     @Override

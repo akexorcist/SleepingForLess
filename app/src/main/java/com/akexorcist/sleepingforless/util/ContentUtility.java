@@ -217,4 +217,11 @@ public class ContentUtility {
         return pattern.matcher(text);
     }
 
+    public String removeLabelFromTitle(String title) {
+        return title.replace("[Android Code]", "")
+                .replace("[Android Design]", "")
+                .replace("[Android Dev Tips]", "")
+                .trim();
+    }
+
 }
