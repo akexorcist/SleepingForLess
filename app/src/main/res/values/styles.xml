@@ -16,6 +16,11 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="ImagePreviewTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
     <style name="CollapsedTitleTextView" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/default_text_size_large</item>
@@ -24,6 +29,11 @@
     <style name="ExpandedTitleTextView" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/default_text_size_extra_large</item>
+    </style>
+
+    <style name="PostTitleTextView" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/default_text_size_small</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -3,6 +3,7 @@ package com.akexorcist.sleepingforless.util;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.constant.TestConstant;
+import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 
@@ -152,6 +153,14 @@ public class ContentUtility {
         Matcher matcher = getMatcher(headerContent, "<h(\\d)>(.+)</h\\d>");
         if (matcher.find()) {
             return new HeaderPost(Integer.parseInt(matcher.group(1)), matcher.group(2));
+        }
+        return null;
+    }
+
+    public CodePost convertCodePost(String headerContent) {
+        Matcher matcher = getMatcher(headerContent, "<code:(java|markup)>");
+        if (matcher.find()) {
+            return new CodePost(headerContent.replaceAll("<code:(java|markup)>", ""), matcher.group(1));
         }
         return null;
     }

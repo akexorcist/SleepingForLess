@@ -1,6 +1,7 @@
 package com.akexorcist.sleepingforless.view.post;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.bumptech.glide.Glide;
@@ -29,6 +31,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 public class PostActivity extends SFLActivity {
+    private Toolbar tbTitle;
     private LinearLayout layoutPostContent;
     private PostList.Item postItem;
 
@@ -37,11 +40,20 @@ public class PostActivity extends SFLActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_reader);
 
+        tbTitle = (Toolbar) findViewById(R.id.tb_title);
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
+
 
         if (savedInstanceState == null) {
             setupFirstRun();
         }
+
+        setToolbar(postItem.getTitle());
+    }
+
+    private void setToolbar(String title) {
+        setSupportActionBar(tbTitle);
+        setTitle(title);
     }
 
     private void setupFirstRun() {
@@ -98,18 +110,27 @@ public class PostActivity extends SFLActivity {
         layoutPostContent.addView(view);
     }
 
-    private void addCodeContent(String plainText) {
+    private void addCodeContent(String code) {
+        CodePost codePost = ContentUtility.getInstance().convertCodePost(code);
         View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_code, layoutPostContent, false);
         TextView tvPostContentPlainText = (TextView) view.findViewById(R.id.tv_post_content_code);
-        tvPostContentPlainText.setText(plainText);
+        tvPostContentPlainText.setText(codePost.getCode());
         layoutPostContent.addView(view);
     }
 
     private void addImageContent(String image) {
-        ImagePost imagePost = ContentUtility.getInstance().convertImagePost(image);
+        final ImagePost imagePost = ContentUtility.getInstance().convertImagePost(image);
         View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_image, layoutPostContent, false);
         ImageView ivPostContentPlainImage = (ImageView) view.findViewById(R.id.iv_post_content_image);
         Glide.with(this).load(imagePost.getPostUrl()).override(500, 500).into(ivPostContentPlainImage);
+        ivPostContentPlainImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Key.KEY_FULL_URL, imagePost.getFullSizeUrl());
+                openActivity(ImagePostPreviewActivity.class, bundle);
+            }
+        });
         layoutPostContent.addView(view);
     }
 }

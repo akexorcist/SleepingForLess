@@ -28,6 +28,10 @@
         <activity
             android:name=".view.post.DebugPostActivity"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".view.post.ImagePostPreviewActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/ImagePreviewTheme" />
     </application>
 
 </manifest>

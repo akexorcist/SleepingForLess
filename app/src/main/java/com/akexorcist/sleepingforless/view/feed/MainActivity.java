@@ -45,16 +45,16 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         setContentView(R.layout.activity_main);
 
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        layoutManager = new GridLayoutManager(this, 1);
+        rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
+
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
-        rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
+        layoutManager = new GridLayoutManager(this, 1);
         rvFeedList.setLayoutManager(layoutManager);
 
         setToolbar();
         BloggerManager.getInstance().getPostList();
     }
-
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
