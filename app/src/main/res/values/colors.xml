@@ -13,5 +13,9 @@
     <color name="dark_gray">#222222</color>
     <color name="light_gray">#999999</color>
     <color name="extra_light_gray">#DDDDDD</color>
+    <color name="extra_extra_light_gray">#FAFAFA</color>
     <color name="alpha_dark_gray">#DD222222</color>
+
+    <color name="text_header">#3D85C6</color>
+    <color name="text_body">#383838</color>
 </resources>

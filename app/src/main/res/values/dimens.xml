@@ -9,4 +9,9 @@
     <dimen name="default_text_size">18sp</dimen>
     <dimen name="default_text_size_large">20sp</dimen>
     <dimen name="default_text_size_extra_large">24sp</dimen>
+
+    <dimen name="default_text_size_h4">18sp</dimen>
+    <dimen name="default_text_size_h3">20sp</dimen>
+    <dimen name="default_text_size_h2">22sp</dimen>
+    <dimen name="default_text_size_h1">24sp</dimen>
 </resources>

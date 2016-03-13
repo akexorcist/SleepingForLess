@@ -22,6 +22,12 @@
             android:name=".view.post.PostReaderActivity"
             android:launchMode="singleTask"
             android:theme="@style/DraggerTheme" />
+        <activity
+            android:name=".view.post.PostActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.post.DebugPostActivity"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>

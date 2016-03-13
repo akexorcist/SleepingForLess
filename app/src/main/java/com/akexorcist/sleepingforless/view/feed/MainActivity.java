@@ -14,15 +14,23 @@ import android.widget.Button;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.constant.TestConstant;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Blog;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
+import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
+import com.akexorcist.sleepingforless.view.post.PostActivity;
 import com.akexorcist.sleepingforless.view.post.PostReaderActivity;
+import com.google.gson.internal.bind.ArrayTypeAdapter;
 import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener {
     private Toolbar tbTitle;
@@ -44,9 +52,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         rvFeedList.setLayoutManager(layoutManager);
 
         setToolbar();
-
         BloggerManager.getInstance().getPostList();
     }
+
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
@@ -99,11 +107,14 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
-        openActivity(PostReaderActivity.class, bundle);
+        openActivity(PostActivity.class, bundle);
     }
 
     @Override
     public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
-        showBottomSheet();
+//        showBottomSheet();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        openActivity(DebugPostActivity.class, bundle);
     }
 }
