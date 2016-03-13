@@ -39,7 +39,7 @@ public class BloggerManager {
     }
 
     public void getPostList() {
-        BloggerConnection.getInstance().getConnection().getPostList(BloggerConstant.BLOG_ID, 10, false, true).enqueue(new Callback<PostList>() {
+        BloggerConnection.getInstance().getConnection().getPostList(BloggerConstant.BLOG_ID, 30, false, true).enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
                 BusProvider.getInstance().post(response.body());
