@@ -1,7 +1,15 @@
 package com.akexorcist.sleepingforless.view.post;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -20,9 +28,11 @@ import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
+import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 import com.bumptech.glide.Glide;
 import com.squareup.otto.Subscribe;
 
@@ -30,7 +40,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostActivity extends SFLActivity {
+public class PostActivity extends SFLActivity implements LinkClickable.LinkClickListener {
     private Toolbar tbTitle;
     private LinearLayout layoutPostContent;
     private PostList.Item postItem;
@@ -49,6 +59,18 @@ public class PostActivity extends SFLActivity {
         }
 
         setToolbar(postItem.getTitle());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ExternalBrowserUtility.getInstance().bindService(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ExternalBrowserUtility.getInstance().unbindService(this);
     }
 
     private void setToolbar(String title) {
@@ -87,10 +109,25 @@ public class PostActivity extends SFLActivity {
     }
 
     private void addPlainTextContent(String plainText) {
+        PlainTextPost plainTextPost = ContentUtility.getInstance().convertPlainText(plainText);
         View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_plain_text, layoutPostContent, false);
         TextView tvPostContentPlainText = (TextView) view.findViewById(R.id.tv_post_content_plain_text);
-        tvPostContentPlainText.setText(plainText);
+        tvPostContentPlainText.setText(setSpannable(plainTextPost));
+        if (plainTextPost.isLinkAvailable()) {
+            tvPostContentPlainText.setMovementMethod(new LinkMovementMethod());
+        }
         layoutPostContent.addView(view);
+    }
+
+    private Spannable setSpannable(PlainTextPost plainTextPost) {
+        Spannable spanText = Spannable.Factory.getInstance().newSpannable(plainTextPost.getText());
+        for (PlainTextPost.Highlight highlight : plainTextPost.getHighlightList()) {
+            spanText.setSpan(new ForegroundColorSpan(highlight.getColor()), highlight.getStart(), highlight.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        for (PlainTextPost.Link link : plainTextPost.getLinkList()) {
+            spanText.setSpan(new LinkClickable(link.getUrl(), this), link.getStart(), link.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return spanText;
     }
 
     private void addHeaderContent(String header) {
@@ -131,6 +168,26 @@ public class PostActivity extends SFLActivity {
                 openActivity(ImagePostPreviewActivity.class, bundle);
             }
         });
+        ivPostContentPlainImage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                copyFullUrl(imagePost.getFullSizeUrl());
+                Snackbar.make(v, "Copy image URL to clipboard.", Snackbar.LENGTH_SHORT).show();
+                return true;
+            }
+
+            private void copyFullUrl(String fullUrl) {
+                ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Image URL", fullUrl);
+                clipboard.setPrimaryClip(clip);
+            }
+        });
         layoutPostContent.addView(view);
+    }
+
+    @Override
+    public void onLinkClick(String url) {
+        Log.e("Check", "Link Click");
+        ExternalBrowserUtility.getInstance().open(this, url);
     }
 }

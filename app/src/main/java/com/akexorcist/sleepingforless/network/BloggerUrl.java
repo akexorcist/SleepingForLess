@@ -10,6 +10,7 @@ public class BloggerUrl {
     public static final String POST_LIST = SUB_BASE + "/blogs/{blogId}/posts" + BloggerUrl.KEY + BloggerUrl.ORDER_BY;
     public static final String POST = SUB_BASE + "/blogs/{blogId}/posts/{postId}" + BloggerUrl.KEY;
     public static final String SFL = "&url=http://www.akexorcist.com/";
-    public static final String ORDER_BY = "&orderBy=updated";
+    public static final String ORDER_BY = "&orderBy=published";
+//    public static final String ORDER_BY = "&orderBy=updated";
     public static final String KEY = "?key=" + BloggerKey.KEY;
 }

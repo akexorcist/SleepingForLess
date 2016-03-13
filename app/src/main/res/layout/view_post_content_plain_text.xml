@@ -5,5 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="5dp"
     android:paddingTop="5dp"
-    android:textSize="@dimen/default_text_size_small"
-    android:textColor="@color/text_body" />
+    android:textColor="@color/text_body"
+    android:textColorLink="@color/text_link"
+    android:textIsSelectable="true"
+    android:textSize="@dimen/default_text_size_small" />

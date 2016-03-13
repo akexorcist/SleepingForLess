@@ -1,11 +1,16 @@
 package com.akexorcist.sleepingforless.util;
 
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.constant.TestConstant;
 import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
+import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +68,7 @@ public class ContentUtility {
     private List<String> removeUnusedATagLine(List<String> textList) {
         ArrayList<String> wrapTextList = new ArrayList<>();
         for (String text : textList) {
-            wrapTextList.add(text.replaceAll("^<a.*</a>", ""));
+            wrapTextList.add(text.replaceAll("<a name='more'></a>", ""));
         }
         return wrapTextList;
     }
@@ -97,7 +102,7 @@ public class ContentUtility {
     private List<String> wrapTextColor(List<String> textList) {
         ArrayList<String> wrapTextList = new ArrayList<>();
         for (String text : textList) {
-            wrapTextList.add(text.replaceAll("<span.+color:.*(#.+);\\\\?[\\'\"]?>(.+)</span>", "<color:$1>$2</color>"));
+            wrapTextList.add(text.replaceAll("<span\\b[^>]*color: (#[a-z0-9]{3,8})\\b[^>]*>(.*?)</span>", "<color:$1>$2</color>"));
         }
         return wrapTextList;
     }
@@ -147,6 +152,48 @@ public class ContentUtility {
             return new ImagePost(matcher.group(1), matcher.group(2));
         }
         return null;
+    }
+
+    public PlainTextPost convertPlainText(String plainText) {
+        List<PlainTextPost.Highlight> highlightList = convertPlainTextHighLight(plainText);
+        List<PlainTextPost.Link> linkList = convertPlainTextLink(plainText);
+        plainText = plainText.replaceAll("<color:#[a-z0-9]{3,8}>(.*?)</color>", "$1");
+        plainText = plainText.replaceAll("<a:.+?>(.*?)</a>", "$1");
+        return new PlainTextPost(plainText, highlightList, linkList);
+    }
+
+    private List<PlainTextPost.Highlight> convertPlainTextHighLight(String plainText) {
+        int codeCount = 0;
+        List<PlainTextPost.Highlight> highlightList = new ArrayList<>();
+        Matcher matcher = getMatcher(plainText, "(<color:(#[a-z0-9]{3,8})>)(.*?)(</color>)");
+        while (matcher.find()) {
+            int openCodeSize = matcher.group(1).length();
+            int closeCodeSize = matcher.group(4).length();
+            int start = matcher.start() - codeCount;
+            int end = matcher.end() - (codeCount + openCodeSize + closeCodeSize);
+            codeCount += openCodeSize + closeCodeSize;
+            int color = Color.parseColor(matcher.group(2));
+            PlainTextPost.Highlight highlight = new PlainTextPost.Highlight(start, end, color);
+            highlightList.add(highlight);
+        }
+        return highlightList;
+    }
+
+    private List<PlainTextPost.Link> convertPlainTextLink(String plainText) {
+        int codeCount = 0;
+        List<PlainTextPost.Link> linkList = new ArrayList<>();
+        Matcher matcher = getMatcher(plainText, "(<a:(.+?)>)(.*?)(</a>)");
+        while (matcher.find()) {
+            int openCodeSize = matcher.group(1).length();
+            int closeCodeSize = matcher.group(4).length();
+            int start = matcher.start() - codeCount;
+            int end = matcher.end() - (codeCount + openCodeSize + closeCodeSize);
+            codeCount += openCodeSize + closeCodeSize;
+            String url = matcher.group(2);
+            PlainTextPost.Link link = new PlainTextPost.Link(start, end, url);
+            linkList.add(link);
+        }
+        return linkList;
     }
 
     public HeaderPost convertHeaderPost(String headerContent) {
