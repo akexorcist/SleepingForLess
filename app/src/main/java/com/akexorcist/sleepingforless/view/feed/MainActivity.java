@@ -42,7 +42,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private ImageView ivMenuSearch;
     private ImageView ivMenuOrder;
     private ImageView ivMenuSettings;
-    private BottomSheetLayout bslOrderMenu;
+    private BottomSheetLayout bslMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         ivMenuSearch = (ImageView) findViewById(R.id.iv_menu_search);
         ivMenuOrder = (ImageView) findViewById(R.id.iv_menu_order);
         ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
-        bslOrderMenu = (BottomSheetLayout) findViewById(R.id.bsl_order_menu);
+        bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
 
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
@@ -205,8 +205,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         MenuSheetView menuSheetView = new MenuSheetView(this, MenuSheetView.MenuType.LIST, "Order by...", new MenuSheetView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (bslOrderMenu.isSheetShowing()) {
-                    bslOrderMenu.dismissSheet();
+                if (bslMenu.isSheetShowing()) {
+                    bslMenu.dismissSheet();
                 }
                 if (item.getItemId() == R.id.action_order_by_published_date) {
                     requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
@@ -217,7 +217,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
             }
         });
         menuSheetView.inflateMenu(R.menu.menu_post_list);
-        bslOrderMenu.showWithSheetView(menuSheetView);
+        bslMenu.showWithSheetView(menuSheetView);
     }
 
     @Subscribe

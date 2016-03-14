@@ -44,7 +44,7 @@ public class ContentUtility {
     }
 
     private String removeNewlineFromHeader(String text) {
-        return text.replaceAll("(<h\\d).+?>\\n?\\n?\\r?(.+)(</h\\d>)", "$1>$2$3<br />");
+        return text.replaceAll("(<h\\d).*?>\\n?\\n?\\r?(.+)(</h\\d>)", "$1>$2$3<br />");
     }
 
     private String replaceNewlineWithBR(String text) {

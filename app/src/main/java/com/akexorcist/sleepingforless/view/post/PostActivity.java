@@ -3,6 +3,7 @@ package com.akexorcist.sleepingforless.view.post;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,23 +27,36 @@ import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
+import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
+import com.akexorcist.sleepingforless.view.search.SearchActivity;
+import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.bumptech.glide.Glide;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.IntentPickerSheetView;
 import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
+import java.util.Comparator;
 import java.util.List;
 
-public class PostActivity extends SFLActivity implements LinkClickable.LinkClickListener {
+public class PostActivity extends SFLActivity implements LinkClickable.LinkClickListener, View.OnClickListener, View.OnTouchListener {
     private Toolbar tbTitle;
-    private FloatingActionButton fabSearch;
+    private FloatingActionButton fabMenu;
+    private FooterLayout flMenu;
+    private View viewContentShadow;
+    private ImageView ivMenuBookmark;
+    private ImageView ivMenuShare;
+    private ImageView ivMenuSettings;
+    private BottomSheetLayout bslMenu;
     private LinearLayout layoutPostContent;
+
     private PostList.Item postItem;
 
     @Override
@@ -50,12 +65,29 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         setContentView(R.layout.activity_post_reader);
 
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        fabSearch = (FloatingActionButton) findViewById(R.id.fab_search);
+        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
+        flMenu = (FooterLayout) findViewById(R.id.fl_menu);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        ivMenuBookmark = (ImageView) findViewById(R.id.iv_menu_bookmark);
+        ivMenuShare = (ImageView) findViewById(R.id.iv_menu_share);
+        ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
+        bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
 
         if (savedInstanceState == null) {
             setupFirstRun();
         }
+
+        viewContentShadow.setVisibility(View.GONE);
+        viewContentShadow.setOnClickListener(this);
+        fabMenu.setOnClickListener(this);
+        ivMenuBookmark.setOnClickListener(this);
+        ivMenuShare.setOnClickListener(this);
+        ivMenuSettings.setOnClickListener(this);
+        ivMenuBookmark.setOnTouchListener(this);
+        ivMenuShare.setOnTouchListener(this);
+        ivMenuSettings.setOnTouchListener(this);
+        flMenu.setFab(fabMenu);
 
         setToolbar(postItem.getTitle());
     }
@@ -104,7 +136,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
             } else if (ContentUtility.getInstance().isHeaderText(text)) {
                 addHeaderContent(text);
             } else {
-                addPlainTextContent("      " + text);
+                addPlainTextContent("    " + text);
             }
         }
     }
@@ -165,7 +197,11 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         final ImagePost imagePost = ContentUtility.getInstance().convertImagePost(image);
         View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_image, layoutPostContent, false);
         ImageView ivPostContentPlainImage = (ImageView) view.findViewById(R.id.iv_post_content_image);
-        Glide.with(this).load(imagePost.getPostUrl()).override(500, 500).thumbnail(0.2f).into(ivPostContentPlainImage);
+        Glide.with(this)
+                .load(imagePost.getPostUrl())
+                .override(500, 500)
+                .thumbnail(0.2f)
+                .into(ivPostContentPlainImage);
         ivPostContentPlainImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,5 +231,77 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     public void onLinkClick(String url) {
         Log.e("Check", "Link Click");
         ExternalBrowserUtility.getInstance().open(this, url);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == fabMenu) {
+            openMenu();
+        } else if (v == viewContentShadow) {
+            closeMenu();
+        } else if (v == ivMenuBookmark) {
+            onMenuBookmarkClick();
+        } else if (v == ivMenuShare) {
+            onMenuShareClick();
+        } else if (v == ivMenuSettings) {
+            onMenuSettingsClick();
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            scaleMenuButtonUp(v);
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            scaleMenuButtonBack(v);
+        }
+        return false;
+    }
+
+    public void openMenu() {
+        flMenu.expandFab();
+        AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
+    }
+
+    public void closeMenu() {
+        flMenu.contractFab();
+        AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
+    }
+
+    public void scaleMenuButtonUp(View v) {
+        AnimationUtility.getInstance().scaleUp(v, 200);
+    }
+
+    public void scaleMenuButtonBack(View v) {
+        AnimationUtility.getInstance().scaleBack(v, 200);
+    }
+
+    public void onMenuBookmarkClick() {
+        Log.e("Check", "onMenuBookmarkClick");
+        closeMenu();
+    }
+
+    public void onMenuShareClick() {
+        Log.e("Check", "onMenuShareClick");
+        sharePost(postItem.getUrl());
+        closeMenu();
+    }
+
+    public void onMenuSettingsClick() {
+        Log.e("Check", "onMenuSettingsClick");
+    }
+
+    public void sharePost(String url) {
+        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+        shareIntent.setType("text/plain");
+        IntentPickerSheetView intentPickerSheet = new IntentPickerSheetView(this, shareIntent, "Share via...", new IntentPickerSheetView.OnIntentPickedListener() {
+            @Override
+            public void onIntentPicked(IntentPickerSheetView.ActivityInfo activityInfo) {
+                bslMenu.dismissSheet();
+                startActivity(activityInfo.getConcreteIntent(shareIntent));
+            }
+        });
+        bslMenu.showWithSheetView(intentPickerSheet);
     }
 }
