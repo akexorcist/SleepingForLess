@@ -58,7 +58,6 @@ public class ContentUtility {
     private List<String> removeUnusedCodeLine(String[] texts) {
         ArrayList<String> wrapTextList = new ArrayList<>();
         for (String text : texts) {
-            Log.i("Check", text);
             wrapTextList.add(text.replaceAll("<<code class=\\\\\".+\\\\\">$", "")
                     .replaceAll("^</code>$", "")
                     .replaceAll("<b>", "")
@@ -225,5 +224,4 @@ public class ContentUtility {
                 .replace("[Android Dev Tips]", "")
                 .trim();
     }
-
 }

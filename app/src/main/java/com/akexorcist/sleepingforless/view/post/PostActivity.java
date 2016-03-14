@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.database.Bookmark;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
@@ -46,7 +48,12 @@ import org.parceler.Parcels;
 import java.util.Comparator;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+
 public class PostActivity extends SFLActivity implements LinkClickable.LinkClickListener, View.OnClickListener, View.OnTouchListener {
+    private Realm realm;
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -76,6 +83,8 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
 
+        realm = Realm.getDefaultInstance();
+
         if (savedInstanceState == null) {
             setupFirstRun();
         }
@@ -92,6 +101,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         flMenu.setFab(fabMenu);
 
         setToolbar(postItem.getTitle());
+        checkIsBookmarked(postItem.getId());
     }
 
     @Override
@@ -104,6 +114,12 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     protected void onStop() {
         super.onStop();
         ExternalBrowserUtility.getInstance().unbindService(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     private void setToolbar(String title) {
@@ -262,6 +278,15 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (bslMenu.isSheetShowing()) {
+            bslMenu.dismissSheet();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
@@ -282,10 +307,13 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
 
     public void onMenuBookmarkClick() {
         Log.e("Check", "onMenuBookmarkClick");
+        if (isBookmark()) {
+            removePostFromBookmark();
+        } else {
+            addPostToBookmark();
+        }
         closeMenu();
     }
-
-
 
     public void onMenuOfflineSaveClick() {
         Log.e("Check", "onMenuOfflineSaveClick");
@@ -314,4 +342,55 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         });
         bslMenu.showWithSheetView(intentPickerSheet);
     }
+
+    public void addPostToBookmark() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Bookmark bookmark = realm.createObject(Bookmark.class);
+                bookmark.setPostId(postItem.getId());
+                setBookmark(true);
+                showSnackbar("Added to bookmark.");
+            }
+        });
+    }
+
+    public void removePostFromBookmark() {
+        RealmResults<Bookmark> result = realm.where(Bookmark.class)
+                .equalTo("postId", postItem.getId())
+                .findAllAsync();
+        realm.beginTransaction();
+        result.clear();
+        realm.commitTransaction();
+        setBookmark(false);
+        showSnackbar("Removed from bookmark.");
+    }
+
+    public void checkIsBookmarked(String postId) {
+        final RealmResults<Bookmark> result = realm.where(Bookmark.class)
+                .equalTo("postId", postId)
+                .findAllAsync();
+        result.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                setBookmark(result.size() > 0);
+            }
+        });
+    }
+
+    public void setBookmark(boolean state) {
+        int drawableResourceId = (state) ? R.drawable.vector_ic_bookmark_check : R.drawable.vector_ic_bookmark_uncheck;
+        ivMenuBookmark.setImageDrawable(getResources().getDrawable(drawableResourceId));
+        ivMenuBookmark.setTag(drawableResourceId);
+    }
+
+    public boolean isBookmark() {
+        return (int) ivMenuBookmark.getTag() == R.drawable.vector_ic_bookmark_check;
+    }
+
+    public void showSnackbar(String message) {
+        Snackbar.make(tbTitle, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+
 }

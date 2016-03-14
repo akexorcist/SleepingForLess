@@ -67,17 +67,11 @@ public class PostReaderActivity extends SFLDraggerActivity {
         Log.e("Check", "onPostSucess");
         List<String> textList = ContentUtility.getInstance().wrapContent(post.getContent());
         for (String text : textList) {
-            Log.e("Check", text);
             if (ContentUtility.getInstance().isCode(text)) {
-                Log.i("Check", "^ Code");
             } else if (ContentUtility.getInstance().isImage(text)) {
-                Log.i("Check", "^ Image");
             } else if (ContentUtility.getInstance().isContainLink(text)) {
-                Log.i("Check", "^ Contain Link");
             } else if (ContentUtility.getInstance().isHeaderText(text)) {
-                Log.i("Check", "^ Header Text");
             } else {
-                Log.i("Check", "^ Plain Text");
             }
         }
 //        wvPostDetail.loadData(post.getContent(), "text/html; charset=UTF-8", "UTF-8");

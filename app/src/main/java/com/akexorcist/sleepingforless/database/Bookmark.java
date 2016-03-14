@@ -8,11 +8,25 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Bookmark extends RealmObject {
     @PrimaryKey
-    int id;
-    String postId;
+    private int id;
+    private String postId;
 
-    public Bookmark(int id, String postId) {
+    public Bookmark() {
+    }
+
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public void setPostId(String postId) {
         this.postId = postId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPostId() {
+        return postId;
     }
 }

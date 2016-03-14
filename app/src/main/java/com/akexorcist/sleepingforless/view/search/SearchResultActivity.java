@@ -99,7 +99,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     public void setPostList(PostList postList) {
         if (postList != null) {
-            Log.e("Check", "setPostList");
             adapter.setPostListItem(postList.getItems());
             adapter.notifyDataSetChanged();
             rvSearchResultList.setAdapter(adapter);
@@ -158,7 +157,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     @Subscribe
     public void onSearchRequest(SearchRequest request) {
-        Log.e("Check", "Keyword : " + request.getKeyword());
         this.request = request;
         searchPost();
     }
