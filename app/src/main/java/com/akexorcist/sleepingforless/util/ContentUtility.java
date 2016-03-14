@@ -44,7 +44,7 @@ public class ContentUtility {
     }
 
     private String removeNewlineFromHeader(String text) {
-        return text.replaceAll("(<h\\d>)\\n?\\n?\\r?(.+)(</h\\d>)", "$1$2$3<br />");
+        return text.replaceAll("(<h\\d).+?>\\n?\\n?\\r?(.+)(</h\\d>)", "$1>$2$3<br />");
     }
 
     private String replaceNewlineWithBR(String text) {
@@ -59,8 +59,10 @@ public class ContentUtility {
         ArrayList<String> wrapTextList = new ArrayList<>();
         for (String text : texts) {
             Log.i("Check", text);
-            wrapTextList.add(text.replaceAll("^<code class=\\\\\".+\\\\\">$", "")
-                    .replaceAll("^</code>$", ""));
+            wrapTextList.add(text.replaceAll("<<code class=\\\\\".+\\\\\">$", "")
+                    .replaceAll("^</code>$", "")
+                    .replaceAll("<b>", "")
+                    .replaceAll("</b>", ""));
         }
         return wrapTextList;
     }

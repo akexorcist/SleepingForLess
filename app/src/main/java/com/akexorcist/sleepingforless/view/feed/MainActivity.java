@@ -32,9 +32,7 @@ import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
-import rebus.bottomdialog.BottomDialog;
-
-public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, BottomDialog.OnItemSelectedListener {
+public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener {
     private Toolbar tbTitle;
     private FeedAdapter adapter;
     private RecyclerView rvFeedList;
@@ -228,15 +226,5 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.SEARCH_REQUEST, Parcels.wrap(request));
         openActivity(SearchResultActivity.class, bundle);
-    }
-
-    @Override
-    public boolean onItemSelected(int id) {
-        if (id == R.id.action_order_by_published_date) {
-            requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
-        } else if (id == R.id.action_order_by_updated_date) {
-            requestPostList(BloggerManager.ORDER_UPDATED_DATE);
-        }
-        return true;
     }
 }

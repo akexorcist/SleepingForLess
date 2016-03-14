@@ -21,6 +21,7 @@
 
         <TextView
             android:id="@+id/tv_post_content_code"
+            fontPath="fonts/DroidSansMono.ttf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollHorizontally="true"
