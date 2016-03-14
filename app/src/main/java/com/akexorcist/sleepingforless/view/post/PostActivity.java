@@ -51,6 +51,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
+    private ImageView ivMenuOfflineSave;
     private ImageView ivMenuBookmark;
     private ImageView ivMenuShare;
     private ImageView ivMenuSettings;
@@ -68,6 +69,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         viewContentShadow = findViewById(R.id.view_content_shadow);
+        ivMenuOfflineSave = (ImageView) findViewById(R.id.iv_menu_offline_save);
         ivMenuBookmark = (ImageView) findViewById(R.id.iv_menu_bookmark);
         ivMenuShare = (ImageView) findViewById(R.id.iv_menu_share);
         ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
@@ -241,6 +243,8 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
             closeMenu();
         } else if (v == ivMenuBookmark) {
             onMenuBookmarkClick();
+        } else if (v == ivMenuOfflineSave) {
+            onMenuOfflineSaveClick();
         } else if (v == ivMenuShare) {
             onMenuShareClick();
         } else if (v == ivMenuSettings) {
@@ -281,8 +285,14 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         closeMenu();
     }
 
+
+
+    public void onMenuOfflineSaveClick() {
+        Log.e("Check", "onMenuOfflineSaveClick");
+        closeMenu();
+    }
+
     public void onMenuShareClick() {
-        Log.e("Check", "onMenuShareClick");
         sharePost(postItem.getUrl());
         closeMenu();
     }

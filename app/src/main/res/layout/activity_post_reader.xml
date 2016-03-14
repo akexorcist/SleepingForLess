@@ -81,7 +81,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iv_menu_love"
+                    android:id="@+id/iv_menu_offline_save"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -90,7 +90,7 @@
                     android:contentDescription="@null"
                     android:padding="10dp"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/vector_ic_love_uncheck" />
+                    app:srcCompat="@drawable/vector_ic_offline_save" />
 
                 <ImageView
                     android:id="@+id/iv_menu_bookmark"
