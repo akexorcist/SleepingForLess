@@ -53,7 +53,7 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/vector_ic_menu"
+        app:srcCompat="@drawable/vector_ic_menu"
         app:layout_behavior="com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>
