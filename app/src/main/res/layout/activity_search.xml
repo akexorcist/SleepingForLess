@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/alpha_black"
-    tools:context="com.akexorcist.sleepingforless.view.search.SearchPostActivity">
+    tools:context=".view.search.SearchActivity">
 
     <com.mypopsy.widget.FloatingSearchView
         android:id="@+id/sfv_post_search"

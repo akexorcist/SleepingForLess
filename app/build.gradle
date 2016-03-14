@@ -33,6 +33,7 @@ dependencies {
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:customtabs:23.2.1'
     compile 'rebus:bottom-dialog:0.0.5'
+    compile 'com.flipboard:bottomsheet-commons:1.5.0'
     compile 'com.github.renaudcerrato:FloatingSearchView:1.0.0'
     compile 'com.bowyer.app:fabtransitionlayout:0.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'

@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,9 +21,11 @@ import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostActivity;
-import com.akexorcist.sleepingforless.view.search.SearchPostActivity;
+import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.search.SearchRequest;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
@@ -39,6 +42,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private View viewContentShadow;
     private ImageView ivMenuSearch;
     private ImageView ivMenuOrder;
+    private ImageView ivMenuSettings;
+    private BottomSheetLayout bslOrderMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +58,18 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         ivMenuSearch = (ImageView) findViewById(R.id.iv_menu_search);
         ivMenuOrder = (ImageView) findViewById(R.id.iv_menu_order);
+        ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
+        bslOrderMenu = (BottomSheetLayout) findViewById(R.id.bsl_order_menu);
 
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
         ivMenuSearch.setOnClickListener(this);
         ivMenuOrder.setOnClickListener(this);
+        ivMenuSettings.setOnClickListener(this);
         ivMenuSearch.setOnTouchListener(this);
         ivMenuOrder.setOnTouchListener(this);
+        ivMenuSettings.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
 
         adapter = new FeedAdapter();
@@ -113,6 +122,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
             onMenuSearchClick();
         } else if (v == ivMenuOrder) {
             onMenuOrderClick();
+        } else if (v == ivMenuSettings) {
+            onMenuSettingsClick();
         }
     }
 
@@ -179,19 +190,43 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     public void onMenuSearchClick() {
-        openActivity(SearchPostActivity.class);
+        openActivity(SearchActivity.class);
         closeMenu();
     }
 
     public void onMenuOrderClick() {
-        BottomDialog bottomDialog = new BottomDialog(MainActivity.this);
-        bottomDialog.title("Order by");
-        bottomDialog.canceledOnTouchOutside(true);
-        bottomDialog.cancelable(true);
-        bottomDialog.inflateMenu(R.menu.menu_post_list);
-        bottomDialog.setOnItemSelectedListener(this);
-        bottomDialog.show();
+        showOrderBottomDialog();
         closeMenu();
+    }
+
+    public void onMenuSettingsClick() {
+        Log.e("Check", "onMenuSettingsClick");
+    }
+
+    private void showOrderBottomDialog() {
+//        BottomDialog bottomDialog = new BottomDialog(MainActivity.this);
+//        bottomDialog.title("Order by");
+//        bottomDialog.canceledOnTouchOutside(true);
+//        bottomDialog.cancelable(true);
+//        bottomDialog.inflateMenu(R.menu.menu_post_list);
+//        bottomDialog.setOnItemSelectedListener(this);
+//        bottomDialog.show();
+        MenuSheetView menuSheetView = new MenuSheetView(this, MenuSheetView.MenuType.LIST, "Order by...", new MenuSheetView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (bslOrderMenu.isSheetShowing()) {
+                    bslOrderMenu.dismissSheet();
+                }
+                if (item.getItemId() == R.id.action_order_by_published_date) {
+                    requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
+                } else if (item.getItemId() == R.id.action_order_by_updated_date) {
+                    requestPostList(BloggerManager.ORDER_UPDATED_DATE);
+                }
+                return true;
+            }
+        });
+        menuSheetView.inflateMenu(R.menu.menu_post_list);
+        bslOrderMenu.showWithSheetView(menuSheetView);
     }
 
     @Subscribe
@@ -201,9 +236,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     @Override
     public boolean onItemSelected(int id) {
-        if(id == R.id.action_order_by_published_date) {
+        if (id == R.id.action_order_by_published_date) {
             requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
-        } else if(id == R.id.action_order_by_updated_date) {
+        } else if (id == R.id.action_order_by_updated_date) {
             requestPostList(BloggerManager.ORDER_UPDATED_DATE);
         }
         return true;

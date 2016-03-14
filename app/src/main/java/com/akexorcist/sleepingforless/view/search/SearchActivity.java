@@ -9,7 +9,7 @@ import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.mypopsy.widget.FloatingSearchView;
 
-public class SearchPostActivity extends SFLActivity implements View.OnClickListener, FloatingSearchView.OnSearchListener {
+public class SearchActivity extends SFLActivity implements View.OnClickListener, FloatingSearchView.OnSearchListener {
     private FloatingSearchView sfvPostSearch;
     private FrameLayout layoutPostSearch;
     private boolean finish = false;
@@ -17,7 +17,7 @@ public class SearchPostActivity extends SFLActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_post);
+        setContentView(R.layout.activity_search);
 
         layoutPostSearch = (FrameLayout) findViewById(R.id.layout_post_search);
         sfvPostSearch = (FloatingSearchView) findViewById(R.id.sfv_post_search);
