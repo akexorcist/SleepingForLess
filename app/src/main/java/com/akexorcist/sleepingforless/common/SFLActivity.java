@@ -3,6 +3,7 @@ package com.akexorcist.sleepingforless.common;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.akexorcist.sleepingforless.bus.BusProvider;
@@ -21,14 +22,14 @@ public class SFLActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         BusProvider.getInstance().register(this);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         BusProvider.getInstance().unregister(this);
     }
 }

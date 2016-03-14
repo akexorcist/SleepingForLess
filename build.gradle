@@ -6,6 +6,9 @@ buildscript {
         maven {
             url "https://jitpack.io"
         }
+        maven {
+            url 'http://dl.bintray.com/raphaelbussa/maven'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0-alpha1'
@@ -21,6 +24,9 @@ allprojects {
         jcenter()
         maven {
             url "https://jitpack.io"
+        }
+        maven {
+            url 'http://dl.bintray.com/raphaelbussa/maven'
         }
     }
 }

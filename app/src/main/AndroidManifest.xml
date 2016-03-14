@@ -25,19 +25,28 @@
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
             android:theme="@style/DraggerTheme" />
+
         <activity
             android:name=".view.post.PostActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />
+
         <activity
             android:name=".view.post.DebugPostActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />
+
         <activity
             android:name=".view.post.ImagePostPreviewActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
-            android:theme="@style/ImagePreviewTheme" />
+            android:theme="@style/PopupTheme" />
+
+        <activity
+            android:name=".view.search.SearchPostActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/PopupTheme" />
     </application>
 
 </manifest>

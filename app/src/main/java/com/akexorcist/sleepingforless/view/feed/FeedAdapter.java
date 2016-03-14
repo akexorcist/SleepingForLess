@@ -131,6 +131,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
                 .into(holder.ivTitle);
     }
 
+    public void clear() {
+        if (itemList != null) {
+            itemList.clear();
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return itemList.size();

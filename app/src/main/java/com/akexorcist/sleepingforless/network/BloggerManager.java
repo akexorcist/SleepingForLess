@@ -15,6 +15,9 @@ import retrofit2.Response;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class BloggerManager {
+    public static final String ORDER_PUBLISHED_DATE = "published";
+    public static final String ORDER_UPDATED_DATE = "updated";
+
     private static BloggerManager manager;
 
     public static BloggerManager getInstance() {
@@ -38,8 +41,8 @@ public class BloggerManager {
         });
     }
 
-    public void getPostList() {
-        BloggerConnection.getInstance().getConnection().getPostList(BloggerConstant.BLOG_ID, 30, false, true).enqueue(new Callback<PostList>() {
+    public void getPostList(String orderBy) {
+        BloggerConnection.getInstance().getConnection().getPostList(BloggerConstant.BLOG_ID, orderBy, 30, false, true).enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
                 BusProvider.getInstance().post(response.body());

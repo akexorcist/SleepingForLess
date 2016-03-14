@@ -18,7 +18,7 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="ImagePreviewTheme" parent="AppTheme">
+    <style name="PopupTheme" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>
     </style>

@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -39,6 +40,7 @@ import java.util.List;
 
 public class PostActivity extends SFLActivity implements LinkClickable.LinkClickListener {
     private Toolbar tbTitle;
+    private FloatingActionButton fabSearch;
     private LinearLayout layoutPostContent;
     private PostList.Item postItem;
 
@@ -48,8 +50,9 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         setContentView(R.layout.activity_post_reader);
 
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
+        fabSearch = (FloatingActionButton) findViewById(R.id.fab_search);
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
-        
+
         if (savedInstanceState == null) {
             setupFirstRun();
         }
