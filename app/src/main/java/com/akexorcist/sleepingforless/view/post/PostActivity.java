@@ -165,7 +165,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         final ImagePost imagePost = ContentUtility.getInstance().convertImagePost(image);
         View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_image, layoutPostContent, false);
         ImageView ivPostContentPlainImage = (ImageView) view.findViewById(R.id.iv_post_content_image);
-        Glide.with(this).load(imagePost.getPostUrl()).override(500, 500).into(ivPostContentPlainImage);
+        Glide.with(this).load(imagePost.getPostUrl()).override(500, 500).thumbnail(0.2f).into(ivPostContentPlainImage);
         ivPostContentPlainImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,6 +3,7 @@ package com.akexorcist.sleepingforless.view.post;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,7 +22,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
  */
 public class ImagePostPreviewActivity extends SFLActivity implements View.OnClickListener {
     private SubsamplingScaleImageView ivPreview;
-    private Button btnPreviewClose;
+    private FloatingActionButton fabPreviewClose;
     private String fullUrl;
 
     @Override
@@ -29,12 +30,13 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_reader_image_preview);
         ivPreview = (SubsamplingScaleImageView) findViewById(R.id.iv_preview);
-        btnPreviewClose = (Button) findViewById(R.id.btn_preview_close);
-        btnPreviewClose.setOnClickListener(this);
+        fabPreviewClose = (FloatingActionButton) findViewById(R.id.fab_preview_close);
+
+        fabPreviewClose.setOnClickListener(this);
 
         getBundleFromIntent();
 
-        Glide.with(this).load(fullUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(this).load(fullUrl).asBitmap().thumbnail(0.2f).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 ivPreview.setImage(ImageSource.bitmap(resource));
@@ -48,7 +50,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v == btnPreviewClose) {
+        if (v == fabPreviewClose) {
             finish();
         }
     }

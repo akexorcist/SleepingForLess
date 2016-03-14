@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/alpha_black"
+    android:background="@color/dark_alpha_black"
     android:orientation="vertical"
     tools:context="com.akexorcist.sleepingforless.view.post.ImagePostPreviewActivity">
 
@@ -12,14 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/btn_preview_close"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_preview_close"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:text="Close"
-        android:textColor="@color/white" />
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/vector_ic_close" />
+
+    <!--<Button-->
+    <!--android:id="@+id/btn_preview_close"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_margin="10dp"-->
+    <!--android:text="Close"-->
+    <!--android:textColor="@color/white" />-->
 </RelativeLayout>

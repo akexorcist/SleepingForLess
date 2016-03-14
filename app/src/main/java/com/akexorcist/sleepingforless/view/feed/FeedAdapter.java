@@ -127,6 +127,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
         Glide.with(holder.ivTitle.getContext())
                 .load(url)
                 .crossFade(200)
+                .thumbnail(0.2f)
                 .centerCrop()
                 .into(holder.ivTitle);
     }

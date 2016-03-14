@@ -25,28 +25,30 @@
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
             android:theme="@style/DraggerTheme" />
-
         <activity
             android:name=".view.post.PostActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />
-
         <activity
             android:name=".view.post.DebugPostActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />
-
         <activity
             android:name=".view.post.ImagePostPreviewActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
             android:theme="@style/PopupTheme" />
-
         <activity
             android:name=".view.search.SearchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
             android:theme="@style/PopupTheme" />
+
+        <meta-data
+            android:name="com.akexorcist.sleepingforless.config.GlideConfiguration"
+            android:value="GlideModule" />
+
+        <activity android:name=".view.search.SearchResultActivity"></activity>
     </application>
 
 </manifest>
