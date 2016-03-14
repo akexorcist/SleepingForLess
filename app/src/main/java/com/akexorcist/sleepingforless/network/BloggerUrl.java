@@ -9,6 +9,7 @@ public class BloggerUrl {
     public static final String BLOG = SUB_BASE + "/blogs/byurl" + BloggerUrl.KEY + BloggerUrl.SFL;
     public static final String POST_LIST = SUB_BASE + "/blogs/{blogId}/posts" + BloggerUrl.KEY;
     public static final String POST = SUB_BASE + "/blogs/{blogId}/posts/{postId}" + BloggerUrl.KEY;
+    public static final String SEARCH = SUB_BASE + "/blogs/{blogId}/posts/search" + BloggerUrl.KEY;
     public static final String SFL = "&url=http://www.akexorcist.com/";
 //    public static final String ORDER_BY = "&orderBy=published";
 //    public static final String ORDER_BY = "&orderBy=updated";

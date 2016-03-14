@@ -1,22 +1,16 @@
 package com.akexorcist.sleepingforless.view.feed;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.model.PostList;
-import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.List;
 
@@ -49,16 +43,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
     @Override
     public void onBindViewHolder(final FeedViewHolder holder, int position) {
-        PostList.Item postItem = itemList.get(position);
+        PostList.Item postItem = itemList.get(holder.getAdapterPosition());
         setTitle(holder.tvTitle, postItem.getTitle());
         setLabel(holder.tvLabel, postItem.getLabels());
         setPublishedDate(holder.tvPublishedDate, postItem.getPublished());
         holder.ivTitle.setImageDrawable(null);
         if (postItem.isImageAvailable()) {
+            holder.ivTitle.setVisibility(View.VISIBLE);
             String url = postItem.getImages().get(0).getUrl();
             loadItemResource(holder, url);
         } else {
-            // TODO Do something
+            holder.ivTitle.setVisibility(View.GONE);
         }
         holder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,27 +96,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
         String[] date = publishedDate.split("T")[0].split("-");
         tvPublishedDate.setText("Published " + date[2] + "/" + date[1] + "/" + date[0]);
     }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-        }
-    };
-
-    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                AnimationUtility.getInstance().fadeIn(v);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                AnimationUtility.getInstance().fadeOut(v);
-            } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-                AnimationUtility.getInstance().fadeOut(v);
-            }
-            return true;
-        }
-    };
 
     private void loadItemResource(final FeedViewHolder holder, String url) {
         Glide.with(holder.ivTitle.getContext())

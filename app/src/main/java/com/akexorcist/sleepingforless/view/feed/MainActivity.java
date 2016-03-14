@@ -3,6 +3,7 @@ package com.akexorcist.sleepingforless.view.feed;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostActivity;
 import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.search.SearchRequest;
+import com.akexorcist.sleepingforless.view.search.SearchResultActivity;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
@@ -36,7 +38,6 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private Toolbar tbTitle;
     private FeedAdapter adapter;
     private RecyclerView rvFeedList;
-    private GridLayoutManager layoutManager;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
@@ -74,8 +75,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
-        layoutManager = new GridLayoutManager(this, 1);
-        rvFeedList.setLayoutManager(layoutManager);
+        rvFeedList.setLayoutManager(new LinearLayoutManager(this));
 
         setToolbar();
         requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
@@ -204,13 +204,6 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     private void showOrderBottomDialog() {
-//        BottomDialog bottomDialog = new BottomDialog(MainActivity.this);
-//        bottomDialog.title("Order by");
-//        bottomDialog.canceledOnTouchOutside(true);
-//        bottomDialog.cancelable(true);
-//        bottomDialog.inflateMenu(R.menu.menu_post_list);
-//        bottomDialog.setOnItemSelectedListener(this);
-//        bottomDialog.show();
         MenuSheetView menuSheetView = new MenuSheetView(this, MenuSheetView.MenuType.LIST, "Order by...", new MenuSheetView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -232,6 +225,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     @Subscribe
     public void onSearchRequest(SearchRequest request) {
         Log.e("Check", "Keyword : " + request.getKeyword());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Key.SEARCH_REQUEST, Parcels.wrap(request));
+        openActivity(SearchResultActivity.class, bundle);
     }
 
     @Override

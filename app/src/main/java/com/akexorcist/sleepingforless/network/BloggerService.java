@@ -3,6 +3,7 @@ package com.akexorcist.sleepingforless.network;
 import com.akexorcist.sleepingforless.network.model.Blog;
 import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
+import com.akexorcist.sleepingforless.network.model.SearchResultList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -21,4 +22,7 @@ public interface BloggerService {
 
     @GET(BloggerUrl.POST)
     Call<Post> getPost(@Path("blogId") String blogId, @Path("postId") String postId);
+
+    @GET(BloggerUrl.SEARCH)
+    Call<PostList> searchPost(@Path("blogId") String blogId, @Query("q") String keyword, @Query("fetchBodies") boolean includeBody);
 }
