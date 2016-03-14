@@ -15,7 +15,7 @@ public class CodePost extends BasePost {
     }
 
     public CodePost(String code, String language) {
-        this.code = code;
+        this.code = code.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
         this.language = language;
     }
 
