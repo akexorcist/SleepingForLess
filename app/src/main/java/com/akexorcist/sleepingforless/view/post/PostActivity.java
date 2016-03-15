@@ -39,6 +39,7 @@ import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 import com.akexorcist.sleepingforless.view.search.SearchActivity;
+import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.bumptech.glide.Glide;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -61,10 +62,10 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
-    private ImageView ivMenuOfflineSave;
-    private ImageView ivMenuBookmark;
-    private ImageView ivMenuShare;
-    private ImageView ivMenuSettings;
+    private MenuButton btnMenuOfflineSave;
+    private MenuButton btnMenuBookmark;
+    private MenuButton btnMenuShare;
+    private MenuButton btnMenuSettings;
     private BottomSheetLayout bslMenu;
     private LinearLayout layoutPostContent;
 
@@ -79,10 +80,10 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         viewContentShadow = findViewById(R.id.view_content_shadow);
-        ivMenuOfflineSave = (ImageView) findViewById(R.id.iv_menu_offline_save);
-        ivMenuBookmark = (ImageView) findViewById(R.id.iv_menu_bookmark);
-        ivMenuShare = (ImageView) findViewById(R.id.iv_menu_share);
-        ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
+        btnMenuOfflineSave = (MenuButton) findViewById(R.id.btn_menu_offline_save);
+        btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
+        btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
+        btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
 
@@ -95,14 +96,14 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
-        ivMenuOfflineSave.setOnClickListener(this);
-        ivMenuBookmark.setOnClickListener(this);
-        ivMenuShare.setOnClickListener(this);
-        ivMenuSettings.setOnClickListener(this);
-        ivMenuOfflineSave.setOnTouchListener(this);
-        ivMenuBookmark.setOnTouchListener(this);
-        ivMenuShare.setOnTouchListener(this);
-        ivMenuSettings.setOnTouchListener(this);
+        btnMenuOfflineSave.setOnClickListener(this);
+        btnMenuBookmark.setOnClickListener(this);
+        btnMenuShare.setOnClickListener(this);
+        btnMenuSettings.setOnClickListener(this);
+        btnMenuOfflineSave.setOnTouchListener(this);
+        btnMenuBookmark.setOnTouchListener(this);
+        btnMenuShare.setOnTouchListener(this);
+        btnMenuSettings.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
 
         setToolbar(postItem.getTitle());
@@ -263,13 +264,13 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
             openMenu();
         } else if (v == viewContentShadow) {
             closeMenu();
-        } else if (v == ivMenuBookmark) {
+        } else if (v == btnMenuBookmark) {
             onMenuBookmarkClick();
-        } else if (v == ivMenuOfflineSave) {
+        } else if (v == btnMenuOfflineSave) {
             onMenuOfflineSaveClick();
-        } else if (v == ivMenuShare) {
+        } else if (v == btnMenuShare) {
             onMenuShareClick();
-        } else if (v == ivMenuSettings) {
+        } else if (v == btnMenuSettings) {
             onMenuSettingsClick();
         }
     }
@@ -377,7 +378,8 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         showSnackbar("Removed from bookmark.");
     }
 
-    public void saveOfflineData() {
+    public void saveOfflineDataToRealm() {
+        realm.beginTransaction();
         PostOffline postOffline = realm.createObject(PostOffline.class);
         postOffline.setPostId(postItem.getId());
         postOffline.setTitle(postItem.getTitle());
@@ -387,51 +389,36 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         postOffline.setUrl(postItem.getUrl());
         RealmList<LabelOffline> labelList = new RealmList<>();
         for (String label : postItem.getLabels()) {
-            LabelOffline labelOffline = new LabelOffline();
+            LabelOffline labelOffline = realm.createObject(LabelOffline.class);
             labelOffline.setLabel(label);
             labelList.add(labelOffline);
         }
         postOffline.setLabels(labelList);
 
-        realm.beginTransaction();
         realm.copyToRealm(postOffline);
         realm.commitTransaction();
+    }
 
+    public void saveOfflineData() {
+        saveOfflineDataToRealm();
         setOfflineSaveAvailable(true);
         showSnackbar("Offline saved.");
-//        realm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                PostOffline postOffline = realm.createObject(PostOffline.class);
-//                postOffline.setPostId(postItem.getId());
-//                postOffline.setTitle(postItem.getTitle());
-//                postOffline.setContent(postItem.getContent());
-//                postOffline.setPublished(postItem.getPublished());
-//                postOffline.setUpdated(postItem.getUpdated());
-//                postOffline.setUrl(postItem.getUrl());
-//                RealmList<LabelOffline> labelList = new RealmList<>();
-//                for (String label : postItem.getLabels()) {
-//                    LabelOffline labelOffline = new LabelOffline();
-//                    labelOffline.setLabel(label);
-//                    labelList.add(labelOffline);
-//                }
-//                postOffline.setLabels(labelList);
-//                setOfflineSaveAvailable(true);
-//                showSnackbar("Offline saved.");
-//            }
-//        });
     }
 
     public void syncOfflineData() {
+        sycnOfflineDataToRealm();
+        saveOfflineData();
+        setOfflineSaveAvailable(false);
+        showSnackbar("Synced.");
+    }
+
+    public void sycnOfflineDataToRealm() {
         RealmResults<Bookmark> result = realm.where(Bookmark.class)
                 .equalTo("postId", postItem.getId())
                 .findAllAsync();
         realm.beginTransaction();
         result.clear();
         realm.commitTransaction();
-        saveOfflineData();
-        setOfflineSaveAvailable(false);
-        showSnackbar("Synced.");
     }
 
     public void checkIsBookmarked(String postId) {
@@ -449,14 +436,13 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
 
     public void setBookmark(boolean state) {
         int drawableResourceId = (state) ? R.drawable.vector_ic_bookmark_check : R.drawable.vector_ic_bookmark_uncheck;
-        ivMenuBookmark.setImageDrawable(getResources().getDrawable(drawableResourceId));
-        ivMenuBookmark.setTag(drawableResourceId);
+        btnMenuBookmark.setIconResource(drawableResourceId);
+        btnMenuBookmark.setTag(drawableResourceId);
     }
 
     public boolean isBookmark() {
-        return (int) ivMenuBookmark.getTag() == R.drawable.vector_ic_bookmark_check;
+        return (int) btnMenuBookmark.getTag() == R.drawable.vector_ic_bookmark_check;
     }
-
 
     public void checkIsOfflineSaved(String postId) {
         final RealmResults<PostOffline> result = realm.where(PostOffline.class)
@@ -465,20 +451,22 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         result.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                setOfflineSaveAvailable(result.size() > 0);
+                setOfflineSaveAvailable(result.size() == 0);
                 result.removeChangeListeners();
             }
         });
     }
 
     public void setOfflineSaveAvailable(boolean state) {
-        int drawableResourceId = (state) ? R.drawable.vector_ic_offline_save : R.drawable.vector_ic_sync;
-        ivMenuOfflineSave.setImageDrawable(getResources().getDrawable(drawableResourceId));
-        ivMenuOfflineSave.setTag(drawableResourceId);
+        int iconResourceId = (state) ? R.drawable.vector_ic_offline_save : R.drawable.vector_ic_sync;
+        String text = (state) ? "Offline" : "Sync";
+        btnMenuOfflineSave.setIconResource(iconResourceId);
+        btnMenuOfflineSave.setTag(iconResourceId);
+        btnMenuOfflineSave.setText(text);
     }
 
     public boolean isOfflineSave() {
-        return (int) ivMenuBookmark.getTag() == R.drawable.vector_ic_offline_save;
+        return (int) btnMenuBookmark.getTag() == R.drawable.vector_ic_offline_save;
     }
 
     public void showSnackbar(String message) {

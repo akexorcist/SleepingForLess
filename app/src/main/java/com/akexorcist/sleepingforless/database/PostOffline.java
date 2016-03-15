@@ -10,8 +10,6 @@ import io.realm.annotations.PrimaryKey;
  * Created by Akexorcist on 3/15/2016 AD.
  */
 public class PostOffline extends RealmObject {
-    @PrimaryKey
-    private int id;
     private String postId;
     private String published;
     private String updated;
@@ -21,14 +19,6 @@ public class PostOffline extends RealmObject {
     private RealmList<LabelOffline> labels;
 
     public PostOffline() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPostId() {

@@ -80,53 +80,41 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/iv_menu_offline_save"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:padding="10dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/vector_ic_offline_save" />
+                <com.akexorcist.sleepingforless.widget.MenuButton
+                    android:id="@+id/btn_menu_offline_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:mbIconSrc="@drawable/vector_ic_offline_save"
+                    app:mbText="Offline" />
 
-                <ImageView
-                    android:id="@+id/iv_menu_bookmark"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:padding="10dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/vector_ic_bookmark_uncheck" />
+                <com.akexorcist.sleepingforless.widget.MenuButton
+                    android:id="@+id/btn_menu_bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:mbIconSrc="@drawable/vector_ic_bookmark_uncheck"
+                    app:mbText="Bookmark" />
 
-                <ImageView
-                    android:id="@+id/iv_menu_share"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:padding="10dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/vector_ic_share" />
+                <com.akexorcist.sleepingforless.widget.MenuButton
+                    android:id="@+id/btn_menu_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:mbIconSrc="@drawable/vector_ic_share"
+                    app:mbText="Share" />
 
-                <ImageView
-                    android:id="@+id/iv_menu_settings"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:padding="10dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/vector_ic_settings" />
+                <com.akexorcist.sleepingforless.widget.MenuButton
+                    android:id="@+id/btn_menu_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:mbIconSrc="@drawable/vector_ic_settings"
+                    app:mbText="Settings" />
             </LinearLayout>
         </com.bowyer.app.fabtransitionlayout.FooterLayout>
 
