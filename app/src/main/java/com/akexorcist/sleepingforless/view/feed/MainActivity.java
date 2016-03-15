@@ -2,7 +2,6 @@ package com.akexorcist.sleepingforless.view.feed;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
