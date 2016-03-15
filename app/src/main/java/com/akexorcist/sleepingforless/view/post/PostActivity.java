@@ -361,6 +361,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
             public void execute(Realm realm) {
                 Bookmark bookmark = realm.createObject(Bookmark.class);
                 bookmark.setPostId(postItem.getId());
+                bookmark.setTitle(postItem.getTitle());
                 setBookmark(true);
                 showSnackbar("Added to bookmark.");
             }

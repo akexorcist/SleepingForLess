@@ -7,6 +7,7 @@ import io.realm.RealmObject;
  */
 public class Bookmark extends RealmObject {
     private String postId;
+    private String title;
 
     public Bookmark() {
     }
@@ -17,5 +18,13 @@ public class Bookmark extends RealmObject {
 
     public String getPostId() {
         return postId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
