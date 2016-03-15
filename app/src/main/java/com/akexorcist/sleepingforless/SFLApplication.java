@@ -21,7 +21,9 @@ public class SFLApplication extends Application {
                 .setDefaultFontPath("fonts/CSPraJad.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
         Realm.setDefaultConfiguration(realmConfiguration);
     }
 }
