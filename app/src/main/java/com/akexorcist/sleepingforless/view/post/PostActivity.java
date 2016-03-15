@@ -319,7 +319,6 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         } else {
             addPostToBookmark();
         }
-        closeMenu();
     }
 
     public void onMenuOfflineSaveClick() {
@@ -329,7 +328,6 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         } else {
             syncOfflineData();
         }
-        closeMenu();
     }
 
     public void onMenuShareClick() {
@@ -388,10 +386,12 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         postOffline.setUpdated(postItem.getUpdated());
         postOffline.setUrl(postItem.getUrl());
         RealmList<LabelOffline> labelList = new RealmList<>();
-        for (String label : postItem.getLabels()) {
-            LabelOffline labelOffline = realm.createObject(LabelOffline.class);
-            labelOffline.setLabel(label);
-            labelList.add(labelOffline);
+        if (postItem != null) {
+            for (String label : postItem.getLabels()) {
+                LabelOffline labelOffline = realm.createObject(LabelOffline.class);
+                labelOffline.setLabel(label);
+                labelList.add(labelOffline);
+            }
         }
         postOffline.setLabels(labelList);
 
@@ -459,7 +459,7 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
 
     public void setOfflineSaveAvailable(boolean state) {
         int iconResourceId = (state) ? R.drawable.vector_ic_offline_save : R.drawable.vector_ic_sync;
-        String text = (state) ? "Offline" : "Sync";
+        String text = (state) ? "Save" : "Sync";
         btnMenuOfflineSave.setIconResource(iconResourceId);
         btnMenuOfflineSave.setTag(iconResourceId);
         btnMenuOfflineSave.setText(text);

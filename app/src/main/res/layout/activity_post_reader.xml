@@ -87,7 +87,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     app:mbIconSrc="@drawable/vector_ic_offline_save"
-                    app:mbText="Offline" />
+                    app:mbText="Save" />
 
                 <com.akexorcist.sleepingforless.widget.MenuButton
                     android:id="@+id/btn_menu_bookmark"
