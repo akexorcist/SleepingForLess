@@ -289,6 +289,8 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     public void onBackPressed() {
         if (bslMenu.isSheetShowing()) {
             bslMenu.dismissSheet();
+        } else if (flMenu.isFabExpanded()) {
+            closeMenu();
         } else {
             super.onBackPressed();
         }

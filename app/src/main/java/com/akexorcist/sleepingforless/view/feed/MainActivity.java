@@ -132,6 +132,17 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         closeMenu();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (bslMenu.isSheetShowing()) {
+            bslMenu.dismissSheet();
+        } else if (flMenu.isFabExpanded()) {
+            closeMenu();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public void setPostList(PostList postList) {
         if (postList != null) {
             adapter.setPostListItem(postList.getItems());
