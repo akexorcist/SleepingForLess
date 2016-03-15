@@ -46,7 +46,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp"
                     android:contentDescription="@null"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/ic_sfl_logo" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
