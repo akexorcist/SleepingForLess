@@ -21,11 +21,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.post.PostReaderActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/DraggerTheme" />
-        <activity
             android:name=".view.post.PostActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />

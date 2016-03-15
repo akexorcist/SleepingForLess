@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_preview_close"
         android:layout_width="60dp"
@@ -23,15 +22,4 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/vector_ic_close" />
-
-    <!--<Button-->
-    <!--android:id="@+id/btn_preview_close"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="50dp"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_gravity="center_horizontal"-->
-    <!--android:layout_margin="10dp"-->
-    <!--android:text="Close"-->
-    <!--android:textColor="@color/white" />-->
 </RelativeLayout>

@@ -1,122 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bsl_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.post.PostReaderActivity">
+    tools:context=".view.post.PostActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:elevation="5dp">
+        <include layout="@layout/view_include_post_title" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/tb_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:contentInsetEnd="0dp"
-                app:contentInsetLeft="0dp"
-                app:contentInsetRight="0dp"
-                app:contentInsetStart="0dp"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:titleTextAppearance="@style/PostTitleTextView" />
-        </android.support.design.widget.AppBarLayout>
+        <include layout="@layout/view_include_post_content" />
 
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
-                android:id="@+id/layout_post_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="30dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp" />
-        </android.support.v4.widget.NestedScrollView>
-
-        <!--<include layout="@layout/content_main" />-->
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_menu"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="@dimen/fab_margin"
-            app:layout_behavior="com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior"
-            app:srcCompat="@drawable/vector_ic_menu" />
-
-        <View
-            android:id="@+id/view_content_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_alpha_black" />
-
-        <com.bowyer.app.fabtransitionlayout.FooterLayout
-            android:id="@+id/fl_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:ft_color="@color/colorAccent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <com.akexorcist.sleepingforless.widget.MenuButton
-                    android:id="@+id/btn_menu_offline_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    app:mbIconSrc="@drawable/vector_ic_offline_save"
-                    app:mbText="Save" />
-
-                <com.akexorcist.sleepingforless.widget.MenuButton
-                    android:id="@+id/btn_menu_bookmark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    app:mbIconSrc="@drawable/vector_ic_bookmark_uncheck"
-                    app:mbText="Bookmark" />
-
-                <com.akexorcist.sleepingforless.widget.MenuButton
-                    android:id="@+id/btn_menu_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    app:mbIconSrc="@drawable/vector_ic_share"
-                    app:mbText="Share" />
-
-                <com.akexorcist.sleepingforless.widget.MenuButton
-                    android:id="@+id/btn_menu_settings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    app:mbIconSrc="@drawable/vector_ic_settings"
-                    app:mbText="Settings" />
-            </LinearLayout>
-        </com.bowyer.app.fabtransitionlayout.FooterLayout>
+        <include layout="@layout/view_include_post_menu" />
 
     </android.support.design.widget.CoordinatorLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

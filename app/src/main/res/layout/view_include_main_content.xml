@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rv_feed_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/extra_extra_light_gray"
+    android:fillViewport="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
