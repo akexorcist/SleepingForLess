@@ -23,6 +23,7 @@ import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostActivity;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.squareup.otto.Subscribe;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
@@ -30,6 +31,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
+    private DilatingDotsProgressBar pbSearchResultList;
     private RecyclerView rvSearchResultList;
     private View viewContentShadow;
     private ImageView ivMenuSearch;
@@ -55,10 +57,12 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     }
 
     public void callService() {
+        showLoading();
         searchPost(request.getKeyword());
     }
 
     private void bindView() {
+        pbSearchResultList = (DilatingDotsProgressBar) findViewById(R.id.pb_search_result_list_loading);
         rvSearchResultList = (RecyclerView) findViewById(R.id.rv_search_result_list);
         viewContentShadow = findViewById(R.id.view_content_shadow);
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
@@ -112,14 +116,13 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     public void onPostListSuccess(PostList postList) {
         this.postList = postList;
         setPostList(postList);
+        hideLoading();
     }
 
-    public void setPostList(PostList postList) {
-        if (postList != null) {
-            adapter.addPostListItem(postList.getItems());
-//            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
-            adapter.setLoadMoreAvailable(false);
-        }
+    @Subscribe
+    public void onSearchRequest(SearchRequest request) {
+        this.request = request;
+        callService();
     }
 
     @Override
@@ -143,6 +146,34 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
             scaleMenuButtonBack(v);
         }
         return false;
+    }
+
+    @Override
+    public void onItemClick(FeedViewHolder holder, PostList.Item item) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        openActivity(PostActivity.class, bundle);
+    }
+
+    @Override
+    public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
+//        showBottomSheet();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        openActivity(DebugPostActivity.class, bundle);
+    }
+
+    @Override
+    public void onLoadMore() {
+        searchMorePost(postList.getNextPageToken());
+    }
+
+    public void setPostList(PostList postList) {
+        if (postList != null) {
+            adapter.addPostListItem(postList.getItems());
+//            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
+            adapter.setLoadMoreAvailable(false);
+        }
     }
 
     public void scaleMenuButtonUp(View v) {
@@ -172,23 +203,14 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         Log.e("Check", "onMenuSettingsClick");
     }
 
-    @Override
-    public void onItemClick(FeedViewHolder holder, PostList.Item item) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
-        openActivity(PostActivity.class, bundle);
+    private void showLoading() {
+        rvSearchResultList.setVisibility(View.GONE);
+        pbSearchResultList.showNow();
     }
 
-    @Override
-    public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
-//        showBottomSheet();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
-        openActivity(DebugPostActivity.class, bundle);
+    private void hideLoading() {
+        rvSearchResultList.setVisibility(View.VISIBLE);
+        pbSearchResultList.hideNow();
     }
 
-    @Override
-    public void onLoadMore() {
-        searchMorePost(postList.getNextPageToken());
-    }
 }
