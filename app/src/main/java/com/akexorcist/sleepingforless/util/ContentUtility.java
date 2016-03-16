@@ -7,6 +7,8 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.constant.TestConstant;
+import com.akexorcist.sleepingforless.view.post.constant.PostType;
+import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
@@ -147,6 +149,23 @@ public class ContentUtility {
         return matcher.find();
     }
 
+    public List<BasePost> convertPost(String rawContent) {
+        List<BasePost> listPost = new ArrayList<>();
+        List<String> textList = ContentUtility.getInstance().wrapContent(rawContent);
+        for (String text : textList) {
+            if (ContentUtility.getInstance().isCode(text)) {
+                listPost.add(ContentUtility.getInstance().convertCodePost(text).setType(PostType.CODE));
+            } else if (ContentUtility.getInstance().isImage(text)) {
+                listPost.add(ContentUtility.getInstance().convertImagePost(text).setType(PostType.IMAGE));
+            } else if (ContentUtility.getInstance().isHeaderText(text)) {
+                listPost.add(ContentUtility.getInstance().convertHeaderPost(text).setType(PostType.HEADER));
+            } else {
+                listPost.add(ContentUtility.getInstance().convertPlainText("    " + text).setType(PostType.PLAIN_TEXT));
+            }
+        }
+        return listPost;
+    }
+
     public ImagePost convertImagePost(String imageContent) {
         Matcher matcher = getMatcher(imageContent, "<a:(.+)><img:(.+)>");
         if (matcher.find()) {
@@ -219,9 +238,7 @@ public class ContentUtility {
     }
 
     public String removeLabelFromTitle(String title) {
-        return title.replace("[Android Code]", "")
-                .replace("[Android Design]", "")
-                .replace("[Android Dev Tips]", "")
+        return title.replace("^[.+?]", "")
                 .trim();
     }
 }

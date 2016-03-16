@@ -118,6 +118,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         } else if (viewType == VIEW_TYPE_LOADING) {
             LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
+            feedViewHolder.pbPostListLoading.showNow();
             if (isLoadMoreAvailable && loadMoreListener != null) {
                 loadMoreListener.onLoadMore();
             }

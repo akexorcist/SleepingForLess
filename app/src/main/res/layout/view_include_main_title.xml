@@ -9,7 +9,8 @@
         android:layout_height="190dp"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="5dp">
+        app:elevation="5dp"
+        app:layout_behavior="com.akexorcist.sleepingforless.widget.FlingBehavior">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/ctl_title"

@@ -28,12 +28,14 @@ import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.squareup.otto.Subscribe;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
 public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener {
     private Toolbar tbTitle;
     private FeedAdapter adapter;
+    private DilatingDotsProgressBar pbFeedListLoading;
     private RecyclerView rvFeedList;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -60,6 +62,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private void bindView() {
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
+        pbFeedListLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_feed_list_loading);
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
         viewContentShadow = findViewById(R.id.view_content_shadow);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
@@ -89,6 +92,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     private void callService() {
+        showLoading();
         requestPostList(sortType);
     }
 
@@ -110,6 +114,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         Log.e("Check", "onBlogSuccess");
         this.postList = postList;
         setPostList(postList);
+        hideLoading();
     }
 
     @Subscribe
@@ -237,6 +242,18 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         });
         menuSheetView.inflateMenu(R.menu.menu_post_list);
         bslMenu.showWithSheetView(menuSheetView);
+    }
+
+    private void showLoading() {
+        rvFeedList.setVisibility(View.GONE);
+//        pbFeedListLoading.setVisibility(View.VISIBLE);
+        pbFeedListLoading.showNow();
+    }
+
+    private void hideLoading() {
+        rvFeedList.setVisibility(View.VISIBLE);
+//        pbFeedListLoading.setVisibility(View.GONE);
+        pbFeedListLoading.hideNow();
     }
 
     @Subscribe

@@ -4,9 +4,9 @@ package com.akexorcist.sleepingforless.view.post.constant;
  * Created by Akexorcist on 3/13/2016 AD.
  */
 public class PostType {
-    public static final String PLAIN_TEXT = "plain_text";
-    public static final String HEADER = "header";
-    public static final String IMAGE = "image";
-    public static final String CODE = "code";
-    public static final String VIDEO = "video";
+    public static final int PLAIN_TEXT = 0;
+    public static final int HEADER = 1;
+    public static final int IMAGE = 2;
+    public static final int CODE = 3;
+    public static final int VIDEO = 4;
 }

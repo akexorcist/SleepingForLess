@@ -8,11 +8,16 @@ import org.parceler.Parcel;
 
 @Parcel(parcelsIndex = false)
 public class BasePost {
-    String type;
+    int type;
     String raw;
 
-    public String getType() {
+    public int getType() {
         return type;
+    }
+
+    public BasePost setType(int type) {
+        this.type = type;
+        return this;
     }
 
     public String getRaw() {

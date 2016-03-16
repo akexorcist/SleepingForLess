@@ -7,18 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
@@ -33,22 +27,16 @@ import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
-import com.akexorcist.sleepingforless.view.post.model.CodePost;
-import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
-import com.akexorcist.sleepingforless.view.post.model.ImagePost;
-import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
-import com.akexorcist.sleepingforless.view.search.SearchActivity;
+import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.IntentPickerSheetView;
 import com.squareup.otto.Subscribe;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
@@ -56,59 +44,39 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class PostActivity extends SFLActivity implements LinkClickable.LinkClickListener, View.OnClickListener, View.OnTouchListener {
+public class PostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener {
     private Realm realm;
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
     private MenuButton btnMenuOfflineSave;
+    private DilatingDotsProgressBar pbPostLoading;
     private MenuButton btnMenuBookmark;
     private MenuButton btnMenuShare;
     private MenuButton btnMenuSettings;
     private BottomSheetLayout bslMenu;
-    private LinearLayout layoutPostContent;
+    private RecyclerView rvPostList;
+    private PostAdapter adapter;
 
     private PostList.Item postItem;
+    private Post post;
+    private List<BasePost> postList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_reader);
-
-        tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
-        flMenu = (FooterLayout) findViewById(R.id.fl_menu);
-        viewContentShadow = findViewById(R.id.view_content_shadow);
-        btnMenuOfflineSave = (MenuButton) findViewById(R.id.btn_menu_offline_save);
-        btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
-        btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
-        btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
-        bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
-        layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
-
         realm = Realm.getDefaultInstance();
 
         if (savedInstanceState == null) {
-            setupFirstRun();
+            restoreIntentData();
         }
 
-        viewContentShadow.setVisibility(View.GONE);
-        viewContentShadow.setOnClickListener(this);
-        fabMenu.setOnClickListener(this);
-        btnMenuOfflineSave.setOnClickListener(this);
-        btnMenuBookmark.setOnClickListener(this);
-        btnMenuShare.setOnClickListener(this);
-        btnMenuSettings.setOnClickListener(this);
-        btnMenuOfflineSave.setOnTouchListener(this);
-        btnMenuBookmark.setOnTouchListener(this);
-        btnMenuShare.setOnTouchListener(this);
-        btnMenuSettings.setOnTouchListener(this);
-        flMenu.setFab(fabMenu);
-
-        setToolbar(postItem.getTitle());
-        checkIsBookmarked(postItem.getId());
-        checkIsOfflineSaved(postItem.getId());
+        bindView();
+        setupView();
+        setToolbar();
+        callService();
     }
 
     @Override
@@ -129,9 +97,40 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         realm.close();
     }
 
-    private void setToolbar(String title) {
+    private void bindView() {
+        tbTitle = (Toolbar) findViewById(R.id.tb_title);
+        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
+        flMenu = (FooterLayout) findViewById(R.id.fl_menu);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        pbPostLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_loading);
+        btnMenuOfflineSave = (MenuButton) findViewById(R.id.btn_menu_offline_save);
+        btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
+        btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
+        btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
+        bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
+        rvPostList = (RecyclerView) findViewById(R.id.rv_post_list);
+    }
+
+    private void setupView() {
+        viewContentShadow.setVisibility(View.GONE);
+        viewContentShadow.setOnClickListener(this);
+        fabMenu.setOnClickListener(this);
+        btnMenuOfflineSave.setOnClickListener(this);
+        btnMenuBookmark.setOnClickListener(this);
+        btnMenuShare.setOnClickListener(this);
+        btnMenuSettings.setOnClickListener(this);
+        btnMenuOfflineSave.setOnTouchListener(this);
+        btnMenuBookmark.setOnTouchListener(this);
+        btnMenuShare.setOnTouchListener(this);
+        btnMenuSettings.setOnTouchListener(this);
+        flMenu.setFab(fabMenu);
+        checkIsBookmarked(postItem.getId());
+        checkIsOfflineSaved(postItem.getId());
+    }
+
+    private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(title));
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(postItem.getTitle()));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,122 +140,25 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         });
     }
 
-    private void setupFirstRun() {
+    private void restoreIntentData() {
         postItem = Parcels.unwrap(getIntent().getParcelableExtra(Key.POST_ID));
+    }
+
+    private void callService() {
+        showLoading();
         BloggerManager.getInstance().getPost(postItem.getId());
     }
 
     @Subscribe
-    public void onPostSucess(Post post) {
-        List<String> textList = ContentUtility.getInstance().wrapContent(post.getContent());
-//        for (String text : textList) {
-//            Log.d("Check", text);
-//        }
-        for (String text : textList) {
-//            Log.e("Check", text);
-            if (ContentUtility.getInstance().isCode(text)) {
-                addCodeContent(text);
-            } else if (ContentUtility.getInstance().isImage(text)) {
-                addImageContent(text);
-            } else if (ContentUtility.getInstance().isHeaderText(text)) {
-                addHeaderContent(text);
-            } else {
-                addPlainTextContent("    " + text);
-            }
-        }
+    public void onPostSuccess(Post post) {
+        this.post = post;
+        setPost(post);
+        hideLoading();
     }
 
     @Subscribe
     public void onPostFailure(Failure failure) {
         Log.e("Check", "onPostFailure");
-    }
-
-    private void addPlainTextContent(String plainText) {
-        PlainTextPost plainTextPost = ContentUtility.getInstance().convertPlainText(plainText);
-        View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_plain_text, layoutPostContent, false);
-        TextView tvPostContentPlainText = (TextView) view.findViewById(R.id.tv_post_content_plain_text);
-        tvPostContentPlainText.setText(setSpannable(plainTextPost));
-        if (plainTextPost.isLinkAvailable()) {
-            tvPostContentPlainText.setMovementMethod(new LinkMovementMethod());
-        }
-        layoutPostContent.addView(view);
-    }
-
-    private Spannable setSpannable(PlainTextPost plainTextPost) {
-        Spannable spanText = Spannable.Factory.getInstance().newSpannable(plainTextPost.getText());
-        for (PlainTextPost.Highlight highlight : plainTextPost.getHighlightList()) {
-            spanText.setSpan(new ForegroundColorSpan(highlight.getColor()), highlight.getStart(), highlight.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        for (PlainTextPost.Link link : plainTextPost.getLinkList()) {
-            spanText.setSpan(new LinkClickable(link.getUrl(), this), link.getStart(), link.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return spanText;
-    }
-
-    private void addHeaderContent(String header) {
-        HeaderPost headerPost = ContentUtility.getInstance().convertHeaderPost(header);
-        View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_header, layoutPostContent, false);
-        TextView tvPostContentHeader = (TextView) view.findViewById(R.id.tv_post_content_header);
-        tvPostContentHeader.setText(headerPost.getText());
-        if (headerPost.getSize() == 1) {
-            tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size_h1));
-        } else if (headerPost.getSize() == 2) {
-            tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size_h2));
-        } else if (headerPost.getSize() == 3) {
-            tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size_h3));
-        } else if (headerPost.getSize() == 4) {
-            tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size_h4));
-        }
-        layoutPostContent.addView(view);
-    }
-
-    private void addCodeContent(String code) {
-        CodePost codePost = ContentUtility.getInstance().convertCodePost(code);
-        View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_code, layoutPostContent, false);
-        TextView tvPostContentPlainText = (TextView) view.findViewById(R.id.tv_post_content_code);
-        tvPostContentPlainText.setText(codePost.getCode());
-        layoutPostContent.addView(view);
-    }
-
-    private void addImageContent(String image) {
-        final ImagePost imagePost = ContentUtility.getInstance().convertImagePost(image);
-        View view = LayoutInflater.from(this).inflate(R.layout.view_post_content_image, layoutPostContent, false);
-        ImageView ivPostContentPlainImage = (ImageView) view.findViewById(R.id.iv_post_content_image);
-        Glide.with(this)
-                .load(imagePost.getPostUrl())
-                .override(500, 500)
-                .thumbnail(0.1f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(ivPostContentPlainImage);
-        ivPostContentPlainImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(Key.KEY_FULL_URL, imagePost.getFullSizeUrl());
-                openActivity(ImagePostPreviewActivity.class, bundle);
-            }
-        });
-        ivPostContentPlainImage.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                copyFullUrl(imagePost.getFullSizeUrl());
-                Snackbar.make(v, "Copy image URL to clipboard.", Snackbar.LENGTH_SHORT).show();
-                return true;
-            }
-
-            private void copyFullUrl(String fullUrl) {
-                ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Image URL", fullUrl);
-                clipboard.setPrimaryClip(clip);
-            }
-        });
-        layoutPostContent.addView(view);
-    }
-
-    @Override
-    public void onLinkClick(String url) {
-        Log.e("Check", "Link Click");
-        ExternalBrowserUtility.getInstance().open(this, url);
     }
 
     @Override
@@ -297,6 +199,41 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         }
     }
 
+    @Override
+    public void onImageClickListener(String fullUrl) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Key.KEY_FULL_URL, fullUrl);
+        openActivity(ImagePostPreviewActivity.class, bundle);
+    }
+
+    @Override
+    public void onImageLongClickListener(String fullUrl) {
+        copyFullUrl(fullUrl);
+        Snackbar.make(tbTitle, "Copy image URL to clipboard.", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLinkClickListener(String url) {
+        ExternalBrowserUtility.getInstance().open(this, url);
+    }
+
+    private void copyFullUrl(String fullUrl) {
+        ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Image URL", fullUrl);
+        clipboard.setPrimaryClip(clip);
+    }
+
+    private void setPost(Post post) {
+        if (post != null) {
+            postList = ContentUtility.getInstance().convertPost(post.getContent());
+            adapter = new PostAdapter(postList);
+            adapter.setPostClickListener(this);
+            rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            rvPostList.setAdapter(adapter);
+//            rvPostList.setAdapter(adapter);
+        }
+    }
+
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
@@ -316,7 +253,6 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     }
 
     public void onMenuBookmarkClick() {
-        Log.e("Check", "onMenuBookmarkClick");
         if (isBookmark()) {
             removePostFromBookmark();
         } else {
@@ -325,7 +261,6 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     }
 
     public void onMenuOfflineSaveClick() {
-        Log.e("Check", "onMenuOfflineSaveClick");
         if (isOfflineSave()) {
             saveOfflineData();
         } else {
@@ -410,13 +345,13 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
     }
 
     public void syncOfflineData() {
-        sycnOfflineDataToRealm();
+        syncOfflineDataToRealm();
         saveOfflineData();
         setOfflineSaveAvailable(false);
         showSnackbar("Synced.");
     }
 
-    public void sycnOfflineDataToRealm() {
+    public void syncOfflineDataToRealm() {
         RealmResults<Bookmark> result = realm.where(Bookmark.class)
                 .equalTo("postId", postItem.getId())
                 .findAllAsync();
@@ -477,5 +412,13 @@ public class PostActivity extends SFLActivity implements LinkClickable.LinkClick
         Snackbar.make(tbTitle, message, Snackbar.LENGTH_SHORT).show();
     }
 
+    private void showLoading() {
+        pbPostLoading.showNow();
+        rvPostList.setVisibility(View.GONE);
+    }
 
+    private void hideLoading() {
+        pbPostLoading.hideNow();
+        rvPostList.setVisibility(View.VISIBLE);
+    }
 }
