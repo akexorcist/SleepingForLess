@@ -32,6 +32,7 @@ public class ExternalBrowserUtility {
         try {
             CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder(mCustomTabsSession)
                     .setToolbarColor(activity.getResources().getColor(R.color.colorPrimary))
+                    .setSecondaryToolbarColor(activity.getResources().getColor(R.color.colorPrimary))
                     .build();
             customTabsIntent.launchUrl(activity, fbbWebUri);
 
