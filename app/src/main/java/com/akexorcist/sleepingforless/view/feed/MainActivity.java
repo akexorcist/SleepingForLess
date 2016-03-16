@@ -40,6 +40,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
+    private MenuButton btnMenuBookmark;
     private MenuButton btnMenuSearch;
     private MenuButton btnMenuSort;
     private MenuButton btnMenuSettings;
@@ -67,6 +68,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         viewContentShadow = findViewById(R.id.view_content_shadow);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
+        btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
         btnMenuSearch = (MenuButton) findViewById(R.id.btn_menu_search);
         btnMenuSort = (MenuButton) findViewById(R.id.btn_menu_sort);
         btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
@@ -76,9 +78,11 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
+        btnMenuBookmark.setOnClickListener(this);
         btnMenuSearch.setOnClickListener(this);
         btnMenuSort.setOnClickListener(this);
         btnMenuSettings.setOnClickListener(this);
+        btnMenuBookmark.setOnTouchListener(this);
         btnMenuSearch.setOnTouchListener(this);
         btnMenuSort.setOnTouchListener(this);
         btnMenuSettings.setOnTouchListener(this);
@@ -128,6 +132,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
             openMenu();
         } else if (v == viewContentShadow) {
             closeMenu();
+        } else if (v == btnMenuBookmark) {
+            onMenuBookmarkClick();
         } else if (v == btnMenuSearch) {
             onMenuSearchClick();
         } else if (v == btnMenuSort) {
@@ -207,6 +213,12 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     public void scaleMenuButtonBack(View v) {
         AnimationUtility.getInstance().scaleBack(v, 200);
+    }
+
+    public void onMenuBookmarkClick() {
+        // TODO Open Bookmark
+//        openActivity(SearchActivity.class);
+        closeMenu();
     }
 
     public void onMenuSearchClick() {

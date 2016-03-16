@@ -42,15 +42,6 @@
                 app:mbText="Bookmark" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
-                android:id="@+id/btn_menu_offline_article"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                app:mbIconSrc="@drawable/vector_ic_offline_content"
-                app:mbText="Offline" />
-
-            <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
