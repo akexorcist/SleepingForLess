@@ -6,16 +6,17 @@ import io.realm.RealmObject;
 /**
  * Created by Akexorcist on 3/15/2016 AD.
  */
-public class Bookmark extends RealmObject {
+public class BookmarkRealm extends RealmObject {
     private String postId;
     private String published;
     private String updated;
     private String url;
     private String title;
     private String content;
-    private RealmList<BookmarkLabel> labels;
+    private RealmList<BookmarkLabelRealm> labelList;
+    private RealmList<BookmarkImageRealm> imageList;
 
-    public Bookmark() {
+    public BookmarkRealm() {
     }
 
     public String getPostId() {
@@ -66,12 +67,20 @@ public class Bookmark extends RealmObject {
         this.content = content;
     }
 
-    public RealmList<BookmarkLabel> getLabels() {
-        return labels;
+    public RealmList<BookmarkLabelRealm> getLabelList() {
+        return labelList;
     }
 
-    public void setLabels(RealmList<BookmarkLabel> labels) {
-        this.labels = labels;
+    public void setLabelList(RealmList<BookmarkLabelRealm> labelList) {
+        this.labelList = labelList;
+    }
+
+    public RealmList<BookmarkImageRealm> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(RealmList<BookmarkImageRealm> imageList) {
+        this.imageList = imageList;
     }
 
 

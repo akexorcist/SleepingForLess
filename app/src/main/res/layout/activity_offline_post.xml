@@ -4,18 +4,18 @@
     android:id="@+id/bsl_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.post.PostActivity">
+    tools:context=".view.offline.OfflinePostActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/view_include_post_title" />
+        <include layout="@layout/view_include_offline_post_title" />
 
-        <include layout="@layout/view_include_post_content" />
+        <include layout="@layout/view_include_offline_post_content" />
 
-        <include layout="@layout/view_include_post_menu" />
+        <include layout="@layout/view_include_offline_post_menu" />
 
     </android.support.design.widget.CoordinatorLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
@@ -91,14 +92,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             setTitle(feedViewHolder.tvTitle, postItem.getTitle());
             setLabel(feedViewHolder.tvLabel, postItem.getLabels());
             setPublishedDate(feedViewHolder.tvPublishedDate, postItem.getPublished());
-            feedViewHolder.ivTitle.setImageDrawable(null);
-            if (postItem.isImageAvailable()) {
-                feedViewHolder.ivTitle.setVisibility(View.VISIBLE);
-                String url = postItem.getImages().get(0).getUrl();
-                loadItemResource(feedViewHolder, url);
-            } else {
-                feedViewHolder.ivTitle.setVisibility(View.GONE);
-            }
+            setImage(feedViewHolder.ivTitle, postItem.getImages());
             feedViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -116,7 +110,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     return true;
                 }
             });
-        } else if (viewType == VIEW_TYPE_LOADING) {
+        } else if (viewType == VIEW_TYPE_LOADING)
+
+        {
             LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
             feedViewHolder.pbPostListLoading.showNow();
             if (isLoadMoreAvailable && loadMoreListener != null) {
@@ -148,13 +144,24 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         tvPublishedDate.setText("Published " + date[2] + "/" + date[1] + "/" + date[0]);
     }
 
-    private void loadItemResource(final FeedViewHolder holder, String url) {
-        Glide.with(holder.ivTitle.getContext())
+    private void setImage(ImageView ivTitle, List<PostList.Image> imageList) {
+        if (imageList != null && !imageList.isEmpty() && imageList.size() > 0) {
+            ivTitle.setImageDrawable(null);
+            ivTitle.setVisibility(View.VISIBLE);
+            String url = imageList.get(0).getUrl();
+            loadItemResource(ivTitle, url);
+        } else {
+            ivTitle.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadItemResource(ImageView ivTitle, String url) {
+        Glide.with(ivTitle.getContext())
                 .load(url)
                 .crossFade(200)
                 .thumbnail(0.2f)
                 .centerCrop()
-                .into(holder.ivTitle);
+                .into(ivTitle);
     }
 
     public void clear() {

@@ -43,7 +43,16 @@
             android:name="com.akexorcist.sleepingforless.config.GlideConfiguration"
             android:value="GlideModule" />
 
-        <activity android:name=".view.search.SearchResultActivity"></activity>
+        <activity
+            android:name=".view.search.SearchResultActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.bookmark.BookmarkActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".view.offline.OfflinePostActivity" />
+        <activity
+            android:name=".view.offline.OfflineImagePostPreviewActivity"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>

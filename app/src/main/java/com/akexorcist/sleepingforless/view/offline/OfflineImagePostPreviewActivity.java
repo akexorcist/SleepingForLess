@@ -1,4 +1,4 @@
-package com.akexorcist.sleepingforless.view.post;
+package com.akexorcist.sleepingforless.view.offline;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -19,10 +19,10 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 /**
  * Created by Akexorcist on 3/13/2016 AD.
  */
-public class ImagePostPreviewActivity extends SFLActivity implements View.OnClickListener {
+public class OfflineImagePostPreviewActivity extends SFLActivity implements View.OnClickListener {
     private SubsamplingScaleImageView ivPreview;
     private FloatingActionButton fabPreviewClose;
-    private String fullUrl;
+    private String url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         getBundleFromIntent();
 
         Glide.with(this)
-                .load(fullUrl)
+                .load(url)
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.1f)
@@ -49,7 +49,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
     }
 
     public void getBundleFromIntent() {
-        fullUrl = getIntent().getStringExtra(Key.KEY_FULL_URL);
+        url = getIntent().getStringExtra(Key.KEY_FULL_URL);
     }
 
     @Override

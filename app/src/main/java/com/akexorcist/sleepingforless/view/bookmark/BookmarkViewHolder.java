@@ -12,18 +12,16 @@ import com.balysv.materialripple.MaterialRippleLayout;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class BookmarkViewHolder extends RecyclerView.ViewHolder {
-    TextView tvTitle;
-    TextView tvLabel;
-    TextView tvPublishedDate;
-    ImageView ivTitle;
-    MaterialRippleLayout mrlFeedButton;
+    public TextView tvTitle;
+    public TextView tvLabel;
+    public ImageView ivTitle;
+    public MaterialRippleLayout mrlFeedButton;
 
     public BookmarkViewHolder(View itemView) {
         super(itemView);
-        tvTitle = (TextView) itemView.findViewById(R.id.tv_feed_title);
-        tvLabel = (TextView) itemView.findViewById(R.id.tv_feed_label);
-        tvPublishedDate = (TextView) itemView.findViewById(R.id.tv_feed_published_date);
-        ivTitle = (ImageView) itemView.findViewById(R.id.iv_feed_title);
-        mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_feed_button);
+        tvTitle = (TextView) itemView.findViewById(R.id.tv_bookmark_title);
+        tvLabel = (TextView) itemView.findViewById(R.id.tv_bookmark_label);
+        ivTitle = (ImageView) itemView.findViewById(R.id.iv_bookmark_title);
+        mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_bookmark_button);
     }
 }

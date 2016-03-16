@@ -13,17 +13,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
-import com.akexorcist.sleepingforless.database.Bookmark;
-import com.akexorcist.sleepingforless.database.BookmarkLabel;
+import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
+import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
+import com.akexorcist.sleepingforless.database.BookmarkRealm;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
+import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
@@ -43,13 +46,16 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class PostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener {
+public class PostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
     private Realm realm;
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
     private DilatingDotsProgressBar pbPostLoading;
+    private DilatingDotsProgressBar pbPostBookmarkLoading;
+    private LinearLayout layoutPostBookmarkLoading;
+    private View viewPostBookmarkLoading;
     private MenuButton btnMenuBookmark;
     private MenuButton btnMenuShare;
     private BottomSheetLayout bslMenu;
@@ -63,7 +69,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_reader);
+        setContentView(R.layout.activity_post);
         realm = Realm.getDefaultInstance();
 
         if (savedInstanceState == null) {
@@ -100,6 +106,9 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         viewContentShadow = findViewById(R.id.view_content_shadow);
         pbPostLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_loading);
+        pbPostBookmarkLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_bookmark_loading);
+        layoutPostBookmarkLoading = (LinearLayout) findViewById(R.id.layout_post_bookmark_loading);
+        viewPostBookmarkLoading = findViewById(R.id.view_post_bookmark_loading);
         btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
         btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
@@ -116,6 +125,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         checkIsBookmarked(postItem.getId());
+        hideBookmarkLoading();
     }
 
     private void setToolbar() {
@@ -241,12 +251,13 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     public void onMenuBookmarkClick() {
         if (isBookmark()) {
             removePostFromBookmark();
+            BookmarkManager.getInstance().removeBookmarkImageFile(post.getId());
             setBookmark(false);
             showSnackbar("Removed from bookmark.");
         } else {
-            addBookmarkToRealm();
-            setBookmark(true);
-            showSnackbar("Added to bookmark.");
+            showBookmarkLoading();
+            addBookmarkToDatabase();
+            downloadImageToBookmark();
         }
         closeMenu();
     }
@@ -272,37 +283,50 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
 
     public void removePostFromBookmark() {
         realm.beginTransaction();
-        RealmResults<Bookmark> result = realm.where(Bookmark.class)
+        RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
                 .equalTo("postId", postItem.getId())
                 .findAll();
         result.clear();
         realm.commitTransaction();
     }
 
-    public void addBookmarkToRealm() {
+    public void addBookmarkToDatabase() {
         realm.beginTransaction();
-        Bookmark postOffline = realm.createObject(Bookmark.class);
-        postOffline.setPostId(postItem.getId());
-        postOffline.setTitle(postItem.getTitle());
-        postOffline.setContent(postItem.getContent());
-        postOffline.setPublished(postItem.getPublished());
-        postOffline.setUpdated(postItem.getUpdated());
-        postOffline.setUrl(postItem.getUrl());
-        RealmList<BookmarkLabel> labelList = new RealmList<>();
-        if (postItem != null) {
-            for (String label : postItem.getLabels()) {
-                BookmarkLabel bookmarkLabel = realm.createObject(BookmarkLabel.class);
-                bookmarkLabel.setLabel(label);
-                labelList.add(bookmarkLabel);
+        BookmarkRealm postOffline = realm.createObject(BookmarkRealm.class);
+        postOffline.setPostId(post.getId());
+        postOffline.setTitle(post.getTitle());
+        postOffline.setContent(post.getContent());
+        postOffline.setPublished(post.getPublished());
+        postOffline.setUpdated(post.getUpdated());
+        postOffline.setUrl(post.getUrl());
+        RealmList<BookmarkLabelRealm> labelList = new RealmList<>();
+        if (post.getLabels() != null) {
+            for (String label : post.getLabels()) {
+                BookmarkLabelRealm bookmarkLabelRealm = realm.createObject(BookmarkLabelRealm.class);
+                bookmarkLabelRealm.setLabel(label);
+                labelList.add(bookmarkLabelRealm);
             }
         }
-        postOffline.setLabels(labelList);
+        postOffline.setLabelList(labelList);
+        RealmList<BookmarkImageRealm> imageList = new RealmList<>();
+        if (postItem.getImages() != null) {
+            for (PostList.Image image : postItem.getImages()) {
+                BookmarkImageRealm bookmarkImageRealm = realm.createObject(BookmarkImageRealm.class);
+                bookmarkImageRealm.setUrl(image.getUrl());
+                imageList.add(bookmarkImageRealm);
+            }
+        }
+        postOffline.setImageList(imageList);
         realm.copyToRealm(postOffline);
         realm.commitTransaction();
     }
 
+    private void downloadImageToBookmark() {
+        BookmarkManager.getInstance().downloadImageToBookmark(post.getId(), postList, this);
+    }
+
     public void checkIsBookmarked(String postId) {
-        final RealmResults<Bookmark> result = realm.where(Bookmark.class)
+        final RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
                 .equalTo("postId", postId)
                 .findAllAsync();
         result.addChangeListener(new RealmChangeListener() {
@@ -339,5 +363,24 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     private void hideLoading() {
         pbPostLoading.hideNow();
         rvPostList.setVisibility(View.VISIBLE);
+    }
+
+    private void showBookmarkLoading() {
+        pbPostBookmarkLoading.showNow();
+        layoutPostBookmarkLoading.setVisibility(View.VISIBLE);
+        viewPostBookmarkLoading.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBookmarkLoading() {
+        pbPostBookmarkLoading.hideNow();
+        layoutPostBookmarkLoading.setVisibility(View.GONE);
+        viewPostBookmarkLoading.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDownloadSuccess() {
+        hideBookmarkLoading();
+        setBookmark(true);
+        showSnackbar("Added to bookmark.");
     }
 }

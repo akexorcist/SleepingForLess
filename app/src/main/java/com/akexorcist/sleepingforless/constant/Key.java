@@ -5,6 +5,7 @@ package com.akexorcist.sleepingforless.constant;
  */
 public class Key {
     public static final String POST_ID = "post_id";
+    public static final String BOOKMARK = "bookmark";
     public static final String SEARCH_REQUEST = "search_request";
     public static final String KEY_FULL_URL = "key_full_url";
 }

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,7 +37,7 @@ public class DebugPostActivity extends SFLActivity implements CompoundButton.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_reader_debug);
+        setContentView(R.layout.activity_post_debug);
 
         layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
         cbPlainText = (CheckBox) findViewById(R.id.cb_plain_text);

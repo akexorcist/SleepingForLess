@@ -1,12 +1,7 @@
 package com.akexorcist.sleepingforless.util;
 
 import android.graphics.Color;
-import android.text.Spannable;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 
-import com.akexorcist.sleepingforless.constant.TestConstant;
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.CodePost;
@@ -238,7 +233,7 @@ public class ContentUtility {
     }
 
     public String removeLabelFromTitle(String title) {
-        return title.replace("^[.+?]", "")
+        return title.replace("^[.*?]", "")
                 .trim();
     }
 }
