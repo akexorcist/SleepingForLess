@@ -27,14 +27,12 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-public class SearchResultActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
+public class SearchResultActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
-    private FooterLayout flMenu;
     private DilatingDotsProgressBar pbSearchResultList;
     private RecyclerView rvSearchResultList;
     private View viewContentShadow;
-    private ImageView ivMenuSearch;
 
     private FeedAdapter adapter;
     private PostList postList;
@@ -66,17 +64,12 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         viewContentShadow = findViewById(R.id.view_content_shadow);
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
-        flMenu = (FooterLayout) findViewById(R.id.fl_menu);
-        ivMenuSearch = (ImageView) findViewById(R.id.iv_menu_search);
     }
 
     private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
-        ivMenuSearch.setOnClickListener(this);
-        ivMenuSearch.setOnTouchListener(this);
-        flMenu.setFab(fabMenu);
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
@@ -124,30 +117,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v == fabMenu) {
-            openMenu();
-        } else if (v == viewContentShadow) {
-            closeMenu();
-        } else if (v == ivMenuSearch) {
             onMenuSearchClick();
-        }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            scaleMenuButtonUp(v);
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            scaleMenuButtonBack(v);
-        }
-        return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (flMenu.isFabExpanded()) {
-            closeMenu();
-        } else {
-            super.onBackPressed();
         }
     }
 
@@ -179,31 +149,8 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         }
     }
 
-    public void scaleMenuButtonUp(View v) {
-        AnimationUtility.getInstance().scaleUp(v, 200);
-    }
-
-    public void scaleMenuButtonBack(View v) {
-        AnimationUtility.getInstance().scaleBack(v, 200);
-    }
-
-    public void openMenu() {
-        flMenu.expandFab();
-        AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
-    }
-
-    public void closeMenu() {
-        flMenu.contractFab();
-        AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
-    }
-
     public void onMenuSearchClick() {
         openActivity(SearchActivity.class);
-        closeMenu();
-    }
-
-    public void onMenuSettingsClick() {
-        Log.e("Check", "onMenuSettingsClick");
     }
 
     private void showLoading() {
