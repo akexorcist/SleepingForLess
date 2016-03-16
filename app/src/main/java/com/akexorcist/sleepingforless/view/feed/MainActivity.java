@@ -42,6 +42,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private FooterLayout flMenu;
     private View viewContentShadow;
     private MenuButton btnMenuBookmark;
+    private MenuButton btnMenuRefresh;
     private MenuButton btnMenuSearch;
     private MenuButton btnMenuSort;
     private MenuButton btnMenuSettings;
@@ -70,6 +71,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
+        btnMenuRefresh = (MenuButton) findViewById(R.id.btn_menu_refresh);
         btnMenuSearch = (MenuButton) findViewById(R.id.btn_menu_search);
         btnMenuSort = (MenuButton) findViewById(R.id.btn_menu_sort);
         btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
@@ -80,10 +82,12 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
+        btnMenuRefresh.setOnClickListener(this);
         btnMenuSearch.setOnClickListener(this);
         btnMenuSort.setOnClickListener(this);
         btnMenuSettings.setOnClickListener(this);
         btnMenuBookmark.setOnTouchListener(this);
+        btnMenuRefresh.setOnTouchListener(this);
         btnMenuSearch.setOnTouchListener(this);
         btnMenuSort.setOnTouchListener(this);
         btnMenuSettings.setOnTouchListener(this);
@@ -135,6 +139,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
             closeMenu();
         } else if (v == btnMenuBookmark) {
             onMenuBookmarkClick();
+        } else if (v == btnMenuRefresh) {
+            onMenuRefreshClick();
         } else if (v == btnMenuSearch) {
             onMenuSearchClick();
         } else if (v == btnMenuSort) {
@@ -218,6 +224,11 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     public void onMenuBookmarkClick() {
         openActivity(BookmarkActivity.class);
+        closeMenu();
+    }
+
+    public void onMenuRefreshClick() {
+        callService();
         closeMenu();
     }
 
