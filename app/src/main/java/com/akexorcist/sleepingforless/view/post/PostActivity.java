@@ -258,6 +258,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         } else {
             addPostToBookmark();
         }
+        closeMenu();
     }
 
     public void onMenuOfflineSaveClick() {
@@ -266,6 +267,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         } else {
             syncOfflineData();
         }
+        closeMenu();
     }
 
     public void onMenuShareClick() {
