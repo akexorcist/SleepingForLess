@@ -26,7 +26,7 @@ import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
-public class SearchResultActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, FeedAdapter.ItemListener {
+public class SearchResultActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -36,7 +36,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private ImageView ivMenuSettings;
 
     private FeedAdapter adapter;
-
+    private PostList postList;
     private SearchRequest request;
 
     @Override
@@ -44,6 +44,21 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
 
+        if (savedInstanceState == null) {
+            restoreIntentData();
+        }
+
+        bindView();
+        setupView();
+        setToolbar();
+        callService();
+    }
+
+    public void callService() {
+        searchPost(request.getKeyword());
+    }
+
+    private void bindView() {
         rvSearchResultList = (RecyclerView) findViewById(R.id.rv_search_result_list);
         viewContentShadow = findViewById(R.id.view_content_shadow);
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
@@ -51,11 +66,9 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         ivMenuSearch = (ImageView) findViewById(R.id.iv_menu_search);
         ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
+    }
 
-        if (savedInstanceState == null) {
-            setupFirstRun();
-        }
-
+    private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
@@ -66,14 +79,14 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         flMenu.setFab(fabMenu);
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
+        adapter.setLoadMoreListener(this);
         rvSearchResultList.setLayoutManager(new LinearLayoutManager(this));
-
-        setToolbar("Search Result : " + request.getKeyword());
+        rvSearchResultList.setAdapter(adapter);
     }
 
-    private void setToolbar(String title) {
+    private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(title));
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle("Search Result : " + request.getKeyword()));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,25 +96,29 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         });
     }
 
-    private void setupFirstRun() {
+    private void restoreIntentData() {
         request = Parcels.unwrap(getIntent().getParcelableExtra(Key.SEARCH_REQUEST));
-        searchPost();
     }
-    private void searchPost() {
-        BloggerManager.getInstance().searchPost(request.getKeyword());
+
+    private void searchPost(String keyword) {
+        BloggerManager.getInstance().searchPost(keyword);
+    }
+
+    private void searchMorePost(String nextPageToken) {
+        BloggerManager.getInstance().getNextPostList(nextPageToken, false);
     }
 
     @Subscribe
     public void onPostListSuccess(PostList postList) {
-        Log.e("Check", "onPostListSuccess");
+        this.postList = postList;
         setPostList(postList);
     }
 
     public void setPostList(PostList postList) {
         if (postList != null) {
-            adapter.setPostListItem(postList.getItems());
-            adapter.notifyDataSetChanged();
-            rvSearchResultList.setAdapter(adapter);
+            adapter.addPostListItem(postList.getItems());
+//            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
+            adapter.setLoadMoreAvailable(false);
         }
     }
 
@@ -155,12 +172,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         Log.e("Check", "onMenuSettingsClick");
     }
 
-    @Subscribe
-    public void onSearchRequest(SearchRequest request) {
-        this.request = request;
-        searchPost();
-    }
-
     @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
@@ -174,5 +185,10 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
         openActivity(DebugPostActivity.class, bundle);
+    }
+
+    @Override
+    public void onLoadMore() {
+        searchMorePost(postList.getNextPageToken());
     }
 }

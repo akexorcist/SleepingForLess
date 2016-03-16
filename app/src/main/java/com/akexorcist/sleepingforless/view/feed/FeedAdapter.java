@@ -12,14 +12,21 @@ import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
-public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int VIEW_TYPE_UNKNOWN = -1;
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
     private ItemListener itemListener;
+    private LoadMoreListener loadMoreListener;
     private List<PostList.Item> itemList;
+    private boolean isLoadMoreAvailable;
 
     public FeedAdapter() {
     }
@@ -36,42 +43,85 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
         this.itemListener = listener;
     }
 
-    @Override
-    public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new FeedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_item, parent, false));
+    public void setLoadMoreListener(LoadMoreListener listener) {
+        this.loadMoreListener = listener;
+    }
+
+    public void setLoadMoreAvailable(boolean available) {
+        isLoadMoreAvailable = available;
+    }
+
+    public void addPostListItem(List<PostList.Item> itemList) {
+        if (itemList == null) {
+            return;
+        }
+        if (this.itemList == null) {
+            this.itemList = new ArrayList<>();
+        }
+        this.itemList.addAll(itemList);
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(final FeedViewHolder holder, int position) {
-        PostList.Item postItem = itemList.get(holder.getAdapterPosition());
-        setTitle(holder.tvTitle, postItem.getTitle());
-        setLabel(holder.tvLabel, postItem.getLabels());
-        setPublishedDate(holder.tvPublishedDate, postItem.getPublished());
-        holder.ivTitle.setImageDrawable(null);
-        if (postItem.isImageAvailable()) {
-            holder.ivTitle.setVisibility(View.VISIBLE);
-            String url = postItem.getImages().get(0).getUrl();
-            loadItemResource(holder, url);
-        } else {
-            holder.ivTitle.setVisibility(View.GONE);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (itemList == null || itemList.size() == 0) {
+            return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_blank, parent, false));
+        } else if (viewType == VIEW_TYPE_ITEM) {
+            return new FeedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_item, parent, false));
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_loading, parent, false));
         }
-        holder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (itemListener != null) {
-                    itemListener.onItemClick(holder, itemList.get(holder.getAdapterPosition()));
-                }
+        return null;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (itemList == null) {
+            return VIEW_TYPE_UNKNOWN;
+        }
+        return position < itemList.size() ? VIEW_TYPE_ITEM : VIEW_TYPE_LOADING;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int viewType = getItemViewType(position);
+        if (viewType == VIEW_TYPE_ITEM) {
+            final FeedViewHolder feedViewHolder = (FeedViewHolder) holder;
+            PostList.Item postItem = itemList.get(holder.getAdapterPosition());
+            setTitle(feedViewHolder.tvTitle, postItem.getTitle());
+            setLabel(feedViewHolder.tvLabel, postItem.getLabels());
+            setPublishedDate(feedViewHolder.tvPublishedDate, postItem.getPublished());
+            feedViewHolder.ivTitle.setImageDrawable(null);
+            if (postItem.isImageAvailable()) {
+                feedViewHolder.ivTitle.setVisibility(View.VISIBLE);
+                String url = postItem.getImages().get(0).getUrl();
+                loadItemResource(feedViewHolder, url);
+            } else {
+                feedViewHolder.ivTitle.setVisibility(View.GONE);
             }
-        });
-        holder.mrlFeedButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (itemListener != null) {
-                    itemListener.onItemLongClick(holder, itemList.get(holder.getAdapterPosition()));
+            feedViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemListener != null) {
+                        itemListener.onItemClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
+                    }
                 }
-                return true;
+            });
+            feedViewHolder.mrlFeedButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (itemListener != null) {
+                        itemListener.onItemLongClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
+                    }
+                    return true;
+                }
+            });
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
+            if (isLoadMoreAvailable && loadMoreListener != null) {
+                loadMoreListener.onLoadMore();
             }
-        });
+        }
     }
 
     private void setTitle(TextView tvTitle, String title) {
@@ -115,12 +165,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        if (itemList == null) {
+            return 1;
+        }
+        return isLoadMoreAvailable ? itemList.size() + 1 : itemList.size();
     }
 
     public interface ItemListener {
         void onItemClick(FeedViewHolder holder, PostList.Item item);
 
         void onItemLongClick(FeedViewHolder holder, PostList.Item item);
+    }
+
+    public interface LoadMoreListener {
+        void onLoadMore();
     }
 }

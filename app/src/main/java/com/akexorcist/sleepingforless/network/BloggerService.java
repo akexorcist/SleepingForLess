@@ -18,7 +18,7 @@ public interface BloggerService {
     Call<Blog> getBlog();
 
     @GET(BloggerUrl.POST_LIST)
-    Call<PostList> getPostList(@Path("blogId") String blogId, @Query("orderBy") String orderBy, @Query("maxResults") int max, @Query("fetchBodies") boolean includeBody, @Query("fetchImages") boolean includeImage);
+    Call<PostList> getPostList(@Path("blogId") String blogId, @Query("orderBy") String orderBy, @Query("maxResults") int max, @Query("fetchBodies") boolean includeBody, @Query("fetchImages") boolean includeImage, @Query("pageToken") String pageToken);
 
     @GET(BloggerUrl.POST)
     Call<Post> getPost(@Path("blogId") String blogId, @Path("postId") String postId);

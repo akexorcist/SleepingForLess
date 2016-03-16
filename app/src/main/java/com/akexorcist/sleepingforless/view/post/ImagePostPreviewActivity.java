@@ -12,6 +12,7 @@ import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -36,12 +37,17 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
 
         getBundleFromIntent();
 
-        Glide.with(this).load(fullUrl).asBitmap().thumbnail(0.2f).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                ivPreview.setImage(ImageSource.bitmap(resource));
-            }
-        });
+        Glide.with(this)
+                .load(fullUrl)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.1f)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        ivPreview.setImage(ImageSource.bitmap(resource));
+                    }
+                });
     }
 
     public void getBundleFromIntent() {

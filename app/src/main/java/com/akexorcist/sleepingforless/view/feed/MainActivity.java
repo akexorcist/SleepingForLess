@@ -31,7 +31,7 @@ import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
-public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener {
+public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener {
     private Toolbar tbTitle;
     private FeedAdapter adapter;
     private RecyclerView rvFeedList;
@@ -43,12 +43,21 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private MenuButton btnMenuSettings;
     private BottomSheetLayout bslMenu;
 
+    private PostList postList;
+    private String sortType = BloggerManager.SORT_PUBLISHED_DATE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("Check", "onCreate");
         setContentView(R.layout.activity_main);
 
+        bindView();
+        setupView();
+        setToolbar();
+        callService();
+    }
+
+    private void bindView() {
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
@@ -58,7 +67,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         btnMenuSearch = (MenuButton) findViewById(R.id.btn_menu_search);
         btnMenuSort = (MenuButton) findViewById(R.id.btn_menu_sort);
         btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
+    }
 
+    private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
@@ -72,15 +83,21 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
+        adapter.setLoadMoreListener(this);
         rvFeedList.setLayoutManager(new LinearLayoutManager(this));
-
-        setToolbar();
-        requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
+        rvFeedList.setAdapter(adapter);
     }
 
-    private void requestPostList(String orderBy) {
-        adapter.clear();
-        BloggerManager.getInstance().getPostList(orderBy);
+    private void callService() {
+        requestPostList(sortType);
+    }
+
+    private void requestPostList(String sortBy) {
+        BloggerManager.getInstance().getPostList(sortBy);
+    }
+
+    private void requestMorePostList(String sortBy, String nextPageToken) {
+        BloggerManager.getInstance().getNextPostList(sortBy, nextPageToken);
     }
 
     private void setToolbar() {
@@ -89,19 +106,10 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     @Subscribe
-    public void onBlogSuccess(Blog blog) {
-        Log.e("Check", "onBlogSuccess");
-        Log.e("Check", "Name : " + blog.getName());
-    }
-
-    @Subscribe
     public void onPostListSuccess(PostList postList) {
         Log.e("Check", "onBlogSuccess");
-
+        this.postList = postList;
         setPostList(postList);
-        PostList.Item item = postList.getItems().get(0);
-        Log.e("Check", "Title : " + item.getTitle());
-        Log.e("Check", "Image : " + item.getImages().get(0).getUrl());
     }
 
     @Subscribe
@@ -143,9 +151,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     public void setPostList(PostList postList) {
         if (postList != null) {
-            adapter.setPostListItem(postList.getItems());
-            adapter.notifyDataSetChanged();
-            rvFeedList.setAdapter(adapter);
+            adapter.addPostListItem(postList.getItems());
+            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
         }
     }
 
@@ -218,11 +225,13 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
                 if (bslMenu.isSheetShowing()) {
                     bslMenu.dismissSheet();
                 }
+                adapter.clear();
                 if (item.getItemId() == R.id.action_sort_by_published_date) {
-                    requestPostList(BloggerManager.ORDER_PUBLISHED_DATE);
+                    sortType = BloggerManager.SORT_PUBLISHED_DATE;
                 } else if (item.getItemId() == R.id.action_sort_by_updated_date) {
-                    requestPostList(BloggerManager.ORDER_UPDATED_DATE);
+                    sortType = BloggerManager.SORT_UPDATED_DATE;
                 }
+                requestPostList(sortType);
                 return true;
             }
         });
@@ -235,5 +244,10 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.SEARCH_REQUEST, Parcels.wrap(request));
         openActivity(SearchResultActivity.class, bundle);
+    }
+
+    @Override
+    public void onLoadMore() {
+        requestMorePostList(sortType, postList.getNextPageToken());
     }
 }
