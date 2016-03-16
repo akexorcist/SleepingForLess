@@ -24,7 +24,27 @@ public class AnimationUtility {
     public static final int DEFAULT_DURATION = 300;
     public static final int DEFAULT_START_DELAY = 0;
 
-    public void fadeOut(final View view, int duration, long startDelay) {
+    public void fadeOut(View view) {
+        fadeOut(view, DEFAULT_DURATION, DEFAULT_START_DELAY, null);
+    }
+
+    public void fadeOut(View view, AnimationFinishCallback callback) {
+        fadeOut(view, DEFAULT_DURATION, DEFAULT_START_DELAY, callback);
+    }
+
+    public void fadeOut(View view, int duration) {
+        fadeOut(view, duration, DEFAULT_START_DELAY, null);
+    }
+
+    public void fadeOut(View view, int duration, AnimationFinishCallback callback) {
+        fadeOut(view, duration, DEFAULT_START_DELAY, callback);
+    }
+
+    public void fadeOut(View view, long startDelay) {
+        fadeOut(view, DEFAULT_DURATION, startDelay, null);
+    }
+
+    public void fadeOut(final View view, int duration, long startDelay, final AnimationFinishCallback callback) {
         ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_fade_out);
         objectAnimator.setTarget(view);
         objectAnimator.setDuration(duration);
@@ -37,6 +57,9 @@ public class AnimationUtility {
             @Override
             public void onAnimationEnd(Animator animation) {
                 view.setVisibility(View.GONE);
+                if (callback != null) {
+                    callback.onAnimationFinished();
+                }
             }
 
             @Override
@@ -50,17 +73,16 @@ public class AnimationUtility {
         objectAnimator.start();
     }
 
-    public void fadeOut(View view) {
-        fadeOut(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
+    public void fadeIn(View view) {
+        fadeIn(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
     }
 
-    public void fadeOut(View view, int duration) {
-        fadeOut(view, duration, DEFAULT_START_DELAY);
+    public void fadeIn(View view, int duration) {
+        fadeIn(view, duration, DEFAULT_START_DELAY);
     }
 
-
-    public void fadeOut(View view, long startDelay) {
-        fadeOut(view, DEFAULT_DURATION, startDelay);
+    public void fadeIn(View view, long startDelay) {
+        fadeIn(view, DEFAULT_DURATION, startDelay);
     }
 
     public void fadeIn(final View view, int duration, long startDelay) {
@@ -89,18 +111,6 @@ public class AnimationUtility {
             }
         });
         objectAnimator.start();
-    }
-
-    public void fadeIn(View view) {
-        fadeIn(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
-    }
-
-    public void fadeIn(View view, int duration) {
-        fadeIn(view, duration, DEFAULT_START_DELAY);
-    }
-
-    public void fadeIn(View view, long startDelay) {
-        fadeIn(view, DEFAULT_DURATION, startDelay);
     }
 
     public void scaleUp(final View view, int duration, long startDelay) {
@@ -141,5 +151,9 @@ public class AnimationUtility {
 
     public void scaleBack(View view) {
         scaleBack(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
+    }
+
+    public interface AnimationFinishCallback {
+        void onAnimationFinished();
     }
 }
