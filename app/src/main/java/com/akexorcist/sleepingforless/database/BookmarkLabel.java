@@ -5,10 +5,10 @@ import io.realm.RealmObject;
 /**
  * Created by Akexorcist on 3/15/2016 AD.
  */
-public class LabelOffline extends RealmObject {
+public class BookmarkLabel extends RealmObject {
     private String label;
 
-    public LabelOffline() {
+    public BookmarkLabel() {
     }
 
     public String getLabel() {

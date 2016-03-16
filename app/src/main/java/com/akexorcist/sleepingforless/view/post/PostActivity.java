@@ -18,8 +18,7 @@ import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.Bookmark;
-import com.akexorcist.sleepingforless.database.LabelOffline;
-import com.akexorcist.sleepingforless.database.PostOffline;
+import com.akexorcist.sleepingforless.database.BookmarkLabel;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
@@ -50,11 +49,9 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
-    private MenuButton btnMenuOfflineSave;
     private DilatingDotsProgressBar pbPostLoading;
     private MenuButton btnMenuBookmark;
     private MenuButton btnMenuShare;
-    private MenuButton btnMenuSettings;
     private BottomSheetLayout bslMenu;
     private RecyclerView rvPostList;
     private PostAdapter adapter;
@@ -103,10 +100,8 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         viewContentShadow = findViewById(R.id.view_content_shadow);
         pbPostLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_loading);
-        btnMenuOfflineSave = (MenuButton) findViewById(R.id.btn_menu_offline_save);
         btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
         btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
-        btnMenuSettings = (MenuButton) findViewById(R.id.btn_menu_settings);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         rvPostList = (RecyclerView) findViewById(R.id.rv_post_list);
     }
@@ -115,17 +110,12 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
-        btnMenuOfflineSave.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuShare.setOnClickListener(this);
-        btnMenuSettings.setOnClickListener(this);
-        btnMenuOfflineSave.setOnTouchListener(this);
         btnMenuBookmark.setOnTouchListener(this);
         btnMenuShare.setOnTouchListener(this);
-        btnMenuSettings.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         checkIsBookmarked(postItem.getId());
-        checkIsOfflineSaved(postItem.getId());
     }
 
     private void setToolbar() {
@@ -169,12 +159,8 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
             closeMenu();
         } else if (v == btnMenuBookmark) {
             onMenuBookmarkClick();
-        } else if (v == btnMenuOfflineSave) {
-            onMenuOfflineSaveClick();
         } else if (v == btnMenuShare) {
             onMenuShareClick();
-        } else if (v == btnMenuSettings) {
-            onMenuSettingsClick();
         }
     }
 
@@ -255,17 +241,12 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     public void onMenuBookmarkClick() {
         if (isBookmark()) {
             removePostFromBookmark();
+            setBookmark(false);
+            showSnackbar("Removed from bookmark.");
         } else {
-            addPostToBookmark();
-        }
-        closeMenu();
-    }
-
-    public void onMenuOfflineSaveClick() {
-        if (isOfflineSave()) {
-            saveOfflineData();
-        } else {
-            syncOfflineData();
+            addBookmarkToRealm();
+            setBookmark(true);
+            showSnackbar("Added to bookmark.");
         }
         closeMenu();
     }
@@ -273,10 +254,6 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     public void onMenuShareClick() {
         sharePost(postItem.getUrl());
         closeMenu();
-    }
-
-    public void onMenuSettingsClick() {
-        Log.e("Check", "onMenuSettingsClick");
     }
 
     public void sharePost(String url) {
@@ -293,72 +270,34 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         bslMenu.showWithSheetView(intentPickerSheet);
     }
 
-    public void addPostToBookmark() {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Bookmark bookmark = realm.createObject(Bookmark.class);
-                bookmark.setPostId(postItem.getId());
-                bookmark.setTitle(postItem.getTitle());
-                setBookmark(true);
-                showSnackbar("Added to bookmark.");
-            }
-        });
-    }
-
     public void removePostFromBookmark() {
+        realm.beginTransaction();
         RealmResults<Bookmark> result = realm.where(Bookmark.class)
                 .equalTo("postId", postItem.getId())
-                .findAllAsync();
-        realm.beginTransaction();
+                .findAll();
         result.clear();
         realm.commitTransaction();
-        setBookmark(false);
-        showSnackbar("Removed from bookmark.");
     }
 
-    public void saveOfflineDataToRealm() {
+    public void addBookmarkToRealm() {
         realm.beginTransaction();
-        PostOffline postOffline = realm.createObject(PostOffline.class);
+        Bookmark postOffline = realm.createObject(Bookmark.class);
         postOffline.setPostId(postItem.getId());
         postOffline.setTitle(postItem.getTitle());
         postOffline.setContent(postItem.getContent());
         postOffline.setPublished(postItem.getPublished());
         postOffline.setUpdated(postItem.getUpdated());
         postOffline.setUrl(postItem.getUrl());
-        RealmList<LabelOffline> labelList = new RealmList<>();
+        RealmList<BookmarkLabel> labelList = new RealmList<>();
         if (postItem != null) {
             for (String label : postItem.getLabels()) {
-                LabelOffline labelOffline = realm.createObject(LabelOffline.class);
-                labelOffline.setLabel(label);
-                labelList.add(labelOffline);
+                BookmarkLabel bookmarkLabel = realm.createObject(BookmarkLabel.class);
+                bookmarkLabel.setLabel(label);
+                labelList.add(bookmarkLabel);
             }
         }
         postOffline.setLabels(labelList);
-
         realm.copyToRealm(postOffline);
-        realm.commitTransaction();
-    }
-
-    public void saveOfflineData() {
-        saveOfflineDataToRealm();
-        setOfflineSaveAvailable(true);
-        showSnackbar("Offline saved.");
-    }
-
-    public void syncOfflineData() {
-        syncOfflineDataToRealm();
-        saveOfflineData();
-        setOfflineSaveAvailable(false);
-        showSnackbar("Synced.");
-    }
-
-    public void syncOfflineDataToRealm() {
-        RealmResults<Bookmark> result = realm.where(Bookmark.class)
-                .equalTo("postId", postItem.getId())
-                .findAllAsync();
-        realm.beginTransaction();
-        result.clear();
         realm.commitTransaction();
     }
 
@@ -382,32 +321,10 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     public boolean isBookmark() {
+        if (btnMenuBookmark.getTag() == null) {
+            btnMenuBookmark.setTag(R.drawable.vector_ic_bookmark_check);
+        }
         return (int) btnMenuBookmark.getTag() == R.drawable.vector_ic_bookmark_check;
-    }
-
-    public void checkIsOfflineSaved(String postId) {
-        final RealmResults<PostOffline> result = realm.where(PostOffline.class)
-                .equalTo("postId", postId)
-                .findAllAsync();
-        result.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                setOfflineSaveAvailable(result.size() == 0);
-                result.removeChangeListeners();
-            }
-        });
-    }
-
-    public void setOfflineSaveAvailable(boolean state) {
-        int iconResourceId = (state) ? R.drawable.vector_ic_offline_save : R.drawable.vector_ic_sync;
-        String text = (state) ? "Save" : "Sync";
-        btnMenuOfflineSave.setIconResource(iconResourceId);
-        btnMenuOfflineSave.setTag(iconResourceId);
-        btnMenuOfflineSave.setText(text);
-    }
-
-    public boolean isOfflineSave() {
-        return (int) btnMenuBookmark.getTag() == R.drawable.vector_ic_offline_save;
     }
 
     public void showSnackbar(String message) {

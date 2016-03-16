@@ -149,6 +149,15 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+        if (flMenu.isFabExpanded()) {
+            closeMenu();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));

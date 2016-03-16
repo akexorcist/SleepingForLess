@@ -118,7 +118,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         } else if (viewType == VIEW_TYPE_LOADING) {
             LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
-            feedViewHolder.pbPostListLoading.showNow();
+//            feedViewHolder.pbPostListLoading.showNow();
             if (isLoadMoreAvailable && loadMoreListener != null) {
                 loadMoreListener.onLoadMore();
             }

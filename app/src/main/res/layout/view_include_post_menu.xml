@@ -33,15 +33,6 @@
             android:orientation="horizontal">
 
             <com.akexorcist.sleepingforless.widget.MenuButton
-                android:id="@+id/btn_menu_offline_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                app:mbIconSrc="@drawable/vector_ic_offline_save"
-                app:mbText="Save" />
-
-            <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,15 +49,6 @@
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_share"
                 app:mbText="Share" />
-
-            <com.akexorcist.sleepingforless.widget.MenuButton
-                android:id="@+id/btn_menu_settings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                app:mbIconSrc="@drawable/vector_ic_settings"
-                app:mbText="Settings" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>
