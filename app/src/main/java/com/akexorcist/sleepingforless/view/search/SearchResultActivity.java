@@ -35,7 +35,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private RecyclerView rvSearchResultList;
     private View viewContentShadow;
     private ImageView ivMenuSearch;
-    private ImageView ivMenuSettings;
 
     private FeedAdapter adapter;
     private PostList postList;
@@ -69,7 +68,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         ivMenuSearch = (ImageView) findViewById(R.id.iv_menu_search);
-        ivMenuSettings = (ImageView) findViewById(R.id.iv_menu_settings);
     }
 
     private void setupView() {
@@ -77,9 +75,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
         ivMenuSearch.setOnClickListener(this);
-        ivMenuSettings.setOnClickListener(this);
         ivMenuSearch.setOnTouchListener(this);
-        ivMenuSettings.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
@@ -133,8 +129,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
             closeMenu();
         } else if (v == ivMenuSearch) {
             onMenuSearchClick();
-        } else if (v == ivMenuSettings) {
-            onMenuSettingsClick();
         }
     }
 

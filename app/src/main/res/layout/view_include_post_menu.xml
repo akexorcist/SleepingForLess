@@ -39,7 +39,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_bookmark_uncheck"
-                app:mbText="Bookmark" />
+                app:mbText="Add Bookmark" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_share"

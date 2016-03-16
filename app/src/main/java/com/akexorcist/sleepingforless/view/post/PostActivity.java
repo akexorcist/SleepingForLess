@@ -340,8 +340,10 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
 
     public void setBookmark(boolean state) {
         int drawableResourceId = (state) ? R.drawable.vector_ic_bookmark_check : R.drawable.vector_ic_bookmark_uncheck;
+        String text = (state) ? "Remove Bookmark" : "Add Bookmark";
         btnMenuBookmark.setIconResource(drawableResourceId);
         btnMenuBookmark.setTag(drawableResourceId);
+        btnMenuBookmark.setText(text);
     }
 
     public boolean isBookmark() {

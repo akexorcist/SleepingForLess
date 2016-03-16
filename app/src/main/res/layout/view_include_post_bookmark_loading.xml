@@ -5,7 +5,7 @@
         android:id="@+id/view_post_bookmark_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/alpha_black" />
+        android:background="@color/dark_alpha_black" />
 
     <LinearLayout
         android:id="@+id/layout_post_bookmark_loading"
@@ -26,7 +26,7 @@
 
         <com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar
             android:id="@+id/pb_post_bookmark_loading"
-            style="@style/DotsProgressBar.Primary"
+            style="@style/DotsProgressBar.White"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -43,18 +43,6 @@
                 android:padding="10dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/vector_ic_search" />
-
-            <ImageView
-                android:id="@+id/iv_menu_settings"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@null"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/vector_ic_settings" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>
