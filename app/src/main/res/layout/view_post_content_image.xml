@@ -4,12 +4,11 @@
     android:background="@color/white"
     android:layout_height="wrap_content">
 
-    <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
         android:id="@+id/iv_post_content_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:adjustViewBounds="true"
-        android:src="@mipmap/ic_launcher" />
+        android:adjustViewBounds="true" />
 </FrameLayout>
