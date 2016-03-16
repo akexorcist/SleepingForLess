@@ -76,7 +76,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (itemList == null) {
+        if (itemList == null || itemList.size() == 0) {
             return VIEW_TYPE_UNKNOWN;
         }
         return position < itemList.size() ? VIEW_TYPE_ITEM : VIEW_TYPE_LOADING;

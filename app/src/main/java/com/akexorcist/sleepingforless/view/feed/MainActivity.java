@@ -230,13 +230,13 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
                 if (bslMenu.isSheetShowing()) {
                     bslMenu.dismissSheet();
                 }
-                adapter.clear();
-                if (item.getItemId() == R.id.action_sort_by_published_date) {
-                    sortType = BloggerManager.SORT_PUBLISHED_DATE;
-                } else if (item.getItemId() == R.id.action_sort_by_updated_date) {
-                    sortType = BloggerManager.SORT_UPDATED_DATE;
+                if (item.getItemId() == R.id.action_sort_by_published_date &&
+                        !sortType.equalsIgnoreCase(BloggerManager.SORT_PUBLISHED_DATE)) {
+                    changeFeedSortType(BloggerManager.SORT_PUBLISHED_DATE);
+                } else if (item.getItemId() == R.id.action_sort_by_updated_date &&
+                        !sortType.equalsIgnoreCase(BloggerManager.SORT_UPDATED_DATE)) {
+                    changeFeedSortType(BloggerManager.SORT_UPDATED_DATE);
                 }
-                requestPostList(sortType);
                 return true;
             }
         });
@@ -244,15 +244,19 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         bslMenu.showWithSheetView(menuSheetView);
     }
 
+    private void changeFeedSortType(String sortType) {
+        adapter.clear();
+        this.sortType = sortType;
+        callService();
+    }
+
     private void showLoading() {
         rvFeedList.setVisibility(View.GONE);
-//        pbFeedListLoading.setVisibility(View.VISIBLE);
         pbFeedListLoading.showNow();
     }
 
     private void hideLoading() {
         rvFeedList.setVisibility(View.VISIBLE);
-//        pbFeedListLoading.setVisibility(View.GONE);
         pbFeedListLoading.hideNow();
     }
 
