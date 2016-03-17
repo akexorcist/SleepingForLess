@@ -392,12 +392,12 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
                 .setAction(R.string.action_view, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        goToBookmarList();
+                        goToBookmarkList();
                     }
                 }).show();
     }
 
-    private void goToBookmarList() {
+    private void goToBookmarkList() {
         openActivity(BookmarkActivity.class);
     }
 }
