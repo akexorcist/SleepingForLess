@@ -154,7 +154,8 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     @Override
     public void onImageClickListener(String url) {
         Bundle bundle = new Bundle();
-        bundle.putString(Key.KEY_FULL_URL, url);
+        bundle.putString(Key.IMAGE_PATH, url);
+        bundle.putString(Key.POST_ID, bookmark.getPostId());
         openActivity(OfflineImagePostPreviewActivity.class, bundle);
     }
 

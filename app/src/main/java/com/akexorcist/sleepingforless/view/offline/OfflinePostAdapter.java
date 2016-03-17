@@ -155,7 +155,7 @@ public class OfflinePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View v) {
                 if (postClickListener != null) {
-                    postClickListener.onImageClickListener(post.getFullSizeUrl());
+                    postClickListener.onImageClickListener(post.getPostUrl());
                 }
             }
         });

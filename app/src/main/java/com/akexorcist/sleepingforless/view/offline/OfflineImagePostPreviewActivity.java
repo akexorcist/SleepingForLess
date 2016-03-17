@@ -4,17 +4,21 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+
+import java.io.File;
 
 /**
  * Created by Akexorcist on 3/13/2016 AD.
@@ -23,22 +27,34 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
     private SubsamplingScaleImageView ivPreview;
     private FloatingActionButton fabPreviewClose;
     private String url;
+    private String postId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_image_preview);
-        ivPreview = (SubsamplingScaleImageView) findViewById(R.id.iv_preview);
-        fabPreviewClose = (FloatingActionButton) findViewById(R.id.fab_preview_close);
-
-        fabPreviewClose.setOnClickListener(this);
 
         getBundleFromIntent();
 
+        bindView();
+        setupView();
+        setImagePreview();
+    }
+
+    private void bindView() {
+        fabPreviewClose = (FloatingActionButton) findViewById(R.id.fab_preview_close);
+        ivPreview = (SubsamplingScaleImageView) findViewById(R.id.iv_preview);
+    }
+
+    private void setupView() {
+        fabPreviewClose.setOnClickListener(this);
+    }
+
+    private void setImagePreview() {
         Glide.with(this)
-                .load(url)
+                .load(BookmarkManager.getInstance().getBookmarkImageFile(postId, url))
                 .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .thumbnail(0.1f)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
@@ -49,7 +65,8 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
     }
 
     public void getBundleFromIntent() {
-        url = getIntent().getStringExtra(Key.KEY_FULL_URL);
+        url = getIntent().getStringExtra(Key.IMAGE_PATH);
+        postId = getIntent().getStringExtra(Key.POST_ID);
     }
 
     @Override
