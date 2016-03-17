@@ -29,6 +29,7 @@ import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
+import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
@@ -213,6 +214,13 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         ExternalBrowserUtility.getInstance().open(this, url);
     }
 
+    @Override
+    public void onDownloadSuccess() {
+        hideBookmarkLoading();
+        setBookmark(true);
+        showBookmarkAddedMessage();
+    }
+
     private void copyFullUrl(String fullUrl) {
         ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Image URL", fullUrl);
@@ -235,25 +243,25 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    public void closeMenu() {
+    private void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    public void scaleMenuButtonUp(View v) {
+    private void scaleMenuButtonUp(View v) {
         AnimationUtility.getInstance().scaleUp(v, 200);
     }
 
-    public void scaleMenuButtonBack(View v) {
+    private void scaleMenuButtonBack(View v) {
         AnimationUtility.getInstance().scaleBack(v, 200);
     }
 
-    public void onMenuBookmarkClick() {
+    private void onMenuBookmarkClick() {
         if (isBookmark()) {
             removePostFromBookmark();
             BookmarkManager.getInstance().removeBookmarkImageFile(post.getId());
             setBookmark(false);
-            showSnackbar(R.string.removed_from_bookmark);
+            showBookmarkRemovedMessage();
         } else {
             showBookmarkLoading();
             addBookmarkToDatabase();
@@ -262,12 +270,12 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         closeMenu();
     }
 
-    public void onMenuShareClick() {
+    private void onMenuShareClick() {
         sharePost(postItem.getUrl());
         closeMenu();
     }
 
-    public void sharePost(String url) {
+    private void sharePost(String url) {
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, url);
         shareIntent.setType("text/plain");
@@ -281,7 +289,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         bslMenu.showWithSheetView(intentPickerSheet);
     }
 
-    public void removePostFromBookmark() {
+    private void removePostFromBookmark() {
         realm.beginTransaction();
         RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
                 .equalTo("postId", postItem.getId())
@@ -290,7 +298,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         realm.commitTransaction();
     }
 
-    public void addBookmarkToDatabase() {
+    private void addBookmarkToDatabase() {
         realm.beginTransaction();
         BookmarkRealm postOffline = realm.createObject(BookmarkRealm.class);
         postOffline.setPostId(post.getId());
@@ -325,7 +333,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         BookmarkManager.getInstance().downloadImageToBookmark(post.getId(), postList, this);
     }
 
-    public void checkIsBookmarked(String postId) {
+    private void checkIsBookmarked(String postId) {
         final RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
                 .equalTo("postId", postId)
                 .findAllAsync();
@@ -338,7 +346,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         });
     }
 
-    public void setBookmark(boolean state) {
+    private void setBookmark(boolean state) {
         int drawableResourceId = (state) ? R.drawable.vector_ic_bookmark_check : R.drawable.vector_ic_bookmark_uncheck;
         int text = (state) ? R.string.menu_remove_bookmark : R.string.menu_add_bookmark;
         btnMenuBookmark.setIconResource(drawableResourceId);
@@ -346,15 +354,11 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         btnMenuBookmark.setText(text);
     }
 
-    public boolean isBookmark() {
+    private boolean isBookmark() {
         if (btnMenuBookmark.getTag() == null) {
             btnMenuBookmark.setTag(R.drawable.vector_ic_bookmark_check);
         }
         return (int) btnMenuBookmark.getTag() == R.drawable.vector_ic_bookmark_check;
-    }
-
-    public void showSnackbar(int resId) {
-        Snackbar.make(tbTitle, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     private void showLoading() {
@@ -379,10 +383,21 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         viewPostBookmarkLoading.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onDownloadSuccess() {
-        hideBookmarkLoading();
-        setBookmark(true);
-        showSnackbar(R.string.added_to_bookmark);
+    private void showBookmarkRemovedMessage() {
+        Snackbar.make(tbTitle, R.string.removed_from_bookmark, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void showBookmarkAddedMessage() {
+        Snackbar.make(tbTitle, R.string.added_to_bookmark, Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_view, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToBookmarList();
+                    }
+                }).show();
+    }
+
+    private void goToBookmarList() {
+        openActivity(BookmarkActivity.class);
     }
 }
