@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                app:mbIconSrc="@drawable/vector_ic_bookmark_uncheck"
+                app:mbIconSrc="@drawable/vector_ic_update"
                 app:mbText="Update" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                app:mbIconSrc="@drawable/vector_ic_share"
+                app:mbIconSrc="@drawable/vector_ic_remove"
                 app:mbText="Delete" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
