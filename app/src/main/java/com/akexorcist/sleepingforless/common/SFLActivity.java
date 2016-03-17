@@ -20,7 +20,7 @@ public class SFLActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.anim_simple_fade_in, R.anim.anim_simple_fade_out);
+        overridePendingTransition(R.anim.anim_default_fade_in, R.anim.anim_default_fade_out);
     }
 
     protected void openActivity(Class<? extends Activity> activityClass) {
