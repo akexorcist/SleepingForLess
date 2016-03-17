@@ -16,6 +16,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     TextView tvLabel;
     TextView tvPublishedDate;
     ImageView ivTitle;
+    ImageView ivBookmarkIndicator;
     MaterialRippleLayout mrlFeedButton;
 
     public FeedViewHolder(View itemView) {
@@ -24,6 +25,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         tvLabel = (TextView) itemView.findViewById(R.id.tv_feed_label);
         tvPublishedDate = (TextView) itemView.findViewById(R.id.tv_feed_published_date);
         ivTitle = (ImageView) itemView.findViewById(R.id.iv_feed_title);
+        ivBookmarkIndicator = (ImageView) itemView.findViewById(R.id.iv_feed_bookmark_indicator);
         mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_feed_button);
     }
 }

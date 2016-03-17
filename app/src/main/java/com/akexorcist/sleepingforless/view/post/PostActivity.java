@@ -29,6 +29,7 @@ import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
+import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
@@ -48,7 +49,6 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class PostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
-    private Realm realm;
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -71,7 +71,6 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        realm = Realm.getDefaultInstance();
 
         if (savedInstanceState == null) {
             restoreIntentData();
@@ -93,12 +92,6 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     protected void onStop() {
         super.onStop();
         ExternalBrowserUtility.getInstance().unbindService(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
     }
 
     private void bindView() {
@@ -222,9 +215,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     private void copyFullUrl(String fullUrl) {
-        ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("Image URL", fullUrl);
-        clipboard.setPrimaryClip(clip);
+        Utility.getInstance().copyTextToClipboard("Image URL", fullUrl);
     }
 
     private void setPost(Post post) {
@@ -290,43 +281,11 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     private void removePostFromBookmark() {
-        realm.beginTransaction();
-        RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
-                .equalTo("postId", postItem.getId())
-                .findAll();
-        result.clear();
-        realm.commitTransaction();
+        BookmarkManager.getInstance().removeBookmark(post.getId());
     }
 
     private void addBookmarkToDatabase() {
-        realm.beginTransaction();
-        BookmarkRealm postOffline = realm.createObject(BookmarkRealm.class);
-        postOffline.setPostId(post.getId());
-        postOffline.setTitle(post.getTitle());
-        postOffline.setContent(post.getContent());
-        postOffline.setPublished(post.getPublished());
-        postOffline.setUpdated(post.getUpdated());
-        postOffline.setUrl(post.getUrl());
-        RealmList<BookmarkLabelRealm> labelList = new RealmList<>();
-        if (post.getLabels() != null) {
-            for (String label : post.getLabels()) {
-                BookmarkLabelRealm bookmarkLabelRealm = realm.createObject(BookmarkLabelRealm.class);
-                bookmarkLabelRealm.setLabel(label);
-                labelList.add(bookmarkLabelRealm);
-            }
-        }
-        postOffline.setLabelList(labelList);
-        RealmList<BookmarkImageRealm> imageList = new RealmList<>();
-        if (postItem.getImages() != null) {
-            for (PostList.Image image : postItem.getImages()) {
-                BookmarkImageRealm bookmarkImageRealm = realm.createObject(BookmarkImageRealm.class);
-                bookmarkImageRealm.setUrl(image.getUrl());
-                imageList.add(bookmarkImageRealm);
-            }
-        }
-        postOffline.setImageList(imageList);
-        realm.copyToRealm(postOffline);
-        realm.commitTransaction();
+        BookmarkManager.getInstance().addBookmark(post, postItem);
     }
 
     private void downloadImageToBookmark() {
@@ -334,16 +293,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     private void checkIsBookmarked(String postId) {
-        final RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
-                .equalTo("postId", postId)
-                .findAllAsync();
-        result.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                setBookmark(result.size() > 0);
-                result.removeChangeListeners();
-            }
-        });
+        setBookmark(BookmarkManager.getInstance().isBookmark(postId));
     }
 
     private void setBookmark(boolean state) {

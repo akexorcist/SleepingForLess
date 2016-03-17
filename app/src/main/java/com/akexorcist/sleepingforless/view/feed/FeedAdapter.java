@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.model.PostList;
+import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.bumptech.glide.Glide;
 
@@ -93,6 +94,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             setLabel(feedViewHolder.tvLabel, postItem.getLabels());
             setPublishedDate(feedViewHolder.tvPublishedDate, postItem.getPublished());
             setImage(feedViewHolder.ivTitle, postItem.getImages());
+            setBookmarkIndicator(feedViewHolder.ivBookmarkIndicator, postItem.getId());
             feedViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -156,11 +158,19 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    private void setBookmarkIndicator(ImageView ivBookmarkIndicator, String postId) {
+        if (BookmarkManager.getInstance().isBookmark(postId)) {
+            ivBookmarkIndicator.setVisibility(View.VISIBLE);
+        } else {
+            ivBookmarkIndicator.setVisibility(View.GONE);
+        }
+    }
+
     private void loadItemResource(ImageView ivTitle, String url) {
         Glide.with(ivTitle.getContext())
                 .load(url)
                 .crossFade(200)
-                .thumbnail(0.2f)
+                .thumbnail(0.1f)
                 .centerCrop()
                 .into(ivTitle);
     }

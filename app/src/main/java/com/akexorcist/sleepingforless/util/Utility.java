@@ -1,5 +1,9 @@
 package com.akexorcist.sleepingforless.util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
@@ -13,5 +17,9 @@ public class Utility {
         return utility;
     }
 
-//    private String
+    public void copyTextToClipboard(String label, String text) {
+        ClipboardManager clipboard = (android.content.ClipboardManager) Contextor.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(label, text);
+        clipboard.setPrimaryClip(clip);
+    }
 }

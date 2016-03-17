@@ -154,6 +154,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     protected void onResume() {
         super.onResume();
         closeMenu();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

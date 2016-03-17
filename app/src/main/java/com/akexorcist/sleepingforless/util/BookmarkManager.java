@@ -3,6 +3,11 @@ package com.akexorcist.sleepingforless.util;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
+import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
+import com.akexorcist.sleepingforless.database.BookmarkRealm;
+import com.akexorcist.sleepingforless.network.model.Post;
+import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.bumptech.glide.Glide;
@@ -13,6 +18,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by Akexorcist on 3/17/2016 AD.
@@ -116,6 +126,60 @@ public class BookmarkManager {
     private String convertFilename(String filename) {
         return filename.replaceAll("[:/.]", "_")
                 .replaceAll("(png$|gif$|jpg$|jpeg$|bmp$|PNG$|GIF$|JPG$|JPEG$|BMP$)", "");
+    }
+
+    public boolean isBookmark(String postId) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
+                .equalTo("postId", postId)
+                .findAll();
+        boolean isBookmark = result != null && result.size() > 0;
+        realm.close();
+        return isBookmark;
+    }
+
+    public void removeBookmark(String postId) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
+                .equalTo("postId", postId)
+                .findAll();
+        result.clear();
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    public void addBookmark(Post post, PostList.Item postItem) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        BookmarkRealm postOffline = realm.createObject(BookmarkRealm.class);
+        postOffline.setPostId(post.getId());
+        postOffline.setTitle(post.getTitle());
+        postOffline.setContent(post.getContent());
+        postOffline.setPublished(post.getPublished());
+        postOffline.setUpdated(post.getUpdated());
+        postOffline.setUrl(post.getUrl());
+        RealmList<BookmarkLabelRealm> labelList = new RealmList<>();
+        if (post.getLabels() != null) {
+            for (String label : post.getLabels()) {
+                BookmarkLabelRealm bookmarkLabelRealm = realm.createObject(BookmarkLabelRealm.class);
+                bookmarkLabelRealm.setLabel(label);
+                labelList.add(bookmarkLabelRealm);
+            }
+        }
+        postOffline.setLabelList(labelList);
+        RealmList<BookmarkImageRealm> imageList = new RealmList<>();
+        if (postItem.getImages() != null) {
+            for (PostList.Image image : postItem.getImages()) {
+                BookmarkImageRealm bookmarkImageRealm = realm.createObject(BookmarkImageRealm.class);
+                bookmarkImageRealm.setUrl(image.getUrl());
+                imageList.add(bookmarkImageRealm);
+            }
+        }
+        postOffline.setImageList(imageList);
+        realm.copyToRealm(postOffline);
+        realm.commitTransaction();
+        realm.close();
     }
 
     public interface DownloadCallback {
