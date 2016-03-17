@@ -4,6 +4,7 @@
     <string name="download_image_successful">"Saved image to Downloads directory."</string>
     <string name="action_view">"View"</string>
     <string name="action_open_bookmark">Open Bookmarks</string>
+    <string name="action_dont_warn">Don\'t Warn</string>
     <string name="published_date">Published %1$s/%2$s/%3$s</string>
     <string name="updated_date">Updated %1$s/%2$s/%3$s</string>
     <string name="title_offline">[Offline] %1$s</string>
@@ -33,6 +34,7 @@
     <string name="network_unavailable">อินเตอร์เน็ตใช้งานไม่ได้</string>
     <string name="network_unavailable_with_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nแต่อ่านบทความจาก Bookmark ได้นะ</string>
     <string name="network_unavailable_no_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nคราวหน้าลอง Bookmark เก็บไว้ดูนะ\nจะได้เปิดอ่านแบบออฟไลน์ได้</string>
+    <string name="warn_offline_bookmark">Bookmark คือบทความที่เก็บออฟไลน์ในเครื่อง</string>
 
 
 </resources>

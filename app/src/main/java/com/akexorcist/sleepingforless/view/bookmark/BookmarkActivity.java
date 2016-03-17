@@ -1,7 +1,9 @@
 package com.akexorcist.sleepingforless.view.bookmark;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
+import com.akexorcist.sleepingforless.config.ContentPreference;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
 import com.akexorcist.sleepingforless.database.BookmarkRealm;
@@ -60,6 +63,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         setupView();
         setToolbar();
         callDatabase();
+        showWarnOfflineBookmark();
     }
 
     private void bindView() {
@@ -188,21 +192,21 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
 
     }
 
-    public void openMenu() {
+    private void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    public void closeMenu() {
+    private void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    public void scaleMenuButtonUp(View v) {
+    private void scaleMenuButtonUp(View v) {
         AnimationUtility.getInstance().scaleUp(v, 200);
     }
 
-    public void scaleMenuButtonBack(View v) {
+    private void scaleMenuButtonBack(View v) {
         AnimationUtility.getInstance().scaleBack(v, 200);
     }
 
@@ -214,6 +218,23 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     private void hideLoading() {
         rvBookmarkList.setVisibility(View.VISIBLE);
         pbBookmarkList.hideNow();
+    }
+
+    private void showWarnOfflineBookmark() {
+        if (ContentPreference.getInstance().shouldWarnOfflineBookmark()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Snackbar.make(tbTitle, R.string.warn_offline_bookmark, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.action_dont_warn, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ContentPreference.getInstance().dontWarnOfflineBookmark();
+                                }
+                            }).show();
+                }
+            }, 1000);
+        }
     }
 
     private Bookmark convertBookmark(BookmarkRealm bookmarkRealm) {

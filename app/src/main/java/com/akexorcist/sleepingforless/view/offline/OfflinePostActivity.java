@@ -9,7 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -97,7 +99,8 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(getString(R.string.title_offline, ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle())));
+        String title = getString(R.string.title_offline, ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()));
+        setTitle(highlightText(title, "[Offline]"));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,5 +227,13 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     private void hideLoading() {
         pbPostLoading.hideNow();
         rvPostList.setVisibility(View.VISIBLE);
+    }
+
+    private Spannable highlightText(String message, String highlight) {
+        int start = message.indexOf(highlight);
+        int end = start + highlight.length();
+        Spannable spannableMessage = new SpannableString(message);
+        spannableMessage.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_offline)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableMessage;
     }
 }
