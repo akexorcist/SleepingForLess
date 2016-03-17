@@ -14,7 +14,7 @@ import com.balysv.materialripple.MaterialRippleLayout;
 public class FeedViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitle;
     TextView tvLabel;
-    TextView tvPublishedDate;
+    TextView tvDate;
     ImageView ivTitle;
     ImageView ivBookmarkIndicator;
     MaterialRippleLayout mrlFeedButton;
@@ -23,7 +23,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         tvTitle = (TextView) itemView.findViewById(R.id.tv_feed_title);
         tvLabel = (TextView) itemView.findViewById(R.id.tv_feed_label);
-        tvPublishedDate = (TextView) itemView.findViewById(R.id.tv_feed_published_date);
+        tvDate = (TextView) itemView.findViewById(R.id.tv_feed_date);
         ivTitle = (ImageView) itemView.findViewById(R.id.iv_feed_title);
         ivBookmarkIndicator = (ImageView) itemView.findViewById(R.id.iv_feed_bookmark_indicator);
         mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_feed_button);

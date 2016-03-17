@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
@@ -29,12 +30,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LoadMoreListener loadMoreListener;
     private List<PostList.Item> itemList;
     private boolean isLoadMoreAvailable;
+    private String sortType;
 
     public FeedAdapter() {
     }
 
-    public FeedAdapter(List<PostList.Item> itemList) {
-        this.itemList = itemList;
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
     }
 
     public void setPostListItem(List<PostList.Item> itemList) {
@@ -92,7 +94,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             PostList.Item postItem = itemList.get(holder.getAdapterPosition());
             setTitle(feedViewHolder.tvTitle, postItem.getTitle());
             setLabel(feedViewHolder.tvLabel, postItem.getLabels());
-            setPublishedDate(feedViewHolder.tvPublishedDate, postItem.getPublished());
+            if (sortType.equalsIgnoreCase(BloggerManager.SORT_UPDATED_DATE)) {
+                setDate(feedViewHolder.tvDate, postItem.getUpdated(), R.string.updated_date);
+            } else {
+                setDate(feedViewHolder.tvDate, postItem.getPublished(), R.string.published_date);
+            }
             setImage(feedViewHolder.ivTitle, postItem.getImages());
             setBookmarkIndicator(feedViewHolder.ivBookmarkIndicator, postItem.getId());
             feedViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
@@ -141,10 +147,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void setPublishedDate(TextView tvPublishedDate, String publishedDate) {
-        String[] date = publishedDate.split("T")[0].split("-");
-        String publishedDetail = tvPublishedDate.getContext().getString(R.string.published_date);
-        tvPublishedDate.setText(String.format(publishedDetail, date[2], date[1], date[0]));
+    private void setDate(TextView tvPublishedDate, String date, int messageResId) {
+        String[] dates = date.split("T")[0].split("-");
+        String publishedDetail = tvPublishedDate.getContext().getString(messageResId);
+        tvPublishedDate.setText(String.format(publishedDetail, dates[2], dates[1], dates[0]));
     }
 
     private void setImage(ImageView ivTitle, List<PostList.Image> imageList) {

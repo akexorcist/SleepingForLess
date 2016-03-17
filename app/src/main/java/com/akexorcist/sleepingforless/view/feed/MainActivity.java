@@ -103,6 +103,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         flMenu.setFab(fabMenu);
 
         adapter = new FeedAdapter();
+        adapter.setSortType(sortType);
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
         rvFeedList.setLayoutManager(new LinearLayoutManager(this));
@@ -304,6 +305,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     private void changeFeedSortType(String sortType) {
         adapter.clear();
+        adapter.setSortType(sortType);
         this.sortType = sortType;
         callService();
     }
