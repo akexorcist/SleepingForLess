@@ -82,6 +82,9 @@ public class BookmarkManager {
     private String saveBookmarkImageBitmap(Bitmap bitmap, String postId, String filename) {
         try {
             File file = createBookmarkImageFile(postId, filename);
+            if (file.exists()) {
+                file.delete();
+            }
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
             fileOutputStream.flush();
@@ -96,12 +99,17 @@ public class BookmarkManager {
     private String createBookmarkDirectory() {
         String bookmarkPath = Contextor.getContext().getFilesDir().getAbsoluteFile() + "/Bookmark";
         File bookmarkDirectory = new File(bookmarkPath);
-        bookmarkDirectory.mkdir();
+        if (!bookmarkDirectory.exists()) {
+            bookmarkDirectory.mkdir();
+        }
         return bookmarkDirectory.getAbsolutePath();
     }
 
     private File createBookmarkImageFile(String postId, String filename) {
-        new File(createBookmarkDirectory() + "/" + postId).mkdir();
+        File postDirectory = new File(createBookmarkDirectory() + "/" + postId);
+        if (!postDirectory.exists()) {
+            postDirectory.mkdir();
+        }
         return new File(createBookmarkDirectory() + "/" + postId + "/" + convertFilename(filename));
     }
 
