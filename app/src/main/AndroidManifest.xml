@@ -3,6 +3,8 @@
     package="com.akexorcist.sleepingforless">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".SFLApplication"
@@ -46,10 +48,13 @@
         <activity
             android:name=".view.search.SearchResultActivity"
             android:launchMode="singleTask" />
+
         <activity
             android:name=".view.bookmark.BookmarkActivity"
             android:launchMode="singleTask" />
+
         <activity android:name=".view.offline.OfflinePostActivity" />
+
         <activity
             android:name=".view.offline.OfflineImagePostPreviewActivity"
             android:launchMode="singleTask" />
