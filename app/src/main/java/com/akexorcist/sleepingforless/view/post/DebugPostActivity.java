@@ -77,7 +77,6 @@ public class DebugPostActivity extends SFLActivity implements CompoundButton.OnC
         layoutPostContent.removeAllViews();
         List<String> textList = ContentUtility.getInstance().wrapContent(post.getContent());
         for (String text : textList) {
-//            Log.e("Check", text);
             if (ContentUtility.getInstance().isCode(text)) {
                 if (cbCode.isChecked()) {
                     addContent(text, Color.parseColor("#e62150"));

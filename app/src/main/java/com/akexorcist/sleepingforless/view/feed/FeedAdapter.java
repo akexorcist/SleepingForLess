@@ -141,7 +141,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void setPublishedDate(TextView tvPublishedDate, String publishedDate) {
         String[] date = publishedDate.split("T")[0].split("-");
-        tvPublishedDate.setText("Published " + date[2] + "/" + date[1] + "/" + date[0]);
+        String publishedDetail = tvPublishedDate.getContext().getString(R.string.published_date);
+        tvPublishedDate.setText(String.format(publishedDetail, date[2], date[1], date[0]));
     }
 
     private void setImage(ImageView ivTitle, List<PostList.Image> imageList) {

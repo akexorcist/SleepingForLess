@@ -40,7 +40,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="20dp"
-                android:text="Sample"
+                android:text="@string/sample"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/default_text_size_extra_small" />
 
@@ -52,7 +52,7 @@
                 android:paddingBottom="20dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="Sample"
+                android:text="@string/sample"
                 android:textColor="@color/dark_gray"
                 android:textSize="@dimen/default_text_size_small" />
 
@@ -68,7 +68,7 @@
                 android:paddingRight="10dp"
                 android:paddingStart="20dp"
                 android:paddingTop="20dp"
-                android:text="Sample"
+                android:text="@string/sample"
                 android:textColor="@color/light_gray"
                 android:textSize="@dimen/default_text_size_extra_small"
                 android:visibility="gone" />

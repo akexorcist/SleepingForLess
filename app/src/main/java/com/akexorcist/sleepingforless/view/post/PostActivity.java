@@ -205,7 +205,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     @Override
     public void onImageLongClickListener(String fullUrl) {
         copyFullUrl(fullUrl);
-        Snackbar.make(tbTitle, "Copy image URL to clipboard.", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tbTitle, R.string.copy_image_url_to_clipboard, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -253,7 +253,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
             removePostFromBookmark();
             BookmarkManager.getInstance().removeBookmarkImageFile(post.getId());
             setBookmark(false);
-            showSnackbar("Removed from bookmark.");
+            showSnackbar(R.string.removed_from_bookmark);
         } else {
             showBookmarkLoading();
             addBookmarkToDatabase();
@@ -340,7 +340,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
 
     public void setBookmark(boolean state) {
         int drawableResourceId = (state) ? R.drawable.vector_ic_bookmark_check : R.drawable.vector_ic_bookmark_uncheck;
-        String text = (state) ? "Remove Bookmark" : "Add Bookmark";
+        int text = (state) ? R.string.menu_remove_bookmark : R.string.menu_add_bookmark;
         btnMenuBookmark.setIconResource(drawableResourceId);
         btnMenuBookmark.setTag(drawableResourceId);
         btnMenuBookmark.setText(text);
@@ -353,8 +353,8 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         return (int) btnMenuBookmark.getTag() == R.drawable.vector_ic_bookmark_check;
     }
 
-    public void showSnackbar(String message) {
-        Snackbar.make(tbTitle, message, Snackbar.LENGTH_SHORT).show();
+    public void showSnackbar(int resId) {
+        Snackbar.make(tbTitle, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     private void showLoading() {
@@ -383,6 +383,6 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     public void onDownloadSuccess() {
         hideBookmarkLoading();
         setBookmark(true);
-        showSnackbar("Added to bookmark.");
+        showSnackbar(R.string.added_to_bookmark);
     }
 }

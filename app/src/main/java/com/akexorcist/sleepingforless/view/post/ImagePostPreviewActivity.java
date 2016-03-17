@@ -97,7 +97,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
                 File destinationFile = new File(getDownloadsDirectory(), file.getName().replaceAll(".", "_") + ".jpg");
                 copyToDownloadsDirectory(file, destinationFile);
                 updateImageToMediaScanner(destinationFile);
-                showSavedMessage("Saved image to Downloads directory.", destinationFile);
+                showSavedMessage(getString(R.string.download_image_successful), destinationFile);
             }
         });
     }
@@ -135,7 +135,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
     }
 
     private void showSavedMessage(String message, final File file) {
-        Snackbar.make(ivPreview, message, Snackbar.LENGTH_LONG).setAction("View", new View.OnClickListener() {
+        Snackbar.make(ivPreview, message, Snackbar.LENGTH_LONG).setAction(R.string.action_view, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();

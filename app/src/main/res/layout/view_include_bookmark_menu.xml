@@ -39,7 +39,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_update"
-                app:mbText="Update All" />
+                app:mbText="@string/menu_update_all" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_remove_all"
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_remove"
-                app:mbText="Remove All" />
+                app:mbText="@string/menu_remove_all" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_info"
@@ -57,7 +57,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_info"
-                app:mbText="Info" />
+                app:mbText="@string/menu_info" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>

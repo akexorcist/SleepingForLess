@@ -114,7 +114,6 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
 
     private void restoreIntentData() {
         bookmark = Parcels.unwrap(getIntent().getParcelableExtra(Key.BOOKMARK));
-        Log.e("Check", "Bookmark : " + (bookmark != null));
     }
 
     @Override
@@ -162,7 +161,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     @Override
     public void onImageLongClickListener(String fullUrl) {
         copyFullUrl(fullUrl);
-        Snackbar.make(tbTitle, "Copy image URL to clipboard.", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tbTitle, R.string.copy_image_url_to_clipboard, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

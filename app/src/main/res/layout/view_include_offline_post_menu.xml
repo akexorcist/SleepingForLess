@@ -39,7 +39,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_update"
-                app:mbText="Update" />
+                app:mbText="@string/menu_update" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_delete"
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_remove"
-                app:mbText="Delete" />
+                app:mbText="@string/menu_delete" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>

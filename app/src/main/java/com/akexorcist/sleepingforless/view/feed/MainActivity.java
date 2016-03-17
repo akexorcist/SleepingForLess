@@ -176,7 +176,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     public void showBottomSheet() {
         FeedDetailBottomSheet modalBottomSheet = FeedDetailBottomSheet.newInstance();
-        modalBottomSheet.show(getSupportFragmentManager(), "bottom sheet");
+        modalBottomSheet.show(getSupportFragmentManager(), "bottom_sheet");
     }
 
     @Override
@@ -247,7 +247,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     private void showSortBottomDialog() {
-        MenuSheetView menuSheetView = new MenuSheetView(this, MenuSheetView.MenuType.LIST, "Sort by...", new MenuSheetView.OnMenuItemClickListener() {
+        MenuSheetView menuSheetView = new MenuSheetView(this, MenuSheetView.MenuType.LIST, R.string.title_sort_by, new MenuSheetView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (bslMenu.isSheetShowing()) {

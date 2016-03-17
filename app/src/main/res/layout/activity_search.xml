@@ -14,7 +14,7 @@
         android:layout_marginTop="20dp"
         android:background="#90000000"
         android:gravity="center_vertical"
-        android:hint="Search"
+        android:hint="@string/hint_search"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
 </FrameLayout>

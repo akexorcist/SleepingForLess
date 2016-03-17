@@ -50,6 +50,10 @@ public class MenuButton extends LinearLayout {
         updateText();
     }
 
+    public void setText(int resId) {
+        setText(getResources().getString(resId));
+    }
+
     public void setIconResource(int iconResId) {
         this.iconResId = iconResId;
         updateIcon();

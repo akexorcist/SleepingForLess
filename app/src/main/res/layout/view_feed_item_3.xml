@@ -30,7 +30,7 @@
             android:background="@color/alpha_dark_gray"
             android:gravity="center"
             android:padding="20dp"
-            android:text="Sample"
+            android:text="@string/sample"
             android:textColor="@color/white"
             android:textSize="@dimen/default_text_size_small" />
 

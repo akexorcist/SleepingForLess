@@ -79,7 +79,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle("Search Result : " + request.getKeyword()));
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_search_result, request.getKeyword())));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

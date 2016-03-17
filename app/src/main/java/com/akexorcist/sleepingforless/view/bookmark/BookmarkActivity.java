@@ -91,7 +91,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle("Bookmark List"));
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_bookmark_list)));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

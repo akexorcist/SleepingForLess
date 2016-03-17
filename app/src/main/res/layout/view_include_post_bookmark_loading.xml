@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="กำลังดาวน์โหลดข้อมูล\nเพื่อบันทึกลง Bookmark"
+            android:text="@string/bookmark_downloading"
             android:textColor="@color/white"
             android:textSize="@dimen/default_text_size_extra_large" />
 

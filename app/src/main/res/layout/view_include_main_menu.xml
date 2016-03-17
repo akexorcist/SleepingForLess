@@ -39,7 +39,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 app:mbIconSrc="@drawable/vector_ic_bookmark_menu"
-                app:mbText="Bookmark" />
+                app:mbText="@string/menu_bookmark" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_refresh"
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 app:mbIconSrc="@drawable/vector_ic_refresh"
-                app:mbText="Refresh" />
+                app:mbText="@string/menu_refresh" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_search"
@@ -57,7 +57,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 app:mbIconSrc="@drawable/vector_ic_search"
-                app:mbText="Search" />
+                app:mbText="@string/menu_search" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_sort"
@@ -66,7 +66,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 app:mbIconSrc="@drawable/vector_ic_sort"
-                app:mbText="Sort" />
+                app:mbText="@string/menu_sort" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_settings"
@@ -75,7 +75,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 app:mbIconSrc="@drawable/vector_ic_settings"
-                app:mbText="Settings" />
+                app:mbText="@string/menu_settings" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>

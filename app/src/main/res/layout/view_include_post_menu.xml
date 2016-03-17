@@ -39,7 +39,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_bookmark_uncheck"
-                app:mbText="Add Bookmark" />
+                app:mbText="@string/menu_add_bookmark" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
                 android:id="@+id/btn_menu_share"
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:mbIconSrc="@drawable/vector_ic_share"
-                app:mbText="Share" />
+                app:mbText="@string/menu_share" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>
