@@ -1,7 +1,6 @@
 package com.akexorcist.sleepingforless.util;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
 import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -47,12 +45,10 @@ public class BookmarkManager {
                 bookmarkImageCount++;
                 ImagePost imagePost = (ImagePost) basePost;
                 final String url = imagePost.getPostUrl();
-                final long startTime = System.currentTimeMillis();
                 BookmarkManager.getInstance().downloadImage(url, new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         saveBookmarkImageBitmap(resource, postId, url);
-                        Log.e("Check", "Duration  : " + (System.currentTimeMillis() - startTime) + " ms");
                         bookmarkImageCount--;
                         if (bookmarkImageCount <= 0 && callback != null) {
                             callback.onDownloadSuccess();
