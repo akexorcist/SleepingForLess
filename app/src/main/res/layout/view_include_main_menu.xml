@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                app:mbIconSrc="@drawable/vector_ic_bookmark_menu"
+                app:mbIconSrc="@drawable/vector_ic_refresh"
                 app:mbText="Refresh" />
 
             <com.akexorcist.sleepingforless.widget.MenuButton
