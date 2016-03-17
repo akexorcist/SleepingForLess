@@ -86,7 +86,6 @@ public class BookmarkManager {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
-            bitmap.recycle();
             return file.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
