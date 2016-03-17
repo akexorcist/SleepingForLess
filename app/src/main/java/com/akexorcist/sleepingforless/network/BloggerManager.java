@@ -2,11 +2,10 @@ package com.akexorcist.sleepingforless.network;
 
 import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.constant.BloggerConstant;
-import com.akexorcist.sleepingforless.network.model.Blog;
-import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
+import com.akexorcist.sleepingforless.network.model.PostFailure;
 import com.akexorcist.sleepingforless.network.model.PostList;
-import com.akexorcist.sleepingforless.network.model.SearchResultList;
+import com.akexorcist.sleepingforless.network.model.PostListFailure;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,20 +25,6 @@ public class BloggerManager {
             manager = new BloggerManager();
         }
         return manager;
-    }
-
-    public void getBlog() {
-        BloggerConnection.getInstance().getConnection().getBlog().enqueue(new Callback<Blog>() {
-            @Override
-            public void onResponse(Call<Blog> call, Response<Blog> response) {
-                BusProvider.getInstance().post(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Blog> call, Throwable t) {
-                BusProvider.getInstance().post(new Failure(t));
-            }
-        });
     }
 
     public void getPostList(String sortBy) {
@@ -71,7 +56,7 @@ public class BloggerManager {
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
-                BusProvider.getInstance().post(new Failure(t));
+                BusProvider.getInstance().post(new PostListFailure(t));
             }
         });
     }
@@ -85,7 +70,7 @@ public class BloggerManager {
 
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                BusProvider.getInstance().post(new Failure(t));
+                BusProvider.getInstance().post(new PostFailure(t));
             }
         });
     }
@@ -99,7 +84,7 @@ public class BloggerManager {
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
-                BusProvider.getInstance().post(new Failure(t));
+                BusProvider.getInstance().post(new PostListFailure(t));
             }
         });
     }

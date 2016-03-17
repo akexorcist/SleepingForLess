@@ -5,19 +5,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.BloggerManager;
-import com.akexorcist.sleepingforless.network.model.Blog;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
+import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostActivity;
@@ -41,6 +45,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
+    private TextView tvUnavailableDescription;
+    private TextView tvOpenBookmark;
     private MenuButton btnMenuBookmark;
     private MenuButton btnMenuRefresh;
     private MenuButton btnMenuSearch;
@@ -70,6 +76,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         viewContentShadow = findViewById(R.id.view_content_shadow);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
+        tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
+        tvOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
         btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
         btnMenuRefresh = (MenuButton) findViewById(R.id.btn_menu_refresh);
         btnMenuSearch = (MenuButton) findViewById(R.id.btn_menu_search);
@@ -81,6 +89,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
+        tvOpenBookmark.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuRefresh.setOnClickListener(this);
         btnMenuSearch.setOnClickListener(this);
@@ -102,6 +111,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     private void callService() {
         showLoading();
+        hideUnavailableMessageImmediately();
         requestPostList(sortType);
     }
 
@@ -118,17 +128,37 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         setTitle(getString(R.string.app_name));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        closeMenu();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     @Subscribe
     public void onPostListSuccess(PostList postList) {
         Log.e("Check", "onBlogSuccess");
         this.postList = postList;
         setPostList(postList);
         hideLoading();
+        hideUnavailableMessage();
     }
 
     @Subscribe
     public void onBlogFailure(Failure failure) {
         Log.e("Check", "onBlogFailure");
+        rvFeedList.setVisibility(View.GONE);
+        pbFeedListLoading.hideNow();
+        showUnavailableMessage();
+    }
+
+    @Subscribe
+    public void onSearchRequest(SearchRequest request) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Key.SEARCH_REQUEST, Parcels.wrap(request));
+        openActivity(SearchResultActivity.class, bundle);
     }
 
     @Override
@@ -147,39 +177,14 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
             onMenuSortClick();
         } else if (v == btnMenuSettings) {
             onMenuSettingsClick();
+        } else if (v == tvOpenBookmark) {
+            onMenuOpenBookmarkClick();
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        closeMenu();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (bslMenu.isSheetShowing()) {
-            bslMenu.dismissSheet();
-        } else if (flMenu.isFabExpanded()) {
-            closeMenu();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    public void setPostList(PostList postList) {
-        if (postList != null) {
-            adapter.addPostListItem(postList.getItems());
-            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
-        }
-    }
-
-    public void showBottomSheet() {
-        FeedDetailBottomSheet modalBottomSheet = FeedDetailBottomSheet.newInstance();
-        modalBottomSheet.show(getSupportFragmentManager(), "bottom_sheet");
+    public void onLoadMore() {
+        requestMorePostList(sortType, postList.getNextPageToken());
     }
 
     @Override
@@ -205,6 +210,29 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
             scaleMenuButtonBack(v);
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (bslMenu.isSheetShowing()) {
+            bslMenu.dismissSheet();
+        } else if (flMenu.isFabExpanded()) {
+            closeMenu();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void setPostList(PostList postList) {
+        if (postList != null) {
+            adapter.addPostListItem(postList.getItems());
+            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
+        }
+    }
+
+    public void showBottomSheet() {
+        FeedDetailBottomSheet modalBottomSheet = FeedDetailBottomSheet.newInstance();
+        modalBottomSheet.show(getSupportFragmentManager(), "bottom_sheet");
     }
 
     public void openMenu() {
@@ -249,6 +277,10 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         Log.e("Check", "onMenuSettingsClick");
     }
 
+    public void onMenuOpenBookmarkClick() {
+        openActivity(BookmarkActivity.class);
+    }
+
     private void showSortBottomDialog() {
         MenuSheetView menuSheetView = new MenuSheetView(this, MenuSheetView.MenuType.LIST, R.string.title_sort_by, new MenuSheetView.OnMenuItemClickListener() {
             @Override
@@ -286,15 +318,35 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         pbFeedListLoading.hideNow();
     }
 
-    @Subscribe
-    public void onSearchRequest(SearchRequest request) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.SEARCH_REQUEST, Parcels.wrap(request));
-        openActivity(SearchResultActivity.class, bundle);
+    private void showUnavailableMessage() {
+        if (BookmarkManager.getInstance().getBookmarkCount() > 0) {
+            tvUnavailableDescription.setText(R.string.network_unavailable_with_bookmark);
+            AnimationUtility.getInstance().fadeIn(tvUnavailableDescription);
+            AnimationUtility.getInstance().fadeIn(tvOpenBookmark);
+        } else {
+            tvOpenBookmark.setVisibility(View.GONE);
+            String message = getString(R.string.network_unavailable_no_bookmark);
+            String highlightText = "Bookmark";
+            tvUnavailableDescription.setText(highlightText(message, highlightText));
+            AnimationUtility.getInstance().fadeIn(tvUnavailableDescription);
+        }
     }
 
-    @Override
-    public void onLoadMore() {
-        requestMorePostList(sortType, postList.getNextPageToken());
+    private Spannable highlightText(String message, String highlight) {
+        int start = message.indexOf(highlight);
+        int end = start + highlight.length();
+        Spannable spannableMessage = new SpannableString(message);
+        spannableMessage.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableMessage;
+    }
+
+    private void hideUnavailableMessage() {
+        AnimationUtility.getInstance().fadeOut(tvUnavailableDescription);
+        AnimationUtility.getInstance().fadeOut(tvOpenBookmark);
+    }
+
+    private void hideUnavailableMessageImmediately() {
+        tvUnavailableDescription.setVisibility(View.GONE);
+        tvOpenBookmark.setVisibility(View.GONE);
     }
 }

@@ -16,6 +16,8 @@
 
         <include layout="@layout/view_include_main_content" />
 
+        <include layout="@layout/view_include_network_unavailable" />
+
         <include layout="@layout/view_include_main_menu" />
 
     </android.support.design.widget.CoordinatorLayout>

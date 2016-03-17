@@ -10,6 +10,8 @@
 
     <include layout="@layout/view_include_search_result_content" />
 
+    <include layout="@layout/view_include_network_unavailable" />
+
     <include layout="@layout/view_include_search_result_menu" />
 
 </android.support.design.widget.CoordinatorLayout>

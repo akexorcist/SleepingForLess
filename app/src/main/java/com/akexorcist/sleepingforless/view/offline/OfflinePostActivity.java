@@ -97,7 +97,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()));
+        setTitle(getString(R.string.title_offline, ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle())));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

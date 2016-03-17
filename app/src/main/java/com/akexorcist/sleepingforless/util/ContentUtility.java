@@ -233,7 +233,7 @@ public class ContentUtility {
     }
 
     public String removeLabelFromTitle(String title) {
-        return title.replace("^[.*?]", "")
+        return title.replaceAll("^[.*?]", "")
                 .trim();
     }
 }

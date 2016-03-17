@@ -8,10 +8,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
@@ -47,6 +51,8 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     private DilatingDotsProgressBar pbPostBookmarkLoading;
     private LinearLayout layoutPostBookmarkLoading;
     private View viewPostBookmarkLoading;
+    private TextView tvUnavailableDescription;
+    private TextView tvOpenBookmark;
     private MenuButton btnMenuBookmark;
     private MenuButton btnMenuShare;
     private BottomSheetLayout bslMenu;
@@ -93,6 +99,8 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         pbPostBookmarkLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_bookmark_loading);
         layoutPostBookmarkLoading = (LinearLayout) findViewById(R.id.layout_post_bookmark_loading);
         viewPostBookmarkLoading = findViewById(R.id.view_post_bookmark_loading);
+        tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
+        tvOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
         btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
         btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
@@ -103,6 +111,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
+        tvOpenBookmark.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuShare.setOnClickListener(this);
         btnMenuBookmark.setOnTouchListener(this);
@@ -130,6 +139,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
 
     private void callService() {
         showLoading();
+        hideUnavailableMessageImmediately();
         BloggerManager.getInstance().getPost(postItem.getId());
     }
 
@@ -138,11 +148,14 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         this.post = post;
         setPost(post);
         hideLoading();
+        hideUnavailableMessage();
     }
 
     @Subscribe
     public void onPostFailure(Failure failure) {
         Log.e("Check", "onPostFailure");
+        pbPostLoading.hideNow();
+        showUnavailableMessage();
     }
 
     @Override
@@ -155,6 +168,8 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
             onMenuBookmarkClick();
         } else if (v == btnMenuShare) {
             onMenuShareClick();
+        } else if (v == tvOpenBookmark) {
+            onMenuOpenBookmarkClick();
         }
     }
 
@@ -249,6 +264,11 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     private void onMenuShareClick() {
         sharePost(postItem.getUrl());
         closeMenu();
+    }
+
+    public void onMenuOpenBookmarkClick() {
+        openActivity(BookmarkActivity.class);
+        finish();
     }
 
     private void sharePost(String url) {
@@ -362,5 +382,37 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
 
     private void goToBookmarkList() {
         openActivity(BookmarkActivity.class);
+    }
+
+    private void showUnavailableMessage() {
+        if (BookmarkManager.getInstance().getBookmarkCount() > 0) {
+            tvUnavailableDescription.setText(R.string.network_unavailable_with_bookmark);
+            AnimationUtility.getInstance().fadeIn(tvUnavailableDescription);
+            AnimationUtility.getInstance().fadeIn(tvOpenBookmark);
+        } else {
+            tvOpenBookmark.setVisibility(View.GONE);
+            String message = getString(R.string.network_unavailable_no_bookmark);
+            String highlightText = "Bookmark";
+            tvUnavailableDescription.setText(highlightText(message, highlightText));
+            AnimationUtility.getInstance().fadeIn(tvUnavailableDescription);
+        }
+    }
+
+    private Spannable highlightText(String message, String highlight) {
+        int start = message.indexOf(highlight);
+        int end = start + highlight.length();
+        Spannable spannableMessage = new SpannableString(message);
+        spannableMessage.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableMessage;
+    }
+
+    private void hideUnavailableMessage() {
+        AnimationUtility.getInstance().fadeOut(tvUnavailableDescription);
+        AnimationUtility.getInstance().fadeOut(tvOpenBookmark);
+    }
+
+    private void hideUnavailableMessageImmediately() {
+        tvUnavailableDescription.setVisibility(View.GONE);
+        tvOpenBookmark.setVisibility(View.GONE);
     }
 }

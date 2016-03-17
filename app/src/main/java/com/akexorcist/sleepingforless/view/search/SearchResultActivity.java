@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.PostList;
+import com.akexorcist.sleepingforless.network.model.PostListFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
@@ -33,6 +35,8 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private DilatingDotsProgressBar pbSearchResultList;
     private RecyclerView rvSearchResultList;
     private View viewContentShadow;
+    private TextView tvUnavailableDescription;
+    private TextView tvOpenBookmark;
 
     private FeedAdapter adapter;
     private PostList postList;
@@ -55,6 +59,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     public void callService() {
         showLoading();
+        hideUnavailableMessageImmediately();
         searchPost(request.getKeyword());
     }
 
@@ -62,6 +67,8 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         pbSearchResultList = (DilatingDotsProgressBar) findViewById(R.id.pb_search_result_list_loading);
         rvSearchResultList = (RecyclerView) findViewById(R.id.rv_search_result_list);
         viewContentShadow = findViewById(R.id.view_content_shadow);
+        tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
+        tvOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
     }
@@ -69,6 +76,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
+        tvOpenBookmark.setVisibility(View.GONE);
         fabMenu.setOnClickListener(this);
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
@@ -103,9 +111,19 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     @Subscribe
     public void onPostListSuccess(PostList postList) {
+        Log.e("Check", "onPostListSuccess");
         this.postList = postList;
         setPostList(postList);
         hideLoading();
+        hideUnavailableMessage();
+    }
+
+    @Subscribe
+    public void onPostListFailure(PostListFailure failure) {
+        Log.e("Check", "onPostListFailure");
+        rvSearchResultList.setVisibility(View.GONE);
+        pbSearchResultList.hideNow();
+        showUnavailableMessage();
     }
 
     @Subscribe
@@ -161,6 +179,19 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private void hideLoading() {
         rvSearchResultList.setVisibility(View.VISIBLE);
         pbSearchResultList.hideNow();
+    }
+
+    private void showUnavailableMessage() {
+        tvUnavailableDescription.setText(R.string.network_unavailable);
+        AnimationUtility.getInstance().fadeIn(tvUnavailableDescription);
+    }
+
+    private void hideUnavailableMessage() {
+        AnimationUtility.getInstance().fadeOut(tvUnavailableDescription);
+    }
+
+    private void hideUnavailableMessageImmediately() {
+        tvUnavailableDescription.setVisibility(View.GONE);
     }
 
 }

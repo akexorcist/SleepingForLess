@@ -3,8 +3,10 @@
     <string name="sample">Sample</string>
     <string name="download_image_successful">"Saved image to Downloads directory."</string>
     <string name="action_view">"View"</string>
+    <string name="action_open_bookmark">Open Bookmarks</string>
     <string name="published_date">Published %1$s/%2$s/%3$s</string>
     <string name="updated_date">Updated %1$s/%2$s/%3$s</string>
+    <string name="title_offline">[Offline] %1$s</string>
     <string name="title_bookmark_list">Bookmark List</string>
     <string name="title_sort_by">Sort by&#8230;</string>
     <string name="title_search_result">Search Result : %1$s</string>
@@ -26,8 +28,11 @@
     <string name="menu_share">Share</string>
     <string name="hint_search">Search</string>
     <string name="bookmark_not_found">ไม่มีบทความที่ Bookmark ไว้</string>
-    <string name="post_not_found">ไม่มีบทความที่ต้องการค้นหา้</string>
+    <string name="post_not_found">ไม่มีบทความที่ต้องการค้นหา</string>
     <string name="bookmark_downloading">กำลังดาวน์โหลดข้อมูล\nเพื่อบันทึกลง Bookmark</string>
+    <string name="network_unavailable">อินเตอร์เน็ตใช้งานไม่ได้</string>
+    <string name="network_unavailable_with_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nแต่อ่านบทความจาก Bookmark ได้นะ</string>
+    <string name="network_unavailable_no_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nคราวหน้าลอง Bookmark เก็บไว้ดูนะ\nจะได้เปิดอ่านแบบออฟไลน์ได้</string>
 
 
 </resources>

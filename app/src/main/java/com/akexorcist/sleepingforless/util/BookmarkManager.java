@@ -134,6 +134,15 @@ public class BookmarkManager {
         return isBookmark;
     }
 
+    public int getBookmarkCount() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
+                .findAll();
+        int bookmarkCount = (result != null) ? result.size() : 0;
+        realm.close();
+        return bookmarkCount;
+    }
+
     public void removeBookmark(String postId) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
