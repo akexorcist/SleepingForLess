@@ -6,10 +6,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_menu"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        style="@style/FloatingActionButton.Single"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/fab_margin"
         app:layout_behavior="com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior"
         app:srcCompat="@drawable/vector_ic_menu" />
 
@@ -28,7 +26,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -36,8 +34,8 @@
                 android:id="@+id/btn_menu_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="@dimen/bottom_menu_margin"
+                android:layout_marginRight="@dimen/bottom_menu_margin"
                 app:mbIconSrc="@drawable/vector_ic_bookmark_menu"
                 app:mbText="@string/menu_bookmark" />
 
@@ -45,8 +43,8 @@
                 android:id="@+id/btn_menu_refresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="@dimen/bottom_menu_margin"
+                android:layout_marginRight="@dimen/bottom_menu_margin"
                 app:mbIconSrc="@drawable/vector_ic_refresh"
                 app:mbText="@string/menu_refresh" />
 
@@ -54,8 +52,8 @@
                 android:id="@+id/btn_menu_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="@dimen/bottom_menu_margin"
+                android:layout_marginRight="@dimen/bottom_menu_margin"
                 app:mbIconSrc="@drawable/vector_ic_search"
                 app:mbText="@string/menu_search" />
 
@@ -63,8 +61,8 @@
                 android:id="@+id/btn_menu_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="@dimen/bottom_menu_margin"
+                android:layout_marginRight="@dimen/bottom_menu_margin"
                 app:mbIconSrc="@drawable/vector_ic_sort"
                 app:mbText="@string/menu_sort" />
 
@@ -72,8 +70,8 @@
                 android:id="@+id/btn_menu_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="@dimen/bottom_menu_margin"
+                android:layout_marginRight="@dimen/bottom_menu_margin"
                 app:mbIconSrc="@drawable/vector_ic_settings"
                 app:mbText="@string/menu_settings" />
         </LinearLayout>

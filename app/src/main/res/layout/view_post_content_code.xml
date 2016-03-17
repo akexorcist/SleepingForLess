@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
+    android:layout_marginBottom="@dimen/default_margin_padding"
+    android:layout_marginLeft="@dimen/default_margin_padding_small"
+    android:layout_marginRight="@dimen/default_margin_padding_small"
+    android:layout_marginTop="@dimen/default_margin_padding_small"
     app:cardBackgroundColor="@color/extra_extra_light_gray">
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp"
+        android:paddingBottom="@dimen/default_margin_padding_large"
+        android:paddingLeft="@dimen/default_margin_padding"
+        android:paddingRight="@dimen/default_margin_padding"
+        android:paddingTop="@dimen/default_margin_padding_large"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="horizontal">
 

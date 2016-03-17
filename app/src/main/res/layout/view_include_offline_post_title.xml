@@ -6,21 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="5dp"
+        app:elevation="@dimen/app_bar_layout_elevation"
         app:layout_behavior="com.akexorcist.sleepingforless.widget.FlingBehavior">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:contentInsetEnd="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
+            style="@style/Toolbar"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextAppearance="@style/PostTitleTextView" />
     </android.support.design.widget.AppBarLayout>
 </merge>

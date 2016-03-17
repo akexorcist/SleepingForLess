@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/menu_button_iv_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/menu_button_icon_size"
+        android:layout_height="@dimen/menu_button_icon_size"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/vector_ic_settings" />
@@ -18,7 +18,7 @@
         android:id="@+id/menu_button_tv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/sample"
         android:textColor="@color/white"
         android:textSize="@dimen/default_text_size_extra_small" />
 </LinearLayout>

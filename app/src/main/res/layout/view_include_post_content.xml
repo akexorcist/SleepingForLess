@@ -8,8 +8,8 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:fillViewport="false"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingLeft="@dimen/default_margin_padding"
+        android:paddingRight="@dimen/default_margin_padding"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

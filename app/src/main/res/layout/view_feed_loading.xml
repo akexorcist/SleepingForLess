@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="@dimen/default_margin_padding">
 
     <com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar
         android:id="@+id/pb_post_list_loading"
         style="@style/DotsProgressBar.Primary"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="@dimen/default_margin_padding_large"
+        android:layout_marginBottom="@dimen/default_margin_padding_large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

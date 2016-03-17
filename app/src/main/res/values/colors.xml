@@ -21,4 +21,6 @@
     <color name="text_header">#3D85C6</color>
     <color name="text_body">#383838</color>
     <color name="text_link">#ED6400</color>
+
+    <color name="alpha_black_background">#90000000</color>
 </resources>

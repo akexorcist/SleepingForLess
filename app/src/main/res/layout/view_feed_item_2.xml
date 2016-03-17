@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
+    android:layout_marginBottom="@dimen/default_margin_padding_small"
+    android:layout_marginLeft="@dimen/default_margin_padding"
+    android:layout_marginRight="@dimen/default_margin_padding"
+    android:layout_marginTop="@dimen/default_margin_padding_small"
     app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="3dp">
+        android:padding="@dimen/default_margin_padding_extra_small">
 
         <ImageView
             android:id="@+id/iv_feed_title"
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="@dimen/post_image_height"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher" />
@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@color/dark_gray"
-            android:padding="10dp"
-            android:text="Sample"
+            android:padding="@dimen/default_margin_padding"
+            android:text="@string/sample"
             android:textColor="@color/white"
             android:textSize="@dimen/default_text_size_small"
             android:visibility="gone" />

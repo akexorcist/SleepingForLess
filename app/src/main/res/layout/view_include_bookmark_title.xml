@@ -4,18 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/AppTheme.AppBarOverlay"
-    app:elevation="5dp">
+    app:elevation="@dimen/app_bar_layout_elevation">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tb_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:contentInsetEnd="0dp"
-        app:contentInsetLeft="0dp"
-        app:contentInsetRight="0dp"
-        app:contentInsetStart="0dp"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
+        style="@style/Toolbar"
         app:titleTextAppearance="@style/PostTitleTextView" />
+
 </android.support.design.widget.AppBarLayout>

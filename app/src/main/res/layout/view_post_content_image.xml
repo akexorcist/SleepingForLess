@@ -7,8 +7,8 @@
         android:id="@+id/iv_post_content_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="@dimen/default_margin_padding_small"
+        android:layout_marginTop="@dimen/default_margin_padding_small"
         android:adjustViewBounds="true" />
 </FrameLayout>
 

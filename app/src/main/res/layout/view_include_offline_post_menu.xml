@@ -6,10 +6,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_menu"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        style="@style/FloatingActionButton.Single"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/fab_margin"
         app:layout_behavior="com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior"
         app:srcCompat="@drawable/vector_ic_menu" />
 
@@ -36,8 +34,8 @@
                 android:id="@+id/btn_menu_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="@dimen/default_margin_padding_large"
+                android:layout_marginRight="@dimen/default_margin_padding_large"
                 app:mbIconSrc="@drawable/vector_ic_update"
                 app:mbText="@string/menu_update" />
 
@@ -45,8 +43,8 @@
                 android:id="@+id/btn_menu_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="@dimen/default_margin_padding_large"
+                android:layout_marginRight="@dimen/default_margin_padding_large"
                 app:mbIconSrc="@drawable/vector_ic_remove"
                 app:mbText="@string/menu_delete" />
         </LinearLayout>

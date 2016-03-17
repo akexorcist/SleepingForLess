@@ -51,9 +51,9 @@
 
     <style name="DotsProgressBar">
         <item name="android:layout_gravity">center</item>
-        <item name="android:radius">4dp</item>
+        <item name="android:radius">@dimen/dot_progress_bar_radius</item>
         <item name="dd_animationDuration">500</item>
-        <item name="dd_horizontalSpacing">10dp</item>
+        <item name="dd_horizontalSpacing">@dimen/dot_progress_bar_spacing</item>
         <item name="dd_numDots">5</item>
         <item name="dd_scaleMultiplier">2</item>
     </style>
@@ -73,5 +73,26 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="FloatingActionButton">
+        <item name="android:layout_width">@dimen/fab_button_size</item>
+        <item name="android:layout_height">@dimen/fab_button_size</item>
+    </style>
+
+    <style name="FloatingActionButton.Single" parent="FloatingActionButton">
+        <item name="android:layout_margin">@dimen/fab_button_margin</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetRight">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+    </style>
 
 </resources>

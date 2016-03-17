@@ -6,10 +6,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_menu"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        style="@style/FloatingActionButton.Single"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/fab_margin"
         app:layout_behavior="com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior"
         app:srcCompat="@drawable/vector_ic_search" />
 
