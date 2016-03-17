@@ -24,13 +24,14 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/tb_title"
-                style="@style/Toolbar" />
+                style="@style/Toolbar"
+                android:layout_height="?attr/actionBarSize" />
 
             <ImageView
                 android:layout_width="@dimen/header_logo_size"
                 android:layout_height="@dimen/header_logo_size"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/default_margin_padding_small"
+                android:layout_marginTop="@dimen/default_margin_padding_extra_large"
                 android:contentDescription="@null"
                 android:src="@mipmap/ic_sfl_logo" />
 

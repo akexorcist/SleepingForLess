@@ -11,7 +11,7 @@
     <dimen name="default_margin_padding_small">5dp</dimen>
     <dimen name="default_margin_padding">10dp</dimen>
     <dimen name="default_margin_padding_large">20dp</dimen>
-    <dimen name="default_margin_padding_extra_largedefault_margin_padding_extra_large">30dp</dimen>
+    <dimen name="default_margin_padding_extra_large">30dp</dimen>
 
     <dimen name="default_text_size_h4">18sp</dimen>
     <dimen name="default_text_size_h3">20sp</dimen>
