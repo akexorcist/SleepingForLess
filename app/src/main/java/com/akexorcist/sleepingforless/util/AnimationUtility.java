@@ -86,7 +86,6 @@ public class AnimationUtility {
     }
 
     public void fadeIn(final View view, int duration, long startDelay) {
-        view.setVisibility(View.VISIBLE);
         view.setEnabled(false);
         ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_fade_in);
         objectAnimator.setTarget(view);
@@ -95,6 +94,7 @@ public class AnimationUtility {
         objectAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                view.setVisibility(View.VISIBLE);
             }
 
             @Override

@@ -1,10 +1,8 @@
 package com.akexorcist.sleepingforless.view.post;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,9 +16,6 @@ import android.widget.LinearLayout;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
-import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
-import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
-import com.akexorcist.sleepingforless.database.BookmarkRealm;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
@@ -42,11 +37,6 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 import org.parceler.Parcels;
 
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 public class PostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
     private Toolbar tbTitle;
@@ -119,7 +109,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
         btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         checkIsBookmarked(postItem.getId());
-        hideBookmarkLoading();
+        hideBookmarkLoadingImmediately();
     }
 
     private void setToolbar() {
@@ -249,14 +239,9 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
 
     private void onMenuBookmarkClick() {
         if (isBookmark()) {
-            removePostFromBookmark();
-            BookmarkManager.getInstance().removeBookmarkImageFile(post.getId());
-            setBookmark(false);
-            showBookmarkRemovedMessage();
+            removeBookmark();
         } else {
-            showBookmarkLoading();
-            addBookmarkToDatabase();
-            downloadImageToBookmark();
+            addBookmark();
         }
         closeMenu();
     }
@@ -278,6 +263,24 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
             }
         });
         bslMenu.showWithSheetView(intentPickerSheet);
+    }
+
+    private void addBookmark() {
+        showBookmarkLoading();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                addBookmarkToDatabase();
+                downloadImageToBookmark();
+            }
+        }, 700);
+    }
+
+    private void removeBookmark() {
+        removePostFromBookmark();
+        BookmarkManager.getInstance().removeBookmarkImageFile(post.getId());
+        setBookmark(false);
+        showBookmarkRemovedMessage();
     }
 
     private void removePostFromBookmark() {
@@ -322,12 +325,22 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     private void showBookmarkLoading() {
+        fabMenu.hide();
+        flMenu.hide();
         pbPostBookmarkLoading.showNow();
-        layoutPostBookmarkLoading.setVisibility(View.VISIBLE);
-        viewPostBookmarkLoading.setVisibility(View.VISIBLE);
+        AnimationUtility.getInstance().fadeIn(layoutPostBookmarkLoading);
+        AnimationUtility.getInstance().fadeIn(viewPostBookmarkLoading);
     }
 
     private void hideBookmarkLoading() {
+        fabMenu.show();
+        fabMenu.show();
+        pbPostBookmarkLoading.hideNow();
+        AnimationUtility.getInstance().fadeOut(layoutPostBookmarkLoading);
+        AnimationUtility.getInstance().fadeOut(viewPostBookmarkLoading);
+    }
+
+    private void hideBookmarkLoadingImmediately() {
         pbPostBookmarkLoading.hideNow();
         layoutPostBookmarkLoading.setVisibility(View.GONE);
         viewPostBookmarkLoading.setVisibility(View.GONE);
