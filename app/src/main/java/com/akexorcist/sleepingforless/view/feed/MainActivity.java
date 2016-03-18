@@ -191,7 +191,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
         openActivity(PostActivity.class, bundle);
     }
 
@@ -199,7 +199,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
 //        showBottomSheet();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
         openActivity(DebugPostActivity.class, bundle);
     }
 

@@ -62,6 +62,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     private PostList.Item postItem;
     private Post post;
     private List<BasePost> postList;
+    private String postPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +135,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     private void restoreIntentData() {
-        postItem = Parcels.unwrap(getIntent().getParcelableExtra(Key.POST_ID));
+        postItem = Parcels.unwrap(getIntent().getParcelableExtra(Key.POST_ITEM));
     }
 
     private void callService() {
