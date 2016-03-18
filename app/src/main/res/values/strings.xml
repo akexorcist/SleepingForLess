@@ -13,6 +13,7 @@
     <string name="title_search_result">Search Result : %1$s</string>
     <string name="copy_image_url_to_clipboard">Copy image URL to clipboard.</string>
     <string name="removed_from_bookmark">Removed from bookmark.</string>
+    <string name="removed_all_bookmark">Removed all bookmark.</string>
     <string name="added_to_bookmark">Added to bookmark.</string>
     <string name="menu_add_bookmark">Add Bookmark</string>
     <string name="menu_remove_bookmark">Remove Bookmark</string>

@@ -14,26 +14,22 @@ import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.config.ContentPreference;
 import com.akexorcist.sleepingforless.constant.Key;
-import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
-import com.akexorcist.sleepingforless.database.BookmarkRealm;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
-import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkImage;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
-import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkLabel;
+import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.offline.OfflinePostActivity;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
+import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class BookmarkActivity extends SFLActivity implements View.OnTouchListener, View.OnClickListener, BookmarkAdapter.ItemListener {
     private Realm realm;
@@ -48,7 +44,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     private MenuButton btnInfo;
 
     private BookmarkAdapter adapter;
-    private List<BookmarkRealm> bookmarkRealmList;
+    private List<Bookmark> bookmarkList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,36 +105,39 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void getBookmarkFromDatabase() {
-        final RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
-                .findAllAsync();
-        result.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                bookmarkRealmList = result;
-                setBookmark(bookmarkRealmList);
-                result.removeChangeListeners();
-                hideLoading();
-                checkBookmarkAvailable();
-            }
-        });
+        bookmarkList = BookmarkManager.getInstance().getBookmarkList();
+        setBookmark(bookmarkList);
+        hideLoading();
+        checkBookmarkAvailable();
     }
 
     private void checkBookmarkAvailable() {
-        if (bookmarkRealmList != null && bookmarkRealmList.size() > 0) {
+        if (bookmarkList != null && bookmarkList.size() > 0) {
             fabMenu.show();
         }
     }
 
-    private void setBookmark(List<BookmarkRealm> bookmarkRealmList) {
-        adapter = new BookmarkAdapter(bookmarkRealmList);
+    private void setBookmark(List<Bookmark> bookmarkList) {
+        adapter = new BookmarkAdapter(bookmarkList);
         adapter.setItemListener(this);
         rvBookmarkList.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notifyDataChanged();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Subscribe
+    public void onBookmarkRemoveEvent(BookmarkRemoveEvent event) {
+        showSnackbar(R.string.removed_from_bookmark);
     }
 
     @Override
@@ -167,14 +166,23 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     @Override
-    public void onItemClick(BookmarkViewHolder holder, BookmarkRealm bookmarkRealm) {
+    public void onBackPressed() {
+        if (flMenu.isFabExpanded()) {
+            closeMenu();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onItemClick(BookmarkViewHolder holder, Bookmark bookmark) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.BOOKMARK, Parcels.wrap(convertBookmark(bookmarkRealm)));
+        bundle.putParcelable(Key.BOOKMARK, Parcels.wrap(bookmark));
         openActivity(OfflinePostActivity.class, bundle);
     }
 
     @Override
-    public void onItemLongClick(BookmarkViewHolder holder, BookmarkRealm bookmarkRealm) {
+    public void onItemLongClick(BookmarkViewHolder holder, Bookmark bookmark) {
 
     }
 
@@ -183,7 +191,16 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void onMenuDeleteAllClick() {
-
+        if (bookmarkList != null) {
+            for (Bookmark bookmark : bookmarkList) {
+                BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
+            }
+            bookmarkList.clear();
+            notifyDataChanged();
+            closeMenu();
+            fabMenu.hide();
+            showSnackbar(R.string.removed_all_bookmark);
+        }
     }
 
     private void onMenuInfoClick() {
@@ -235,21 +252,13 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         }
     }
 
-    private Bookmark convertBookmark(BookmarkRealm bookmarkRealm) {
-        Bookmark bookmark = new Bookmark();
-        bookmark.setPostId(bookmarkRealm.getPostId());
-        bookmark.setTitle(bookmarkRealm.getTitle());
-        bookmark.setUrl(bookmarkRealm.getUrl());
-        bookmark.setContent(bookmarkRealm.getContent());
-        bookmark.setPublished(bookmarkRealm.getPublished());
-        bookmark.setUpdated(bookmarkRealm.getUpdated());
-        List<BookmarkImage> bookmarkImageList = new ArrayList<>();
-        List<BookmarkLabel> bookmarkLabelList = new ArrayList<>();
-        for (BookmarkLabelRealm bookmarkLabelRealm : bookmarkRealm.getLabelList()) {
-            bookmarkLabelList.add(new BookmarkLabel().setLabel(bookmarkLabelRealm.getLabel()));
-        }
-        bookmark.setImageList(bookmarkImageList);
-        bookmark.setLabelList(bookmarkLabelList);
-        return bookmark;
+    private void notifyDataChanged() {
+//        if (adapter != null) {
+        adapter.notifyDataSetChanged();
+//        }
+    }
+
+    private void showSnackbar(int messageResId) {
+        Snackbar.make(tbTitle, messageResId, Snackbar.LENGTH_SHORT).show();
     }
 }

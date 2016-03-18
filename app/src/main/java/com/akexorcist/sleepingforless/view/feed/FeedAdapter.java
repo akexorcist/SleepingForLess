@@ -1,7 +1,6 @@
 package com.akexorcist.sleepingforless.view.feed;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.PostList;
-import com.akexorcist.sleepingforless.util.BookmarkManager;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.bumptech.glide.Glide;
 

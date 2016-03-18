@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,12 +17,15 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
+import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
@@ -177,6 +181,15 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     }
 
     private void onMenuDeleteClick() {
+        BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
+        finish();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BusProvider.getInstance().post(new BookmarkRemoveEvent());
+            }
+        }, 500);
 
     }
 

@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.util.BookmarkManager;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.view.offline.holder.CodeOfflinePostViewHolder;
 import com.akexorcist.sleepingforless.view.offline.holder.HeaderOfflinePostViewHolder;
 import com.akexorcist.sleepingforless.view.offline.holder.ImageOfflinePostViewHolder;

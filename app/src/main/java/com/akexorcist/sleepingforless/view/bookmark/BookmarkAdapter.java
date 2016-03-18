@@ -8,14 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
-import com.akexorcist.sleepingforless.database.BookmarkRealm;
 import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
+import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkLabel;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-
-import io.realm.RealmList;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
@@ -25,10 +23,10 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final int VIEW_TYPE_ITEM = 0;
 
     private ItemListener itemListener;
-    private List<BookmarkRealm> bookmarkRealmList;
+    private List<Bookmark> bookmarkList;
 
-    public BookmarkAdapter(List<BookmarkRealm> bookmarkRealmList) {
-        this.bookmarkRealmList = bookmarkRealmList;
+    public BookmarkAdapter(List<Bookmark> bookmarkList) {
+        this.bookmarkList = bookmarkList;
     }
 
     public void setItemListener(ItemListener listener) {
@@ -47,7 +45,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (bookmarkRealmList == null || bookmarkRealmList.size() == 0) {
+        if (bookmarkList == null || bookmarkList.size() == 0) {
             return VIEW_TYPE_UNKNOWN;
         }
         return VIEW_TYPE_ITEM;
@@ -58,15 +56,15 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         int viewType = getItemViewType(position);
         if (viewType == VIEW_TYPE_ITEM) {
             final BookmarkViewHolder bookmarkViewHolder = (BookmarkViewHolder) holder;
-            BookmarkRealm bookmarkRealm = bookmarkRealmList.get(holder.getAdapterPosition());
-            setTitle(bookmarkViewHolder.tvTitle, bookmarkRealm.getTitle());
-            setLabel(bookmarkViewHolder.tvLabel, bookmarkRealm.getLabelList());
+            Bookmark bookmark = bookmarkList.get(holder.getAdapterPosition());
+            setTitle(bookmarkViewHolder.tvTitle, bookmark.getTitle());
+            setLabel(bookmarkViewHolder.tvLabel, bookmark.getLabelList());
             bookmarkViewHolder.ivTitle.setVisibility(View.GONE);
             bookmarkViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemListener != null) {
-                        itemListener.onItemClick(bookmarkViewHolder, bookmarkRealmList.get(bookmarkViewHolder.getAdapterPosition()));
+                        itemListener.onItemClick(bookmarkViewHolder, bookmarkList.get(bookmarkViewHolder.getAdapterPosition()));
                     }
                 }
             });
@@ -74,7 +72,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemListener != null) {
-                        itemListener.onItemLongClick(bookmarkViewHolder, bookmarkRealmList.get(bookmarkViewHolder.getAdapterPosition()));
+                        itemListener.onItemLongClick(bookmarkViewHolder, bookmarkList.get(bookmarkViewHolder.getAdapterPosition()));
                     }
                     return true;
                 }
@@ -87,7 +85,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         tvTitle.setText(title);
     }
 
-    private void setLabel(TextView tvLabel, RealmList<BookmarkLabelRealm> labelList) {
+    private void setLabel(TextView tvLabel, List<BookmarkLabel> labelList) {
         if (labelList != null) {
             String label = "";
             for (int i = 0; i < labelList.size(); i++) {
@@ -114,16 +112,16 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (!isBookmarkListAvailable()) {
             return 1;
         }
-        return bookmarkRealmList.size();
+        return bookmarkList.size();
     }
 
     private boolean isBookmarkListAvailable() {
-        return bookmarkRealmList != null && bookmarkRealmList.size() > 0;
+        return bookmarkList != null && bookmarkList.size() > 0;
     }
 
     public interface ItemListener {
-        void onItemClick(BookmarkViewHolder holder, BookmarkRealm item);
+        void onItemClick(BookmarkViewHolder holder, Bookmark item);
 
-        void onItemLongClick(BookmarkViewHolder holder, BookmarkRealm item);
+        void onItemLongClick(BookmarkViewHolder holder, Bookmark item);
     }
 }

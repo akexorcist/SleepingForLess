@@ -1,10 +1,12 @@
-package com.akexorcist.sleepingforless.util;
+package com.akexorcist.sleepingforless.database;
 
 import android.graphics.Bitmap;
 
-import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
-import com.akexorcist.sleepingforless.database.BookmarkRealm;
 import com.akexorcist.sleepingforless.network.model.Post;
+import com.akexorcist.sleepingforless.util.Contextor;
+import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
+import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkImage;
+import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkLabel;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.bumptech.glide.Glide;
@@ -14,9 +16,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -174,6 +178,49 @@ public class BookmarkManager {
         realm.copyToRealm(postOffline);
         realm.commitTransaction();
         realm.close();
+    }
+
+    public List<Bookmark> getBookmarkList() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        final RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
+                .findAll();
+        List<Bookmark> bookmarkList = new ArrayList<>();
+        for(BookmarkRealm bookmarkRealm : result) {
+            bookmarkList.add(convertBookmark(bookmarkRealm));
+        }
+//        result.addChangeListener(new RealmChangeListener() {
+//            @Override
+//            public void onChange() {
+//
+//                bookmarkRealmList = result;
+//                setBookmark(bookmarkRealmList);
+//                result.removeChangeListeners();
+//                hideLoading();
+//                checkBookmarkAvailable();
+//            }
+//        });
+        realm.commitTransaction();
+        realm.close();
+        return bookmarkList;
+    }
+
+    public Bookmark convertBookmark(BookmarkRealm bookmarkRealm) {
+        Bookmark bookmark = new Bookmark();
+        bookmark.setPostId(bookmarkRealm.getPostId());
+        bookmark.setTitle(bookmarkRealm.getTitle());
+        bookmark.setUrl(bookmarkRealm.getUrl());
+        bookmark.setContent(bookmarkRealm.getContent());
+        bookmark.setPublished(bookmarkRealm.getPublished());
+        bookmark.setUpdated(bookmarkRealm.getUpdated());
+        List<BookmarkImage> bookmarkImageList = new ArrayList<>();
+        List<BookmarkLabel> bookmarkLabelList = new ArrayList<>();
+        for (BookmarkLabelRealm bookmarkLabelRealm : bookmarkRealm.getLabelList()) {
+            bookmarkLabelList.add(new BookmarkLabel().setLabel(bookmarkLabelRealm.getLabel()));
+        }
+        bookmark.setImageList(bookmarkImageList);
+        bookmark.setLabelList(bookmarkLabelList);
+        return bookmark;
     }
 
     public interface DownloadCallback {
