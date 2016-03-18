@@ -94,7 +94,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             PostList.Item postItem = itemList.get(holder.getAdapterPosition());
             setTitle(feedViewHolder.tvTitle, postItem.getTitle());
             setLabel(feedViewHolder.tvLabel, postItem.getLabels());
-            if (sortType.equalsIgnoreCase(BloggerManager.SORT_UPDATED_DATE)) {
+            if (sortType != null && sortType.equalsIgnoreCase(BloggerManager.SORT_UPDATED_DATE)) {
                 setDate(feedViewHolder.tvDate, postItem.getUpdated(), R.string.updated_date);
             } else {
                 setDate(feedViewHolder.tvDate, postItem.getPublished(), R.string.published_date);

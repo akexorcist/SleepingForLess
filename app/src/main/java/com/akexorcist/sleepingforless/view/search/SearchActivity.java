@@ -36,7 +36,7 @@ public class SearchActivity extends SFLActivity implements View.OnClickListener,
 
     @Override
     public void onSearchAction(CharSequence charSequence) {
-        if(!finish) {
+        if (!finish) {
             finish = true;
             BusProvider.getInstance().post(new SearchRequest(charSequence.toString()));
             finish();

@@ -112,6 +112,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         this.postList = postList;
         setPostList(postList);
         hideLoading();
+        fabMenu.show();
         hideUnavailableMessage();
     }
 
@@ -120,6 +121,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         Log.e("Check", "onPostListFailure");
         rvSearchResultList.setVisibility(View.GONE);
         pbSearchResultList.hideNow();
+        fabMenu.show();
         showUnavailableMessage();
     }
 
@@ -139,7 +141,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
         openActivity(PostByIdActivity.class, bundle);
     }
 
@@ -147,7 +149,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
 //        showBottomSheet();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
+        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
         openActivity(DebugPostActivity.class, bundle);
     }
 
@@ -169,6 +171,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     }
 
     private void showLoading() {
+        fabMenu.hide();
         rvSearchResultList.setVisibility(View.GONE);
         pbSearchResultList.showNow();
     }

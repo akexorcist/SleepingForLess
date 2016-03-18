@@ -146,6 +146,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         checkIsBookmarked(post.getId());
         setTitle(ContentUtility.getInstance().removeLabelFromTitle(post.getTitle()));
         hideLoading();
+        fabMenu.show();
         hideUnavailableMessage();
     }
 
@@ -333,6 +334,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     private void showLoading() {
+        fabMenu.hide();
         pbPostLoading.showNow();
         rvPostList.setVisibility(View.GONE);
     }

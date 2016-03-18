@@ -311,11 +311,13 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     private void showLoading() {
+        fabMenu.hide();
         rvFeedList.setVisibility(View.GONE);
         pbFeedListLoading.showNow();
     }
 
     private void hideLoading() {
+        fabMenu.show();
         rvFeedList.setVisibility(View.VISIBLE);
         pbFeedListLoading.hideNow();
     }

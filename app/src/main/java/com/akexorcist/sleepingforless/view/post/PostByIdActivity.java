@@ -62,7 +62,6 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     private PostList.Item postItem;
     private Post post;
     private List<BasePost> postList;
-    private String postPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +148,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
         this.post = post;
         setPost(post);
         hideLoading();
+        fabMenu.show();
         hideUnavailableMessage();
     }
 
@@ -336,6 +336,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     }
 
     private void showLoading() {
+        fabMenu.hide();
         pbPostLoading.showNow();
         rvPostList.setVisibility(View.GONE);
     }
