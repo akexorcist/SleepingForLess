@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
 import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
 import com.akexorcist.sleepingforless.database.BookmarkRealm;
 import com.akexorcist.sleepingforless.util.ContentUtility;
@@ -62,8 +61,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             BookmarkRealm bookmarkRealm = bookmarkRealmList.get(holder.getAdapterPosition());
             setTitle(bookmarkViewHolder.tvTitle, bookmarkRealm.getTitle());
             setLabel(bookmarkViewHolder.tvLabel, bookmarkRealm.getLabelList());
-            setImage(bookmarkViewHolder.ivTitle, bookmarkRealm.getImageList());
-            bookmarkViewHolder.ivTitle.setImageDrawable(null);
+            bookmarkViewHolder.ivTitle.setVisibility(View.GONE);
             bookmarkViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,17 +98,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             tvLabel.setText(label);
         }
-    }
-
-    private void setImage(ImageView ivTitle, List<BookmarkImageRealm> imageList) {
-//        if (imageList != null && !imageList.isEmpty() && imageList.size() > 0) {
-//            ivTitle.setVisibility(View.VISIBLE);
-//            String url = imageList.get(0).getUrl();
-//            loadItemResource(ivTitle, url);
-//        } else {
-//            ivTitle.setVisibility(View.GONE);
-//        }
-        ivTitle.setVisibility(View.GONE);
     }
 
     private void loadItemResource(ImageView ivTitle, String url) {

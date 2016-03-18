@@ -14,7 +14,6 @@ public class BookmarkRealm extends RealmObject {
     private String title;
     private String content;
     private RealmList<BookmarkLabelRealm> labelList;
-    private RealmList<BookmarkImageRealm> imageList;
 
     public BookmarkRealm() {
     }
@@ -74,14 +73,4 @@ public class BookmarkRealm extends RealmObject {
     public void setLabelList(RealmList<BookmarkLabelRealm> labelList) {
         this.labelList = labelList;
     }
-
-    public RealmList<BookmarkImageRealm> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(RealmList<BookmarkImageRealm> imageList) {
-        this.imageList = imageList;
-    }
-
-
 }

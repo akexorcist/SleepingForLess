@@ -49,4 +49,6 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'org.parceler:parceler-api:1.0.4'
     apt 'org.parceler:parceler:1.0.4'
+    compile 'com.airbnb:deeplinkdispatch:1.5.0'
+    apt 'com.airbnb:deeplinkdispatch-processor:1.5.0'
 }

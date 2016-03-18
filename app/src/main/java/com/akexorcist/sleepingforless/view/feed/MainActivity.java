@@ -24,7 +24,7 @@ import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.BookmarkManager;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
-import com.akexorcist.sleepingforless.view.post.PostActivity;
+import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.search.SearchRequest;
 import com.akexorcist.sleepingforless.view.search.SearchResultActivity;
@@ -192,7 +192,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
-        openActivity(PostActivity.class, bundle);
+        openActivity(PostByIdActivity.class, bundle);
     }
 
     @Override

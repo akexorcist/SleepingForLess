@@ -59,7 +59,7 @@ public class DebugPostActivity extends SFLActivity implements CompoundButton.OnC
 
     private void setupFirstRun() {
         postItem = Parcels.unwrap(getIntent().getParcelableExtra(Key.POST_ITEM));
-        BloggerManager.getInstance().getPost(postItem.getId());
+        BloggerManager.getInstance().getPostById(postItem.getId());
     }
 
     @Subscribe

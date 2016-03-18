@@ -20,8 +20,11 @@ public interface BloggerService {
     @GET(BloggerUrl.POST_LIST)
     Call<PostList> getPostList(@Path("blogId") String blogId, @Query("orderBy") String orderBy, @Query("maxResults") int max, @Query("fetchBodies") boolean includeBody, @Query("fetchImages") boolean includeImage, @Query("pageToken") String pageToken);
 
-    @GET(BloggerUrl.POST)
-    Call<Post> getPost(@Path("blogId") String blogId, @Path("postId") String postId);
+    @GET(BloggerUrl.POST_BY_ID)
+    Call<Post> getPostById(@Path("blogId") String blogId, @Path("postId") String postId);
+
+    @GET(BloggerUrl.POST_BY_PATH)
+    Call<Post> getPostByPath(@Path("blogId") String blogId, @Query("path") String postPath);
 
     @GET(BloggerUrl.SEARCH)
     Call<PostList> searchPost(@Path("blogId") String blogId, @Query("q") String keyword, @Query("fetchBodies") boolean includeBody);

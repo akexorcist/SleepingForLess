@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,7 +16,6 @@ import com.akexorcist.sleepingforless.config.ContentPreference;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
 import com.akexorcist.sleepingforless.database.BookmarkRealm;
-import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkImage;
@@ -246,9 +244,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         bookmark.setPublished(bookmarkRealm.getPublished());
         bookmark.setUpdated(bookmarkRealm.getUpdated());
         List<BookmarkImage> bookmarkImageList = new ArrayList<>();
-        for (BookmarkImageRealm bookmarkImageRealm : bookmarkRealm.getImageList()) {
-            bookmarkImageList.add(new BookmarkImage().setUrl(bookmarkImageRealm.getUrl()));
-        }
         List<BookmarkLabel> bookmarkLabelList = new ArrayList<>();
         for (BookmarkLabelRealm bookmarkLabelRealm : bookmarkRealm.getLabelList()) {
             bookmarkLabelList.add(new BookmarkLabel().setLabel(bookmarkLabelRealm.getLabel()));

@@ -3,7 +3,7 @@
     package="com.akexorcist.sleepingforless">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -22,28 +22,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".view.post.PostActivity"
-            android:launchMode="singleTask"
+            android:name=".view.post.PostByIdActivity"
             android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".view.post.PostByPathActivity"
+            android:screenOrientation="fullSensor" />
+
         <activity
             android:name=".view.post.DebugPostActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />
+
         <activity
             android:name=".view.post.ImagePostPreviewActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
             android:theme="@style/PopupTheme" />
+
         <activity
             android:name=".view.search.SearchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor"
             android:theme="@style/PopupTheme" />
-
-        <meta-data
-            android:name="com.akexorcist.sleepingforless.config.GlideConfiguration"
-            android:value="GlideModule" />
 
         <activity
             android:name=".view.search.SearchResultActivity"
@@ -53,11 +56,38 @@
             android:name=".view.bookmark.BookmarkActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".view.offline.OfflinePostActivity" />
+        <activity
+            android:name=".view.offline.OfflinePostActivity"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".view.offline.OfflineImagePostPreviewActivity"
             android:launchMode="singleTask" />
+
+        <activity
+            android:name=".view.deeplink.LinkActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
+
+        <activity
+            android:name="com.airbnb.deeplinkdispatch.DeepLinkActivity"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="akexorcist.com" android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="www.akexorcist.com" android:scheme="http" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.akexorcist.sleepingforless.config.GlideConfiguration"
+            android:value="GlideModule" />
     </application>
 
 </manifest>

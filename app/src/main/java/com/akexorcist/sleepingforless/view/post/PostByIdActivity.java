@@ -42,7 +42,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
+public class PostByIdActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -141,7 +141,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     private void callService() {
         showLoading();
         hideUnavailableMessageImmediately();
-        BloggerManager.getInstance().getPost(postItem.getId());
+        BloggerManager.getInstance().getPostById(postItem.getId());
     }
 
     @Subscribe
@@ -309,7 +309,7 @@ public class PostActivity extends SFLActivity implements View.OnClickListener, V
     }
 
     private void addBookmarkToDatabase() {
-        BookmarkManager.getInstance().addBookmark(post, postItem);
+        BookmarkManager.getInstance().addBookmark(post);
     }
 
     private void downloadImageToBookmark() {

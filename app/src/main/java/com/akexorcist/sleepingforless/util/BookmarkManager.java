@@ -2,11 +2,9 @@ package com.akexorcist.sleepingforless.util;
 
 import android.graphics.Bitmap;
 
-import com.akexorcist.sleepingforless.database.BookmarkImageRealm;
 import com.akexorcist.sleepingforless.database.BookmarkLabelRealm;
 import com.akexorcist.sleepingforless.database.BookmarkRealm;
 import com.akexorcist.sleepingforless.network.model.Post;
-import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.bumptech.glide.Glide;
@@ -154,7 +152,7 @@ public class BookmarkManager {
         realm.close();
     }
 
-    public void addBookmark(Post post, PostList.Item postItem) {
+    public void addBookmark(Post post) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         BookmarkRealm postOffline = realm.createObject(BookmarkRealm.class);
@@ -173,15 +171,6 @@ public class BookmarkManager {
             }
         }
         postOffline.setLabelList(labelList);
-        RealmList<BookmarkImageRealm> imageList = new RealmList<>();
-        if (postItem.getImages() != null) {
-            for (PostList.Image image : postItem.getImages()) {
-                BookmarkImageRealm bookmarkImageRealm = realm.createObject(BookmarkImageRealm.class);
-                bookmarkImageRealm.setUrl(image.getUrl());
-                imageList.add(bookmarkImageRealm);
-            }
-        }
-        postOffline.setImageList(imageList);
         realm.copyToRealm(postOffline);
         realm.commitTransaction();
         realm.close();

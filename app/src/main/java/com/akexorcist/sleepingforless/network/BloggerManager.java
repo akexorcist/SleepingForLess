@@ -61,8 +61,22 @@ public class BloggerManager {
         });
     }
 
-    public void getPost(String postId) {
-        BloggerConnection.getInstance().getConnection().getPost(BloggerConstant.BLOG_ID, postId).enqueue(new Callback<Post>() {
+    public void getPostById(String postId) {
+        BloggerConnection.getInstance().getConnection().getPostById(BloggerConstant.BLOG_ID, postId).enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                BusProvider.getInstance().post(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                BusProvider.getInstance().post(new PostFailure(t));
+            }
+        });
+    }
+
+    public void getPostByPath(String postPath) {
+        BloggerConnection.getInstance().getConnection().getPostByPath(BloggerConstant.BLOG_ID, postPath).enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 BusProvider.getInstance().post(response.body());

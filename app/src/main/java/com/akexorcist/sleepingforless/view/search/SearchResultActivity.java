@@ -6,9 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
@@ -22,8 +20,7 @@ import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.feed.FeedViewHolder;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
-import com.akexorcist.sleepingforless.view.post.PostActivity;
-import com.bowyer.app.fabtransitionlayout.FooterLayout;
+import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -143,7 +140,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ID, Parcels.wrap(item));
-        openActivity(PostActivity.class, bundle);
+        openActivity(PostByIdActivity.class, bundle);
     }
 
     @Override
