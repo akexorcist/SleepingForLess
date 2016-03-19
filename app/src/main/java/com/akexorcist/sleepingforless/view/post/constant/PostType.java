@@ -9,4 +9,5 @@ public class PostType {
     public static final int IMAGE = 2;
     public static final int CODE = 3;
     public static final int VIDEO = 4;
+    public static final int BLANK = 5;
 }

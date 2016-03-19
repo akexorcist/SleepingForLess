@@ -18,6 +18,7 @@ import com.akexorcist.sleepingforless.view.offline.holder.ImageOfflinePostViewHo
 import com.akexorcist.sleepingforless.view.offline.holder.PlainTextOfflinePostViewHolder;
 import com.akexorcist.sleepingforless.view.offline.holder.VideoOfflinePostViewHolder;
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
+import com.akexorcist.sleepingforless.view.post.holder.PlainTextPostViewHolder;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
@@ -57,35 +58,39 @@ public class OfflinePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return new HeaderOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_header, parent, false));
         } else if (viewType == PostType.PLAIN_TEXT) {
             return new PlainTextOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_plain_text, parent, false));
+        } else if (viewType == PostType.BLANK) {
+            return new PlainTextPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_blank, parent, false));
         }
         return null;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return postList.get(position).getType();
+        return position < postList.size() - 1 ? postList.get(position).getType() : PostType.BLANK;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        BasePost basePost = postList.get(holder.getAdapterPosition());
-        if (viewType == PostType.PLAIN_TEXT) {
-            addPlainTextContent(holder, basePost);
-        } else if (viewType == PostType.HEADER) {
-            addHeaderContent(holder, basePost);
-        } else if (viewType == PostType.IMAGE) {
-            addImageContent(holder, basePost);
-        } else if (viewType == PostType.CODE) {
-            addCodeContent(holder, basePost);
-        } else if (viewType == PostType.VIDEO) {
-            addVideoContent(holder, basePost);
+        if (position < postList.size() - 1) {
+            BasePost basePost = postList.get(holder.getAdapterPosition());
+            if (viewType == PostType.PLAIN_TEXT) {
+                addPlainTextContent(holder, basePost);
+            } else if (viewType == PostType.HEADER) {
+                addHeaderContent(holder, basePost);
+            } else if (viewType == PostType.IMAGE) {
+                addImageContent(holder, basePost);
+            } else if (viewType == PostType.CODE) {
+                addCodeContent(holder, basePost);
+            } else if (viewType == PostType.VIDEO) {
+                addVideoContent(holder, basePost);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return postList.size();
+        return postList.size() > 0 ? postList.size() + 1 : 0;
     }
 
     // Plain Text
