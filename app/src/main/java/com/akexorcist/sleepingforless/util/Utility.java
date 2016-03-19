@@ -25,15 +25,4 @@ public class Utility {
         ClipData clip = ClipData.newPlainText(label, text);
         clipboard.setPrimaryClip(clip);
     }
-
-    public void avoidDuplicateClick(final View view) {
-        Log.e("Check", "avoidDuplicateClick");
-        view.setEnabled(false);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                view.setEnabled(true);
-//            }
-//        }, 1000);
-    }
 }

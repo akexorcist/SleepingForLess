@@ -85,6 +85,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         viewContentShadow = findViewById(R.id.view_content_shadow);
         pbPostLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_offline_post_loading);
         btnMenuUpdate = (MenuButton) findViewById(R.id.btn_menu_update);
+        btnMenuUpdate.setVisibility(View.GONE);
         btnMenuDelete = (MenuButton) findViewById(R.id.btn_menu_delete);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         rvPostList = (RecyclerView) findViewById(R.id.rv_offline_post_list);

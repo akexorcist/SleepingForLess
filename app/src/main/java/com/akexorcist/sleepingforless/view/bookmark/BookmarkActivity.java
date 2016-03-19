@@ -77,6 +77,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         viewContentShadow.setOnClickListener(this);
         fabMenu.hide();
         fabMenu.setOnClickListener(this);
+        btnUpdateAll.setVisibility(View.GONE);
         btnUpdateAll.setOnClickListener(this);
         btnRemoveAll.setOnClickListener(this);
         btnInfo.setOnClickListener(this);
@@ -253,9 +254,9 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void notifyDataChanged() {
-//        if (adapter != null) {
-        adapter.notifyDataSetChanged();
-//        }
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void showSnackbar(int messageResId) {

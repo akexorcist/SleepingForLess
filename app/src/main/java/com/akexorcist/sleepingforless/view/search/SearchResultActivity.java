@@ -139,7 +139,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
-        Utility.getInstance().avoidDuplicateClick(holder.mrlFeedButton);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
         openActivity(PostByIdActivity.class, bundle, true);
