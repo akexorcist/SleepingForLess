@@ -41,6 +41,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setPostListItem(List<PostList.Item> itemList) {
         this.itemList = itemList;
+        notifyDataSetChanged();
     }
 
     public void setItemListener(ItemListener listener) {

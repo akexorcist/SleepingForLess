@@ -127,6 +127,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     @Subscribe
     public void onSearchRequest(SearchRequest request) {
         this.request = request;
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_search_result, request.getKeyword())));
         callService();
     }
 
@@ -159,7 +160,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     public void setPostList(PostList postList) {
         if (postList != null) {
-            adapter.addPostListItem(postList.getItems());
+            adapter.setPostListItem(postList.getItems());
 //            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
             adapter.setLoadMoreAvailable(false);
         }
