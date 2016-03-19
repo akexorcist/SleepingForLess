@@ -17,6 +17,7 @@ import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.network.model.PostListFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.feed.FeedViewHolder;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
@@ -108,7 +109,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     @Subscribe
     public void onPostListSuccess(PostList postList) {
-        Log.e("Check", "onPostListSuccess");
         this.postList = postList;
         setPostList(postList);
         hideLoading();
@@ -118,7 +118,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     @Subscribe
     public void onPostListFailure(PostListFailure failure) {
-        Log.e("Check", "onPostListFailure");
         rvSearchResultList.setVisibility(View.GONE);
         pbSearchResultList.hideNow();
         fabMenu.show();
@@ -140,9 +139,10 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
+        Utility.getInstance().avoidDuplicateClick(holder.mrlFeedButton);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
-        openActivity(PostByIdActivity.class, bundle);
+        openActivity(PostByIdActivity.class, bundle, true);
     }
 
     @Override

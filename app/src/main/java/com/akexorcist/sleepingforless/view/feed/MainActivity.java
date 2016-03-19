@@ -1,5 +1,6 @@
 package com.akexorcist.sleepingforless.view.feed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
+import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
@@ -133,7 +135,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     protected void onResume() {
         super.onResume();
         closeMenu();
-        fabMenu.show();
+        showFAB();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -193,7 +195,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
-        openActivity(PostByIdActivity.class, bundle);
+        openActivity(PostByIdActivity.class, bundle, true);
     }
 
     @Override
@@ -351,5 +353,10 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private void hideUnavailableMessageImmediately() {
         tvUnavailableDescription.setVisibility(View.GONE);
         tvOpenBookmark.setVisibility(View.GONE);
+    }
+
+    private void showFAB() {
+        fabMenu.show();
+        flMenu.contractFab();
     }
 }

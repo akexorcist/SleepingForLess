@@ -3,6 +3,10 @@ package com.akexorcist.sleepingforless.network;
 import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.constant.BloggerConstant;
 import com.akexorcist.sleepingforless.network.model.Post;
+import com.akexorcist.sleepingforless.network.model.PostById;
+import com.akexorcist.sleepingforless.network.model.PostByIdFailure;
+import com.akexorcist.sleepingforless.network.model.PostByPath;
+import com.akexorcist.sleepingforless.network.model.PostByPathFailure;
 import com.akexorcist.sleepingforless.network.model.PostFailure;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.network.model.PostListFailure;
@@ -62,29 +66,29 @@ public class BloggerManager {
     }
 
     public void getPostById(String postId) {
-        BloggerConnection.getInstance().getConnection().getPostById(BloggerConstant.BLOG_ID, postId).enqueue(new Callback<Post>() {
+        BloggerConnection.getInstance().getConnection().getPostById(BloggerConstant.BLOG_ID, postId).enqueue(new Callback<PostById>() {
             @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
+            public void onResponse(Call<PostById> call, Response<PostById> response) {
                 BusProvider.getInstance().post(response.body());
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                BusProvider.getInstance().post(new PostFailure(t));
+            public void onFailure(Call<PostById> call, Throwable t) {
+                BusProvider.getInstance().post(new PostByIdFailure(t));
             }
         });
     }
 
     public void getPostByPath(String postPath) {
-        BloggerConnection.getInstance().getConnection().getPostByPath(BloggerConstant.BLOG_ID, postPath).enqueue(new Callback<Post>() {
+        BloggerConnection.getInstance().getConnection().getPostByPath(BloggerConstant.BLOG_ID, postPath).enqueue(new Callback<PostByPath>() {
             @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
+            public void onResponse(Call<PostByPath> call, Response<PostByPath> response) {
                 BusProvider.getInstance().post(response.body());
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                BusProvider.getInstance().post(new PostFailure(t));
+            public void onFailure(Call<PostByPath> call, Throwable t) {
+                BusProvider.getInstance().post(new PostByPathFailure(t));
             }
         });
     }

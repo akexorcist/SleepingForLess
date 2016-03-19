@@ -12,6 +12,7 @@ import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.PostList;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.Utility;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -117,9 +118,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     return true;
                 }
             });
-        } else if (viewType == VIEW_TYPE_LOADING)
-
-        {
+        } else if (viewType == VIEW_TYPE_LOADING) {
             LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
             feedViewHolder.pbPostListLoading.showNow();
             if (isLoadMoreAvailable && loadMoreListener != null) {

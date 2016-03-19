@@ -12,12 +12,12 @@ import com.balysv.materialripple.MaterialRippleLayout;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class FeedViewHolder extends RecyclerView.ViewHolder {
-    TextView tvTitle;
-    TextView tvLabel;
-    TextView tvDate;
-    ImageView ivTitle;
-    ImageView ivBookmarkIndicator;
-    MaterialRippleLayout mrlFeedButton;
+    public TextView tvTitle;
+    public TextView tvLabel;
+    public TextView tvDate;
+    public ImageView ivTitle;
+    public ImageView ivBookmarkIndicator;
+    public MaterialRippleLayout mrlFeedButton;
 
     public FeedViewHolder(View itemView) {
         super(itemView);

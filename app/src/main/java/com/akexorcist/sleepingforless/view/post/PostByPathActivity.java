@@ -23,6 +23,8 @@ import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.Post;
+import com.akexorcist.sleepingforless.network.model.PostByPath;
+import com.akexorcist.sleepingforless.network.model.PostByPathFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
@@ -139,7 +141,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     @Subscribe
-    public void onPostSuccess(Post post) {
+    public void onPostSuccess(PostByPath post) {
         this.post = post;
         setPost(post);
         checkIsBookmarked(post.getId());
@@ -150,7 +152,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     @Subscribe
-    public void onPostFailure(Failure failure) {
+    public void onPostFailure(PostByPathFailure failure) {
         Log.e("Check", "onPostFailure");
         pbPostLoading.hideNow();
         showUnavailableMessage();

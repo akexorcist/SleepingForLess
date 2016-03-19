@@ -3,6 +3,9 @@ package com.akexorcist.sleepingforless.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
@@ -21,5 +24,16 @@ public class Utility {
         ClipboardManager clipboard = (android.content.ClipboardManager) Contextor.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, text);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public void avoidDuplicateClick(final View view) {
+        Log.e("Check", "avoidDuplicateClick");
+        view.setEnabled(false);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                view.setEnabled(true);
+//            }
+//        }, 1000);
     }
 }

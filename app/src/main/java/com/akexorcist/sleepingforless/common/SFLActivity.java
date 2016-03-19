@@ -31,6 +31,14 @@ public class SFLActivity extends AppCompatActivity {
         startActivity(new Intent(this, activityClass).putExtras(bundle));
     }
 
+    protected void openActivity(Class<? extends Activity> activityClass, Bundle bundle, boolean singleTop) {
+        Intent intent = new Intent(this, activityClass).putExtras(bundle);
+        if (singleTop) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        }
+        startActivity(intent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
