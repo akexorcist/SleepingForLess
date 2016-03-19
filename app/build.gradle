@@ -32,6 +32,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:customtabs:23.2.1'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'io.realm:realm-android:0.87.5'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
@@ -52,3 +53,5 @@ dependencies {
     compile 'com.airbnb:deeplinkdispatch:1.5.0'
     apt 'com.airbnb:deeplinkdispatch-processor:1.5.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
