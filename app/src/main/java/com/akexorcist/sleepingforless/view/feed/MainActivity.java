@@ -1,8 +1,14 @@
 package com.akexorcist.sleepingforless.view.feed;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +24,7 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.gcm.GcmRegisterService;
 import com.akexorcist.sleepingforless.network.BloggerManager;
 import com.akexorcist.sleepingforless.network.model.Failure;
 import com.akexorcist.sleepingforless.network.model.PostList;
@@ -68,6 +75,14 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         setupView();
         setToolbar();
         callService();
+        setupGcmRegister();
+    }
+
+    private void setupGcmRegister() {
+        registerReceiver();
+        if (Utility.getInstance().checkPlayServices(this)) {
+            registerGcm();
+        }
     }
 
     private void bindView() {
@@ -134,11 +149,18 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver();
         closeMenu();
         showFAB();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver();
     }
 
     @Subscribe
@@ -358,5 +380,34 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private void showFAB() {
         fabMenu.show();
         flMenu.contractFab();
+    }
+
+    // Google Cloud Messaging
+    private boolean isReceiverRegistered;
+
+    private void registerGcm() {
+        Intent intent = new Intent(this, GcmRegisterService.class);
+        startService(intent);
+    }
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean sentToken = sharedPreferences.getBoolean(GcmRegisterService.SENT_TOKEN_TO_SERVER, false);
+            // TODO Do something here
+        }
+    };
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter(GcmRegisterService.REGISTRATION_COMPLETE));
+            isReceiverRegistered = true;
+        }
+    }
+
+    private void unregisterReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        isReceiverRegistered = false;
     }
 }
