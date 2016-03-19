@@ -188,7 +188,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                BusProvider.getInstance().post(new BookmarkRemoveEvent());
+                BusProvider.getInstance().post(new BookmarkRemoveEvent(bookmark.getPostId()));
             }
         }, 500);
 

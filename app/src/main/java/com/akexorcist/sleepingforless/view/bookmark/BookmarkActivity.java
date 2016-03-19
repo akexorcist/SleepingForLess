@@ -78,6 +78,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         fabMenu.hide();
         fabMenu.setOnClickListener(this);
         btnUpdateAll.setVisibility(View.GONE);
+        btnInfo.setVisibility(View.GONE);
         btnUpdateAll.setOnClickListener(this);
         btnRemoveAll.setOnClickListener(this);
         btnInfo.setOnClickListener(this);
@@ -138,7 +139,17 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
 
     @Subscribe
     public void onBookmarkRemoveEvent(BookmarkRemoveEvent event) {
+        notifyRemoveBookmark(event.getPostId());
         showSnackbar(R.string.removed_from_bookmark);
+    }
+
+    private void notifyRemoveBookmark(String postId) {
+        for (int i = 0; i < bookmarkList.size(); i++) {
+            if (bookmarkList.get(i).getPostId().equalsIgnoreCase(postId)) {
+                bookmarkList.remove(i);
+                adapter.notifyItemRemoved(i);
+            }
+        }
     }
 
     @Override
