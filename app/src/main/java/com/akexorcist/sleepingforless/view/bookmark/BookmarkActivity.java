@@ -2,6 +2,7 @@ package com.akexorcist.sleepingforless.view.bookmark;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.config.ContentPreference;
@@ -22,6 +25,8 @@ import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.offline.OfflinePostActivity;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -203,6 +208,36 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void onMenuDeleteAllClick() {
+        new MaterialStyledDialog(this)
+                .setCancelable(true)
+                .setTitle(getString(R.string.remove_all_confirm_title))
+                .setDescription(getString(R.string.remove_all_confirm_description))
+                .withDialogAnimation(true, Duration.FAST)
+                .withIconAnimation(true)
+                .setHeaderColor(R.color.colorAccent)
+                .setIcon(R.drawable.vector_ic_warning)
+                .setPositive(getString(R.string.remove_confirm_yes), new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        removeAllBookmark();
+                    }
+                })
+                .setNegative(getString(R.string.remove_confirm_no), new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                })
+                .build()
+                .show();
+        closeMenu();
+    }
+
+    private void onMenuInfoClick() {
+
+    }
+
+    private void removeAllBookmark() {
         if (bookmarkList != null) {
             for (Bookmark bookmark : bookmarkList) {
                 BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
@@ -213,10 +248,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
             fabMenu.hide();
             showSnackbar(R.string.removed_all_bookmark);
         }
-    }
-
-    private void onMenuInfoClick() {
-
     }
 
     private void openMenu() {

@@ -39,7 +39,9 @@
     <string name="network_unavailable_with_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nแต่อ่านบทความจาก Bookmark ได้นะ</string>
     <string name="network_unavailable_no_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nคราวหน้าลอง Bookmark เก็บไว้ดูนะ\nจะได้เปิดอ่านแบบออฟไลน์ได้</string>
     <string name="warn_offline_bookmark">Bookmark คือบทความที่เก็บออฟไลน์ในเครื่อง</string>
-    <string name="remove_confirm">Delete this bookmark?</string>
+    <string name="remove_confirm_title">Delete this bookmark?</string>
+    <string name="remove_all_confirm_title">Delete all bookmarks?</string>
+    <string name="remove_all_confirm_description">This can\'t be undone.</string>
     <string name="remove_confirm_yes">Yes, I\'m sure.</string>
     <string name="remove_confirm_no">Noooo~</string>
 

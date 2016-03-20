@@ -196,7 +196,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     private void onMenuDeleteClick() {
         new MaterialStyledDialog(this)
                 .setCancelable(true)
-                .setTitle(getString(R.string.remove_confirm))
+                .setTitle(getString(R.string.remove_confirm_title))
                 .setDescription(ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()))
                 .withDialogAnimation(true, Duration.FAST)
                 .withIconAnimation(true)
