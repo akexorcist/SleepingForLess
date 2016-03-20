@@ -15,6 +15,7 @@ import android.view.View;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.util.StorageUtility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -94,18 +95,12 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         download(fullUrl, new SimpleTarget<File>() {
             @Override
             public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
-                File destinationFile = new File(getDownloadsDirectory(), file.getName().replaceAll(".", "_") + ".jpg");
-                copyToDownloadsDirectory(file, destinationFile);
-                updateImageToMediaScanner(destinationFile);
-                showSavedMessage(getString(R.string.download_image_successful), destinationFile);
+                File destinationFile = new File(StorageUtility.getInstance().getDownloadsDirectory(), file.getName().replaceAll(".", "_") + ".jpg");
+                StorageUtility.getInstance().copyToDownloadsDirectory(file, destinationFile);
+                StorageUtility.getInstance().updateImageToMediaScanner(destinationFile);
+                showSavedMessage(destinationFile);
             }
         });
-    }
-
-    public void updateImageToMediaScanner(File file) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(Uri.fromFile(file));
-        sendBroadcast(intent);
     }
 
     private void download(String url, SimpleTarget<File> simpleTarget) {
@@ -114,28 +109,8 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
                 .downloadOnly(simpleTarget);
     }
 
-    private File getDownloadsDirectory() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    }
-
-    private void copyToDownloadsDirectory(File source, File destination) {
-        try {
-            InputStream inputStream = new FileInputStream(source);
-            OutputStream outputStream = new FileOutputStream(destination);
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                outputStream.write(buf, 0, len);
-            }
-            inputStream.close();
-            outputStream.close();
-        } catch (IOException e) {
-        }
-    }
-
-    private void showSavedMessage(String message, final File file) {
-        Snackbar.make(ivPreview, message, Snackbar.LENGTH_LONG).setAction(R.string.action_view, new View.OnClickListener() {
+    private void showSavedMessage(final File file) {
+        Snackbar.make(ivPreview, R.string.download_image_successful, Snackbar.LENGTH_LONG).setAction(R.string.action_view, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
