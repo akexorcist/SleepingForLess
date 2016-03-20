@@ -24,31 +24,47 @@ public class SleepingForLessManager {
         return manager;
     }
 
-    public void addGcmToken(String token, String serial) {
+    public void addGcmToken(final String token, String serial, final GcmTokenCallback callback) {
         InsertTokenRequest request = new InsertTokenRequest(token, serial);
         SleepingForLessConnection.getInstance().getConnection().addGcmToken(request).enqueue(new Callback<InsertTokenResponse>() {
             @Override
             public void onResponse(Call<InsertTokenResponse> call, Response<InsertTokenResponse> response) {
-                BusProvider.getInstance().post(response.body());
+                if(callback != null) {
+                    callback.onTokenAdded(token);
+                }
             }
 
             @Override
             public void onFailure(Call<InsertTokenResponse> call, Throwable t) {
-                BusProvider.getInstance().post(new InsertTokenResponseFailure(t));
+                if(callback != null) {
+                    callback.onTokenFailed(token);
+                }
             }
         });
     }
 
-    public void removeGcmToken(String token) {
+    public void removeGcmToken(final String token, final GcmTokenCallback callback) {
         RemoveTokenRequest request = new RemoveTokenRequest(token);
         SleepingForLessConnection.getInstance().getConnection().removeGcmToken(request).enqueue(new Callback<RemoveTokenResponse>() {
             @Override
             public void onResponse(Call<RemoveTokenResponse> call, Response<RemoveTokenResponse> response) {
+                if(callback != null) {
+                    callback.onTokenRemoved(token);
+                }
             }
 
             @Override
             public void onFailure(Call<RemoveTokenResponse> call, Throwable t) {
+                if(callback != null) {
+                    callback.onTokenFailed(token);
+                }
             }
         });
+    }
+
+    public interface GcmTokenCallback {
+        void onTokenAdded(String token);
+        void onTokenRemoved(String token);
+        void onTokenFailed(String token);
     }
 }

@@ -21,7 +21,7 @@ import java.io.IOException;
  * Created by Akexorcist on 3/19/2016 AD.
  */
 
-public class GcmRegisterService extends IntentService {
+public class GcmRegisterService extends IntentService implements SleepingForLessManager.GcmTokenCallback {
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
@@ -78,12 +78,24 @@ public class GcmRegisterService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        String oldTokenId = GcmTokenPreference.getInstance().checkNewToken(token);
-        if (oldTokenId != null) {
+        if (GcmTokenPreference.getInstance().isNewToken(token)) {
             Log.e("Check", "Send Registration To Server");
-            SleepingForLessManager.getInstance().removeGcmToken(oldTokenId);
-            SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL);
+            SleepingForLessManager.getInstance().removeGcmToken(GcmTokenPreference.getInstance().getTokenId(), null);
+            SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL, this);
         }
+    }
+
+    @Override
+    public void onTokenAdded(String token) {
+        GcmTokenPreference.getInstance().setTokenId(token);
+    }
+
+    @Override
+    public void onTokenRemoved(String token) {
+    }
+
+    @Override
+    public void onTokenFailed(String token) {
     }
 
     /**
@@ -100,5 +112,4 @@ public class GcmRegisterService extends IntentService {
         }
     }
     // [END subscribe_topics]
-
 }

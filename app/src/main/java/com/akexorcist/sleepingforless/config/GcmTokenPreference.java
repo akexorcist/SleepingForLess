@@ -25,23 +25,18 @@ public class GcmTokenPreference {
         return Contextor.getContext().getSharedPreferences(GCM_TOKEN_PREFERENCE, Context.MODE_PRIVATE);
     }
 
-    public String checkNewToken(String tokenId) {
-        String oldTokenId = getTokenId();
-        if (!tokenId.equalsIgnoreCase(oldTokenId)) {
-            setTokenId(tokenId);
-            return oldTokenId;
-        }
-        return null;
+    public boolean isNewToken(String tokenId) {
+        return !tokenId.equalsIgnoreCase(getTokenId());
     }
 
-    private void setTokenId(String tokenId) {
+    public void setTokenId(String tokenId) {
         getPreference()
                 .edit()
                 .putString(KEY_TOKEN_ID, tokenId)
                 .apply();
     }
 
-    private String getTokenId() {
+    public String getTokenId() {
         return getPreference().getString(KEY_TOKEN_ID, "");
     }
 }
