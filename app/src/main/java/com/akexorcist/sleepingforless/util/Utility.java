@@ -51,4 +51,16 @@ public class Utility {
         }
         return true;
     }
+
+    public int getDrawableResource(Context context, String filename) {
+        return getResourceByFilename(context, "drawable", context.getPackageName());
+    }
+
+    public int getMipmapResource(Context context, String filename) {
+        return getResourceByFilename(context, "mipmap", context.getPackageName());
+    }
+
+    private int getResourceByFilename(Context context, String resourceType, String filename) {
+        return context.getResources().getIdentifier(filename, resourceType, context.getPackageName());
+    }
 }
