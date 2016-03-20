@@ -2,7 +2,7 @@ package com.akexorcist.sleepingforless.database;
 
 import android.graphics.Bitmap;
 
-import com.akexorcist.sleepingforless.network.model.Post;
+import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkImage;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 

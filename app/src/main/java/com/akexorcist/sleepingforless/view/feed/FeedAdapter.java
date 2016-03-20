@@ -8,11 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.network.BloggerManager;
-import com.akexorcist.sleepingforless.network.model.PostList;
+import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
+import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
-import com.akexorcist.sleepingforless.util.Utility;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;

@@ -3,11 +3,13 @@ package com.akexorcist.sleepingforless.gcm;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.network.sfl.SleepingForLessManager;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -75,7 +77,8 @@ public class GcmRegisterService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // TODO Add custom implementation, as needed.
+        Log.e("Check", "Send Registration To Server");
+        SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL);
     }
 
     /**
