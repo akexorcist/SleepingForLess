@@ -27,6 +27,7 @@ import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
+import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
@@ -179,7 +180,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
 
     @Override
     public void onImageLongClickListener(String fullUrl) {
-        copyFullUrl(fullUrl);
+        Utility.getInstance().copyTextToClipboard("Image URL", fullUrl);
         Snackbar.make(tbTitle, R.string.copy_image_url_to_clipboard, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -232,12 +233,6 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
                 BusProvider.getInstance().post(new BookmarkRemoveEvent(bookmark.getPostId()));
             }
         }, 500);
-    }
-
-    private void copyFullUrl(String fullUrl) {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("Image URL", fullUrl);
-        clipboard.setPrimaryClip(clip);
     }
 
     private void setPost(Bookmark bookmark) {
