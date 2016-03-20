@@ -54,6 +54,12 @@ public class PostList {
         public Item() {
         }
 
+        public Item(String title, String id, String url) {
+            this.title = title;
+            this.id = id;
+            this.url = url;
+        }
+
         public String getKind() {
             return kind;
         }

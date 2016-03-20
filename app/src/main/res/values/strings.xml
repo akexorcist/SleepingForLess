@@ -13,6 +13,7 @@
     <string name="title_bookmark_list">Bookmark List</string>
     <string name="title_sort_by">Sort by&#8230;</string>
     <string name="title_search_result">Search Result : %1$s</string>
+    <string name="title_new_blog_post_available">New Blog Post Available</string>
     <string name="copy_image_url_to_clipboard">Copy image URL to clipboard.</string>
     <string name="removed_from_bookmark">Removed from bookmark.</string>
     <string name="removed_all_bookmark">Removed all bookmark.</string>
