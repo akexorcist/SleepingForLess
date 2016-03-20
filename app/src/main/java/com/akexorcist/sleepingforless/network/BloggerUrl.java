@@ -1,5 +1,7 @@
 package com.akexorcist.sleepingforless.network;
 
+import com.akexorcist.sleepingforless.network.blogger.BloggerKey;
+
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
