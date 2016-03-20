@@ -47,6 +47,15 @@
                 android:layout_marginRight="@dimen/default_margin_padding_large"
                 app:mbIconSrc="@drawable/vector_ic_remove"
                 app:mbText="@string/menu_delete" />
+
+            <com.akexorcist.sleepingforless.widget.MenuButton
+                android:id="@+id/btn_menu_open_from_original"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_margin_padding_large"
+                android:layout_marginRight="@dimen/default_margin_padding_large"
+                app:mbIconSrc="@drawable/vector_ic_open_from_original"
+                app:mbText="@string/menu_open_from_original" />
         </LinearLayout>
     </com.bowyer.app.fabtransitionlayout.FooterLayout>
 </merge>

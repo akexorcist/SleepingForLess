@@ -44,6 +44,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     private DilatingDotsProgressBar pbPostLoading;
     private MenuButton btnMenuUpdate;
     private MenuButton btnMenuDelete;
+    private MenuButton btnMenuOpenFromOriginal;
     private BottomSheetLayout bslMenu;
     private RecyclerView rvPostList;
     private OfflinePostAdapter adapter;
@@ -86,6 +87,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         pbPostLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_offline_post_loading);
         btnMenuUpdate = (MenuButton) findViewById(R.id.btn_menu_update);
         btnMenuDelete = (MenuButton) findViewById(R.id.btn_menu_delete);
+        btnMenuOpenFromOriginal = (MenuButton) findViewById(R.id.btn_menu_open_from_original);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         rvPostList = (RecyclerView) findViewById(R.id.rv_offline_post_list);
     }
@@ -97,8 +99,10 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         btnMenuUpdate.setVisibility(View.GONE);
         btnMenuUpdate.setOnClickListener(this);
         btnMenuDelete.setOnClickListener(this);
+        btnMenuOpenFromOriginal.setOnClickListener(this);
         btnMenuUpdate.setOnTouchListener(this);
         btnMenuDelete.setOnTouchListener(this);
+        btnMenuOpenFromOriginal.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
     }
 
@@ -134,6 +138,8 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
             onMenuUpdateClick();
         } else if (v == btnMenuDelete) {
             onMenuDeleteClick();
+        } else if (v == btnMenuOpenFromOriginal) {
+            onMenuOpenInOnlineClick();
         }
     }
 
@@ -191,7 +197,11 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
                 BusProvider.getInstance().post(new BookmarkRemoveEvent(bookmark.getPostId()));
             }
         }, 500);
+    }
 
+    private void onMenuOpenInOnlineClick() {
+        ExternalBrowserUtility.getInstance().open(this, bookmark.getUrl());
+        closeMenu();
     }
 
     private void copyFullUrl(String fullUrl) {
