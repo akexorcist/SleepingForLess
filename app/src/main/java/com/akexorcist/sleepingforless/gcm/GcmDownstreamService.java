@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.constant.Key;
@@ -63,8 +64,7 @@ public class GcmDownstreamService extends GcmListenerService {
         builder.setLargeIcon(bitmap);
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(new Random().nextInt(10000), notification);
-        notificationManager.
+        notificationManager.notify(new Random().nextInt(100000), notification);
     }
 
     private int randomNotificationIcon() {
