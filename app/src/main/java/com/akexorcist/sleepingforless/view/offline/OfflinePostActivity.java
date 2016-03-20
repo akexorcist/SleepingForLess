@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.common.SFLActivity;
@@ -30,6 +33,8 @@ import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.github.javiersantos.materialstyleddialogs.enums.Duration;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
@@ -188,20 +193,45 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     }
 
     private void onMenuDeleteClick() {
-        BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
-        finish();
+        new MaterialStyledDialog(this)
+                .setCancelable(true)
+                .setTitle(getString(R.string.remove_confirm))
+                .setDescription(ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()))
+                .withDialogAnimation(true, Duration.FAST)
+                .withIconAnimation(true)
+                .setHeaderColor(R.color.colorAccent)
+                .setIcon(R.drawable.vector_ic_warning)
+                .setPositive(getString(R.string.remove_confirm_yes), new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
+                        finish();
+                        notifyBookmarkRemoved();
+                    }
+                })
+                .setNegative(getString(R.string.remove_confirm_no), new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
+                    }
+                })
+                .build()
+                .show();
+        closeMenu();
+    }
+
+    private void onMenuOpenInOnlineClick() {
+        ExternalBrowserUtility.getInstance().open(this, bookmark.getUrl());
+        closeMenu();
+    }
+
+    public void notifyBookmarkRemoved() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 BusProvider.getInstance().post(new BookmarkRemoveEvent(bookmark.getPostId()));
             }
         }, 500);
-    }
-
-    private void onMenuOpenInOnlineClick() {
-        ExternalBrowserUtility.getInstance().open(this, bookmark.getUrl());
-        closeMenu();
     }
 
     private void copyFullUrl(String fullUrl) {
