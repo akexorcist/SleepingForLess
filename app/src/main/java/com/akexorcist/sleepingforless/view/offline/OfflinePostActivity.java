@@ -205,9 +205,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
                 .setPositive(getString(R.string.remove_confirm_yes), new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
-                        finish();
-                        notifyBookmarkRemoved();
+                        removeBookmark();
                     }
                 })
                 .setNegative(getString(R.string.remove_confirm_no), new MaterialDialog.SingleButtonCallback() {
@@ -224,6 +222,12 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     private void onMenuOpenInOnlineClick() {
         ExternalBrowserUtility.getInstance().open(this, bookmark.getUrl());
         closeMenu();
+    }
+
+    public void removeBookmark() {
+        BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
+        finish();
+        notifyBookmarkRemoved();
     }
 
     public void notifyBookmarkRemoved() {
