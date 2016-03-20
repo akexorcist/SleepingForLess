@@ -1,7 +1,9 @@
 package com.akexorcist.sleepingforless.network.sfl;
 
-import com.akexorcist.sleepingforless.network.sfl.model.GcmTokenRequest;
-import com.akexorcist.sleepingforless.network.sfl.model.GcmTokenResponse;
+import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenRequest;
+import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenResponse;
+import com.akexorcist.sleepingforless.network.sfl.model.RemoveTokenRequest;
+import com.akexorcist.sleepingforless.network.sfl.model.RemoveTokenResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,5 +14,8 @@ import retrofit2.http.POST;
  */
 public interface SleepingForLessService {
     @POST(SleepingForLessUrl.ADD_SUBSCRIBER)
-    Call<GcmTokenResponse> addGcmToken(@Body GcmTokenRequest request);
+    Call<InsertTokenResponse> addGcmToken(@Body InsertTokenRequest request);
+
+    @POST(SleepingForLessUrl.REMOVE_OLD_SUBSCRIBER)
+    Call<RemoveTokenResponse> removeGcmToken(@Body RemoveTokenRequest request);
 }

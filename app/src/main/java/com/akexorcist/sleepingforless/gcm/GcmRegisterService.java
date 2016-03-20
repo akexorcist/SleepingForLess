@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.config.GcmTokenPreference;
 import com.akexorcist.sleepingforless.network.sfl.SleepingForLessManager;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -70,15 +71,19 @@ public class GcmRegisterService extends IntentService {
 
     /**
      * Persist registration to third-party servers.
-     *
+     * <p/>
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
      *
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        Log.e("Check", "Send Registration To Server");
-        SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL);
+        String oldTokenId = GcmTokenPreference.getInstance().checkNewToken(token);
+        if (oldTokenId != null) {
+            Log.e("Check", "Send Registration To Server");
+            SleepingForLessManager.getInstance().removeGcmToken(oldTokenId);
+            SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL);
+        }
     }
 
     /**

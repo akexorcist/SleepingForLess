@@ -9,11 +9,11 @@ import org.parceler.Parcel;
  */
 
 @Parcel(parcelsIndex = false)
-public class GcmTokenResponseFailure extends Failure {
-    public GcmTokenResponseFailure() {
+public class InsertTokenResponseFailure extends Failure {
+    public InsertTokenResponseFailure() {
     }
 
-    public GcmTokenResponseFailure(Throwable throwable) {
+    public InsertTokenResponseFailure(Throwable throwable) {
         super(throwable);
     }
 }

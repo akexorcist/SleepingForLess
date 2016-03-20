@@ -7,14 +7,14 @@ import org.parceler.Parcel;
  */
 
 @Parcel(parcelsIndex = false)
-public class GcmTokenRequest {
+public class InsertTokenRequest {
     public String token;
     public String serial;
 
-    public GcmTokenRequest() {
+    public InsertTokenRequest() {
     }
 
-    public GcmTokenRequest(String token, String serial) {
+    public InsertTokenRequest(String token, String serial) {
         this.token = token;
         this.serial = serial;
     }

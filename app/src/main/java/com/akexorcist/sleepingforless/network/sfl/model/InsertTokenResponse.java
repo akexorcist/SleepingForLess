@@ -7,11 +7,11 @@ import org.parceler.Parcel;
  */
 
 @Parcel(parcelsIndex = false)
-public class GcmTokenResponse {
+public class InsertTokenResponse {
     public String status;
     public String message;
 
-    public GcmTokenResponse() {
+    public InsertTokenResponse() {
     }
 
     public String getStatus() {

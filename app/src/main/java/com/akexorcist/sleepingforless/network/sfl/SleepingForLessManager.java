@@ -1,17 +1,11 @@
 package com.akexorcist.sleepingforless.network.sfl;
 
 import com.akexorcist.sleepingforless.bus.BusProvider;
-import com.akexorcist.sleepingforless.constant.BloggerConstant;
-import com.akexorcist.sleepingforless.network.blogger.BloggerConnection;
-import com.akexorcist.sleepingforless.network.blogger.model.PostById;
-import com.akexorcist.sleepingforless.network.blogger.model.PostByIdFailure;
-import com.akexorcist.sleepingforless.network.blogger.model.PostByPath;
-import com.akexorcist.sleepingforless.network.blogger.model.PostByPathFailure;
-import com.akexorcist.sleepingforless.network.blogger.model.PostList;
-import com.akexorcist.sleepingforless.network.blogger.model.PostListFailure;
-import com.akexorcist.sleepingforless.network.sfl.model.GcmTokenRequest;
-import com.akexorcist.sleepingforless.network.sfl.model.GcmTokenResponse;
-import com.akexorcist.sleepingforless.network.sfl.model.GcmTokenResponseFailure;
+import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenRequest;
+import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenResponse;
+import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenResponseFailure;
+import com.akexorcist.sleepingforless.network.sfl.model.RemoveTokenRequest;
+import com.akexorcist.sleepingforless.network.sfl.model.RemoveTokenResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,16 +25,29 @@ public class SleepingForLessManager {
     }
 
     public void addGcmToken(String token, String serial) {
-        GcmTokenRequest request = new GcmTokenRequest(token, serial);
-        SleepingForLessConnection.getInstance().getConnection().addGcmToken(request).enqueue(new Callback<GcmTokenResponse>() {
+        InsertTokenRequest request = new InsertTokenRequest(token, serial);
+        SleepingForLessConnection.getInstance().getConnection().addGcmToken(request).enqueue(new Callback<InsertTokenResponse>() {
             @Override
-            public void onResponse(Call<GcmTokenResponse> call, Response<GcmTokenResponse> response) {
+            public void onResponse(Call<InsertTokenResponse> call, Response<InsertTokenResponse> response) {
                 BusProvider.getInstance().post(response.body());
             }
 
             @Override
-            public void onFailure(Call<GcmTokenResponse> call, Throwable t) {
-                BusProvider.getInstance().post(new GcmTokenResponseFailure(t));
+            public void onFailure(Call<InsertTokenResponse> call, Throwable t) {
+                BusProvider.getInstance().post(new InsertTokenResponseFailure(t));
+            }
+        });
+    }
+
+    public void removeGcmToken(String token) {
+        RemoveTokenRequest request = new RemoveTokenRequest(token);
+        SleepingForLessConnection.getInstance().getConnection().removeGcmToken(request).enqueue(new Callback<RemoveTokenResponse>() {
+            @Override
+            public void onResponse(Call<RemoveTokenResponse> call, Response<RemoveTokenResponse> response) {
+            }
+
+            @Override
+            public void onFailure(Call<RemoveTokenResponse> call, Throwable t) {
             }
         });
     }
