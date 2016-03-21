@@ -50,5 +50,8 @@
     <string name="settings_clear_app_cache">Clear App Cache</string>
     <string name="settings_loading">&#8230;</string>
     <string name="settings_key_push_notification">key_push_notification</string>
+    <string name="settings_category_notification">Notifications</string>
+    <string name="settings_category_storage">Storage</string>
+    <string name="settings_category_Other">Other</string>
     <string name="cache_file_size">Size %1$s</string>
 </resources>
