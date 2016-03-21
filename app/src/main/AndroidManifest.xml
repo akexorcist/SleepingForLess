@@ -61,7 +61,6 @@
             android:name=".view.deeplink.LinkActivity"
             android:theme="@android:style/Theme.NoDisplay" />
         <activity android:name=".view.settings.SettingsActivity" />
-
         <activity
             android:name=".view.settings.SettingsActionActivity"
             android:theme="@android:style/Theme.NoDisplay" />
@@ -123,6 +122,8 @@
         <meta-data
             android:name="com.akexorcist.sleepingforless.config.GlideConfiguration"
             android:value="GlideModule" />
+
+        <activity android:name=".view.settings.OpenSourceLicensesActivity"></activity>
     </application>
 
 </manifest>
