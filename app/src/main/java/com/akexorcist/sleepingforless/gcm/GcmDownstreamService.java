@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.config.SettingsPreference;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.util.ContentUtility;
@@ -33,6 +34,9 @@ public class GcmDownstreamService extends GcmListenerService {
     public static final String KEY_ID = "id";
     public static final String KEY_URL = "url";
     public static final String KEY_ICON = "icon";
+    public static final String KEY_TYPE = "type";
+
+    public static final String TYPE_NOTIFICATION = "notification";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -40,7 +44,13 @@ public class GcmDownstreamService extends GcmListenerService {
         String id = data.getString(KEY_ID);
         String url = data.getString(KEY_URL);
         String icon = data.getString(KEY_ICON);
-        showNotification(new PostList.Item(title, id, url), icon);
+        String type = data.getString(KEY_TYPE);
+
+        if (type != null &&
+                type.equalsIgnoreCase(TYPE_NOTIFICATION) &&
+                SettingsPreference.getInstance().isNotificationEnable()) {
+            showNotification(new PostList.Item(title, id, url), icon);
+        }
     }
 
     private void showNotification(PostList.Item postItem, String icon) {

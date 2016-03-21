@@ -21,4 +21,6 @@
 -keepclasseswithmembers class * {
      @com.airbnb.deeplinkdispatch.DeepLink <methods>;
 }
+-keepnames class com.akexorcist.sleepingforless.config.MyGlideModule
+-keep public class * implements com.bumptech.glide.module.GlideModule
 

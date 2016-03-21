@@ -38,6 +38,7 @@ import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.search.SearchRequest;
 import com.akexorcist.sleepingforless.view.search.SearchResultActivity;
+import com.akexorcist.sleepingforless.view.settings.SettingsActivity;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -301,7 +302,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     public void onMenuSettingsClick() {
-        Log.e("Check", "onMenuSettingsClick");
+        openActivity(SettingsActivity.class);
+        closeMenu();
     }
 
     public void onMenuOpenBookmarkClick() {
