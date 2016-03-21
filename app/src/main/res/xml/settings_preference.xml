@@ -14,9 +14,25 @@
         android:title="@string/settings_category_storage">
 
         <com.jenzz.materialpreference.Preference
-            android:key="key_clear_app_cache"
+            android:key="@string/settings_key_clear_app_cache"
             android:summary="@string/settings_loading"
             android:title="@string/settings_clear_app_cache">
+
+            <intent
+                android:action="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity.ACTION_CLEAR_CACHE"
+                android:targetClass="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity"
+                android:targetPackage="com.akexorcist.sleepingforless" />
+
+        </com.jenzz.materialpreference.Preference>
+    </com.jenzz.materialpreference.PreferenceCategory>
+
+    <com.jenzz.materialpreference.PreferenceCategory
+        android:title="@string/settings_category_other">
+
+        <com.jenzz.materialpreference.Preference
+            android:key="@string/settings_key_app_version"
+            android:summary="@string/settings_loading"
+            android:title="@string/settings_app_version">
 
             <intent
                 android:action="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity.ACTION_CLEAR_CACHE"

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
@@ -62,5 +64,15 @@ public class Utility {
 
     private int getResourceByFilename(Context context, String resourceType, String filename) {
         return context.getResources().getIdentifier(filename, resourceType, context.getPackageName());
+    }
+
+    public String getAppVersion() {
+        PackageManager manager = Contextor.getContext().getPackageManager();
+        try {
+            PackageInfo info = manager.getPackageInfo(Contextor.getContext().getPackageName(), 0);
+            return info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return "";
     }
 }
