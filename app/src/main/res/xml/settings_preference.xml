@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.jenzz.materialpreference.SwitchPreference
-        android:defaultValue="true"
-        android:key="key_push_notification"
-        android:title="@string/settings_push_notification" />
+    <com.jenzz.materialpreference.PreferenceCategory
+        android:title="@string/settings_category_notification">
 
-    <com.jenzz.materialpreference.Preference
-        android:key="key_clear_app_cache"
-        android:summary="@string/settings_loading"
-        android:title="@string/settings_clear_app_cache">
+        <com.jenzz.materialpreference.SwitchPreference
+            android:defaultValue="true"
+            android:key="key_push_notification"
+            android:title="@string/settings_push_notification" />
+    </com.jenzz.materialpreference.PreferenceCategory>
 
-        <intent
-            android:action="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity.ACTION_CLEAR_CACHE"
-            android:targetClass="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity"
-            android:targetPackage="com.akexorcist.sleepingforless" />
+    <com.jenzz.materialpreference.PreferenceCategory
+        android:title="@string/settings_category_storage">
 
-    </com.jenzz.materialpreference.Preference>
+        <com.jenzz.materialpreference.Preference
+            android:key="key_clear_app_cache"
+            android:summary="@string/settings_loading"
+            android:title="@string/settings_clear_app_cache">
 
+            <intent
+                android:action="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity.ACTION_CLEAR_CACHE"
+                android:targetClass="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity"
+                android:targetPackage="com.akexorcist.sleepingforless" />
+
+        </com.jenzz.materialpreference.Preference>
+    </com.jenzz.materialpreference.PreferenceCategory>
 </PreferenceScreen>
