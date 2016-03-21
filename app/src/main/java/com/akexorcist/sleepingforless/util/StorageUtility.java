@@ -3,9 +3,6 @@ package com.akexorcist.sleepingforless.util;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
-
-import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,12 +67,14 @@ public class StorageUtility {
     }
 
     public boolean deleteDir(File directory) {
-        if (directory != null && directory.isDirectory()) {
-            String[] childrenList = directory.list();
-            for (String children : childrenList) {
-                boolean success = deleteDir(new File(directory, children));
-                if (!success) {
-                    return false;
+        if (directory != null) {
+            if (directory.isDirectory()) {
+                String[] childrenList = directory.list();
+                for (String children : childrenList) {
+                    boolean success = deleteDir(new File(directory, children));
+                    if (!success) {
+                        return false;
+                    }
                 }
             }
             return directory.delete();
