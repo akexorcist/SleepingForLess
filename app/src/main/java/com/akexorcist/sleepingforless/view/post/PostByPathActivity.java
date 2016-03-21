@@ -77,6 +77,12 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        notifyBookmarkChange();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         ExternalBrowserUtility.getInstance().bindService(this);
@@ -312,6 +318,12 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
 
     private void downloadImageToBookmark() {
         BookmarkManager.getInstance().downloadImageToBookmark(post.getId(), postList, this);
+    }
+
+    private void notifyBookmarkChange() {
+        if(post != null) {
+            checkIsBookmarked(post.getId());
+        }
     }
 
     private void checkIsBookmarked(String postId) {
