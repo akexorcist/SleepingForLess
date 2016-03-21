@@ -12,7 +12,7 @@
         android:background="@color/extra_extra_light_gray"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/view_include_main_title" />
+        <include layout="@layout/view_include_toolbar_main_title" />
 
         <include layout="@layout/view_include_main_content" />
 

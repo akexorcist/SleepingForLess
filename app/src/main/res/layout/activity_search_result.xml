@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.akexorcist.sleepingforless.view.search.SearchResultActivity">
 
-    <include layout="@layout/view_include_search_result_title" />
+    <include layout="@layout/view_include_toolbar_simple_title" />
 
     <include layout="@layout/view_include_search_result_content" />
 

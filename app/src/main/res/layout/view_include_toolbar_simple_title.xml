@@ -2,17 +2,17 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="@dimen/app_bar_layout_elevation"
-        app:layout_behavior="com.akexorcist.sleepingforless.widget.FlingBehavior">
+        app:elevation="@dimen/app_bar_layout_elevation">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_title"
             style="@style/Toolbar"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextAppearance="@style/PostTitleTextView" />
+
     </android.support.design.widget.AppBarLayout>
 </merge>

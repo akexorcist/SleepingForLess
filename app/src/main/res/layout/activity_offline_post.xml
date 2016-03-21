@@ -12,7 +12,7 @@
         android:background="@color/white"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/view_include_offline_post_title" />
+        <include layout="@layout/view_include_toolbar_scroll_title" />
 
         <include layout="@layout/view_include_offline_post_content" />
 

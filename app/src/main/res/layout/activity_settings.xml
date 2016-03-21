@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <include layout="@layout/view_include_settings_title" />
+    <include layout="@layout/view_include_toolbar_simple_title" />
 
     <LinearLayout
         android:id="@+id/layout_settings_container"

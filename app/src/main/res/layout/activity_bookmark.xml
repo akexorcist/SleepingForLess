@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity">
 
-    <include layout="@layout/view_include_bookmark_title" />
+    <include layout="@layout/view_include_toolbar_simple_title" />
 
     <include layout="@layout/view_include_bookmark_content" />
 
