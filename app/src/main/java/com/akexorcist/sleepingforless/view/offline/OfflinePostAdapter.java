@@ -7,11 +7,6 @@ import android.view.ViewGroup;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
-import com.akexorcist.sleepingforless.view.offline.holder.CodeOfflinePostViewHolder;
-import com.akexorcist.sleepingforless.view.offline.holder.HeaderOfflinePostViewHolder;
-import com.akexorcist.sleepingforless.view.offline.holder.ImageOfflinePostViewHolder;
-import com.akexorcist.sleepingforless.view.offline.holder.PlainTextOfflinePostViewHolder;
-import com.akexorcist.sleepingforless.view.offline.holder.VideoOfflinePostViewHolder;
 import com.akexorcist.sleepingforless.view.post.LinkClickable;
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
 import com.akexorcist.sleepingforless.view.post.holder.CodePostViewHolder;
@@ -48,15 +43,15 @@ public class OfflinePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == PostType.CODE) {
-            return new CodeOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_code, parent, false));
+            return new CodePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_code, parent, false));
         } else if (viewType == PostType.IMAGE) {
-            return new ImageOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_image, parent, false));
+            return new ImagePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_image, parent, false));
         } else if (viewType == PostType.VIDEO) {
-            return new VideoOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_video, parent, false));
+            return new VideoPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_video, parent, false));
         } else if (viewType == PostType.HEADER) {
-            return new HeaderOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_header, parent, false));
+            return new HeaderPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_header, parent, false));
         } else if (viewType == PostType.PLAIN_TEXT) {
-            return new PlainTextOfflinePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_plain_text, parent, false));
+            return new PlainTextPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_plain_text, parent, false));
         } else if (viewType == PostType.BLANK) {
             return new PlainTextPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_blank, parent, false));
         }
