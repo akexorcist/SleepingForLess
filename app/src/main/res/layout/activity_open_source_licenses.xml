@@ -14,5 +14,10 @@
 
         <include layout="@layout/view_include_toolbar_simple_title" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_open_source_license_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </android.support.design.widget.CoordinatorLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

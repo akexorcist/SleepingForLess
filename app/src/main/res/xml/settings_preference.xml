@@ -27,15 +27,15 @@
 
     <com.jenzz.materialpreference.PreferenceCategory android:title="@string/settings_category_other">
 
-        <com.jenzz.materialpreference.Preference
-            android:summary="@string/settings_open_source_licenses_detail"
-            android:title="@string/settings_open_source_licenses_title">
+        <!--<com.jenzz.materialpreference.Preference-->
+            <!--android:summary="@string/settings_open_source_licenses_detail"-->
+            <!--android:title="@string/settings_open_source_licenses_title">-->
 
-            <intent
-                android:targetClass="com.akexorcist.sleepingforless.view.settings.OpenSourceLicensesActivity"
-                android:targetPackage="com.akexorcist.sleepingforless" />
+            <!--<intent-->
+                <!--android:targetClass="com.akexorcist.sleepingforless.view.settings.OpenSourceLicensesActivity"-->
+                <!--android:targetPackage="com.akexorcist.sleepingforless" />-->
 
-        </com.jenzz.materialpreference.Preference>
+        <!--</com.jenzz.materialpreference.Preference>-->
 
         <com.jenzz.materialpreference.Preference
             android:key="@string/settings_key_app_version"

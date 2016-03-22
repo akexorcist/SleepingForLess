@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "library_name": "Android Annotations Support Library",
+      "year": "2005-2011",
+      "project_name": "The Android Open Source Project",
+      "license_type": "Apache",
+      "license_version": "2.0"
+    },
+    {
+      "library_name": "Android Compatibility Library v4",
+      "year": "2005-2011",
+      "project_name": "The Android Open Source Project",
+      "license_type": "Apache",
+      "license_version": "2.0"
+    },
+    {
+      "library_name": "Android Compatibility Library v7",
+      "year": "2005-2011",
+      "project_name": "The Android Open Source Project",
+      "license_type": "Apache",
+      "license_version": "2.0"
+    },
+    {
+      "library_name": "Android Design Support Library",
+      "year": "2005-2011",
+      "project_name": "The Android Open Source Project",
+      "license_type": "Apache",
+      "license_version": "2.0"
+    }
+  ]
+}
