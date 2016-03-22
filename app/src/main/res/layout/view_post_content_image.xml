@@ -3,6 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar
+        android:id="@+id/pb_post_content_image_loading"
+        style="@style/DotsProgressBar.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin_padding_extra_large" />
+
     <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
         android:id="@+id/iv_post_content_image"
         android:layout_width="match_parent"

@@ -7,16 +7,25 @@ import android.widget.ImageView;
 import com.akexorcist.sleepingforless.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
+
+import java.io.File;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class ImagePostViewHolder extends RecyclerView.ViewHolder {
     public ImageView ivPostContentPlainImage;
+    public DilatingDotsProgressBar pbPostContentImageLoading;
 
     public ImagePostViewHolder(View itemView) {
         super(itemView);
         ivPostContentPlainImage = (ImageView) itemView.findViewById(R.id.iv_post_content_image);
+        pbPostContentImageLoading = (DilatingDotsProgressBar) itemView.findViewById(R.id.pb_post_content_image_loading);
+        pbPostContentImageLoading.showNow();
     }
 
     public void clearImage() {
@@ -30,6 +39,40 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
                 .override(500, 500)
                 .thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        pbPostContentImageLoading.hideNow();
+                        return false;
+                    }
+                })
+                .into(ivPostContentPlainImage);
+    }
+
+    public void load(File file) {
+        clearImage();
+        Glide.with(itemView.getContext())
+                .load(file)
+                .override(500, 500)
+                .thumbnail(0.1f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<File, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, File model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, File model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        pbPostContentImageLoading.hideNow();
+                        return false;
+                    }
+                })
                 .into(ivPostContentPlainImage);
     }
 
