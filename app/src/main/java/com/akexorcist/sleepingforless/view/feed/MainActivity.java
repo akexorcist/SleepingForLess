@@ -7,8 +7,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -48,11 +50,13 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener {
+public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
     private Toolbar tbTitle;
+    private AppBarLayout ablTitle;
     private FeedAdapter adapter;
     private DilatingDotsProgressBar pbFeedListLoading;
     private RecyclerView rvFeedList;
+    private SwipeRefreshLayout srlFeedList;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
     private View viewContentShadow;
@@ -89,7 +93,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     private void bindView() {
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
+        ablTitle = (AppBarLayout) findViewById(R.id.abl_title);
         rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
+        srlFeedList = (SwipeRefreshLayout) findViewById(R.id.srl_feed_list);
         pbFeedListLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_feed_list_loading);
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
         viewContentShadow = findViewById(R.id.view_content_shadow);
@@ -105,6 +111,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     private void setupView() {
+        btnMenuRefresh.setVisibility(View.GONE);
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
@@ -119,6 +126,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         btnMenuSearch.setOnTouchListener(this);
         btnMenuSort.setOnTouchListener(this);
         btnMenuSettings.setOnTouchListener(this);
+        srlFeedList.setOnRefreshListener(this);
+        srlFeedList.setColorSchemeResources(R.color.colorAccent);
         flMenu.setFab(fabMenu);
 
         adapter = new FeedAdapter();
@@ -157,29 +166,31 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+        ablTitle.addOnOffsetChangedListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver();
+        ablTitle.removeOnOffsetChangedListener(this);
     }
 
     @Subscribe
     public void onPostListSuccess(PostList postList) {
-        Log.e("Check", "onBlogSuccess");
         this.postList = postList;
         setPostList(postList);
         hideLoading();
         hideUnavailableMessage();
+        cancelSwipeRefresh();
     }
 
     @Subscribe
     public void onBlogFailure(PostListFailure failure) {
-        Log.e("Check", "onBlogFailure");
         rvFeedList.setVisibility(View.GONE);
         pbFeedListLoading.hideNow();
         showUnavailableMessage();
+        cancelSwipeRefresh();
     }
 
     @Subscribe
@@ -249,6 +260,16 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        callService();
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        srlFeedList.setEnabled(verticalOffset == 0);
     }
 
     public void setPostList(PostList postList) {
@@ -412,5 +433,11 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private void unregisterReceiver() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         isReceiverRegistered = false;
+    }
+
+    private void cancelSwipeRefresh() {
+        if (srlFeedList.isRefreshing()) {
+            srlFeedList.setRefreshing(false);
+        }
     }
 }
