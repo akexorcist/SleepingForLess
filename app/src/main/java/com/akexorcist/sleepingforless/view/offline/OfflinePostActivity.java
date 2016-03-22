@@ -3,6 +3,8 @@ package com.akexorcist.sleepingforless.view.offline;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -189,8 +191,13 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         ExternalBrowserUtility.getInstance().open(this, url);
     }
 
-    private void onMenuUpdateClick() {
+    @Override
+    public void onVideoClickListener(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
 
+    private void onMenuUpdateClick() {
+        // TODO update offline bookmark
     }
 
     private void onMenuDeleteClick() {
