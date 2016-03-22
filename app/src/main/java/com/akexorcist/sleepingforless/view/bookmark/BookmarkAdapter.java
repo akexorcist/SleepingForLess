@@ -4,14 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
-import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkLabel;
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -55,12 +50,11 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
         if (viewType == VIEW_TYPE_CONTENT) {
-            final BookmarkViewHolder bookmarkViewHolder = (BookmarkViewHolder) holder;
             Bookmark bookmark = bookmarkList.get(holder.getAdapterPosition());
-            setTitle(bookmarkViewHolder.tvTitle, bookmark.getTitle());
-            setLabel(bookmarkViewHolder.tvLabel, bookmark.getLabelList());
-            bookmarkViewHolder.ivTitle.setVisibility(View.GONE);
-            bookmarkViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
+            final BookmarkViewHolder bookmarkViewHolder = (BookmarkViewHolder) holder;
+            bookmarkViewHolder.setTitle(bookmark.getTitle());
+            bookmarkViewHolder.setLabel(bookmark.getLabelList());
+            bookmarkViewHolder.setFeedClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemListener != null) {
@@ -68,7 +62,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             });
-            bookmarkViewHolder.mrlFeedButton.setOnLongClickListener(new View.OnLongClickListener() {
+            bookmarkViewHolder.setFeedLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemListener != null) {
@@ -78,33 +72,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
         }
-    }
-
-    private void setTitle(TextView tvTitle, String title) {
-        title = ContentUtility.getInstance().removeLabelFromTitle(title);
-        tvTitle.setText(title);
-    }
-
-    private void setLabel(TextView tvLabel, List<BookmarkLabel> labelList) {
-        if (labelList != null) {
-            String label = "";
-            for (int i = 0; i < labelList.size(); i++) {
-                label += labelList.get(i).getLabel();
-                if (i < labelList.size() - 1) {
-                    label += ", ";
-                }
-            }
-            tvLabel.setText(label);
-        }
-    }
-
-    private void loadItemResource(ImageView ivTitle, String url) {
-        Glide.with(ivTitle.getContext())
-                .load(url)
-                .crossFade(200)
-                .thumbnail(0.2f)
-                .centerCrop()
-                .into(ivTitle);
     }
 
     @Override
