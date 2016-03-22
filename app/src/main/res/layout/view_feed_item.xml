@@ -48,6 +48,10 @@
                     android:visibility="gone" />
             </FrameLayout>
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_margin_padding_large" />
+
             <TextView
                 android:id="@+id/tv_feed_label"
                 android:layout_width="match_parent"
@@ -56,7 +60,6 @@
                 android:paddingBottom="@dimen/default_margin_padding"
                 android:paddingLeft="@dimen/default_margin_padding_large"
                 android:paddingRight="@dimen/default_margin_padding_large"
-                android:paddingTop="@dimen/default_margin_padding_large"
                 android:text="@string/sample"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/default_text_size_extra_small" />

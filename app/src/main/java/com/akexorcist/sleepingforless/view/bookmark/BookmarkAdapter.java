@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_UNKNOWN = -1;
-    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_CONTENT = 0;
 
     private ItemListener itemListener;
     private List<Bookmark> bookmarkList;
@@ -37,7 +37,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (!isBookmarkListAvailable()) {
             return new BookmarkBlankViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_bookmark_blank, parent, false));
-        } else if (viewType == VIEW_TYPE_ITEM) {
+        } else if (viewType == VIEW_TYPE_CONTENT) {
             return new BookmarkViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_bookmark_item, parent, false));
         }
         return null;
@@ -48,13 +48,13 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (bookmarkList == null || bookmarkList.size() == 0) {
             return VIEW_TYPE_UNKNOWN;
         }
-        return VIEW_TYPE_ITEM;
+        return VIEW_TYPE_CONTENT;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        if (viewType == VIEW_TYPE_ITEM) {
+        if (viewType == VIEW_TYPE_CONTENT) {
             final BookmarkViewHolder bookmarkViewHolder = (BookmarkViewHolder) holder;
             Bookmark bookmark = bookmarkList.get(holder.getAdapterPosition());
             setTitle(bookmarkViewHolder.tvTitle, bookmark.getTitle());

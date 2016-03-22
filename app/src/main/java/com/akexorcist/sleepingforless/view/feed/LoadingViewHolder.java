@@ -16,4 +16,8 @@ public class LoadingViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         pbPostListLoading = (DilatingDotsProgressBar) itemView.findViewById(R.id.pb_post_list_loading);
     }
+
+    public void showLoadingNow() {
+        pbPostListLoading.showNow();
+    }
 }

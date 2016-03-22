@@ -4,15 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
-import com.akexorcist.sleepingforless.database.BookmarkManager;
-import com.akexorcist.sleepingforless.util.ContentUtility;
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +16,7 @@ import java.util.List;
  */
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_UNKNOWN = -1;
-    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_CONTENT = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
     private ItemListener itemListener;
@@ -70,7 +64,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (itemList == null || itemList.size() == 0) {
             return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_blank, parent, false));
-        } else if (viewType == VIEW_TYPE_ITEM) {
+        } else if (viewType == VIEW_TYPE_CONTENT) {
             return new FeedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_item, parent, false));
         } else if (viewType == VIEW_TYPE_LOADING) {
             return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_loading, parent, false));
@@ -83,100 +77,52 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (itemList == null || itemList.size() == 0) {
             return VIEW_TYPE_UNKNOWN;
         }
-        return position < itemList.size() ? VIEW_TYPE_ITEM : VIEW_TYPE_LOADING;
+        return position < itemList.size() ? VIEW_TYPE_CONTENT : VIEW_TYPE_LOADING;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        if (viewType == VIEW_TYPE_ITEM) {
-            final FeedViewHolder feedViewHolder = (FeedViewHolder) holder;
-            PostList.Item postItem = itemList.get(holder.getAdapterPosition());
-            setTitle(feedViewHolder.tvTitle, postItem.getTitle());
-            setLabel(feedViewHolder.tvLabel, postItem.getLabels());
-            if (sortType != null && sortType.equalsIgnoreCase(BloggerManager.SORT_UPDATED_DATE)) {
-                setDate(feedViewHolder.tvDate, postItem.getUpdated(), R.string.updated_date);
-            } else {
-                setDate(feedViewHolder.tvDate, postItem.getPublished(), R.string.published_date);
-            }
-            setImage(feedViewHolder.ivTitle, postItem.getImages());
-            setBookmarkIndicator(feedViewHolder.ivBookmarkIndicator, postItem.getId());
-            feedViewHolder.mrlFeedButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemListener != null) {
-                        itemListener.onItemClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
-                    }
-                }
-            });
-            feedViewHolder.mrlFeedButton.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (itemListener != null) {
-                        itemListener.onItemLongClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
-                    }
-                    return true;
-                }
-            });
+        if (viewType == VIEW_TYPE_CONTENT) {
+            addContentView(holder);
         } else if (viewType == VIEW_TYPE_LOADING) {
-            LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
-            feedViewHolder.pbPostListLoading.showNow();
-            if (isLoadMoreAvailable && loadMoreListener != null) {
-                loadMoreListener.onLoadMore();
-            }
+            addLoadingView(holder);
         }
     }
 
-    private void setTitle(TextView tvTitle, String title) {
-        title = ContentUtility.getInstance().removeLabelFromTitle(title);
-        tvTitle.setText(title);
-    }
-
-    private void setLabel(TextView tvLabel, List<String> labelList) {
-        if (labelList != null) {
-            String label = "";
-            for (int i = 0; i < labelList.size(); i++) {
-                label += labelList.get(i);
-                if (i < labelList.size() - 1) {
-                    label += ", ";
+    private void addContentView(RecyclerView.ViewHolder holder) {
+        final FeedViewHolder feedViewHolder = (FeedViewHolder) holder;
+        PostList.Item postItem = itemList.get(holder.getAdapterPosition());
+        feedViewHolder.setTitle(postItem.getTitle());
+        feedViewHolder.setLabel(postItem.getLabels());
+        feedViewHolder.setSortDate(sortType, postItem.getPublished(), postItem.getUpdated());
+        feedViewHolder.setImage(postItem.getImages());
+        feedViewHolder.setBookmarkIndicator(postItem.getId());
+        feedViewHolder.setFeedClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemListener != null) {
+                    itemListener.onItemClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
                 }
             }
-            tvLabel.setText(label);
+        });
+        feedViewHolder.setFeedLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (itemListener != null) {
+                    itemListener.onItemLongClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
+                }
+                return true;
+            }
+        });
+    }
+
+    private void addLoadingView(RecyclerView.ViewHolder holder) {
+        LoadingViewHolder feedViewHolder = (LoadingViewHolder) holder;
+        feedViewHolder.showLoadingNow();
+        if (isLoadMoreAvailable && loadMoreListener != null) {
+            loadMoreListener.onLoadMore();
         }
-    }
-
-    private void setDate(TextView tvPublishedDate, String date, int messageResId) {
-        String[] dates = date.split("T")[0].split("-");
-        String publishedDetail = tvPublishedDate.getContext().getString(messageResId);
-        tvPublishedDate.setText(String.format(publishedDetail, dates[2], dates[1], dates[0]));
-    }
-
-    private void setImage(ImageView ivTitle, List<PostList.Image> imageList) {
-        if (imageList != null && !imageList.isEmpty() && imageList.size() > 0) {
-            ivTitle.setImageDrawable(null);
-            ivTitle.setVisibility(View.VISIBLE);
-            String url = imageList.get(0).getUrl();
-            loadItemResource(ivTitle, url);
-        } else {
-            ivTitle.setVisibility(View.GONE);
-        }
-    }
-
-    private void setBookmarkIndicator(ImageView ivBookmarkIndicator, String postId) {
-        if (BookmarkManager.getInstance().isBookmark(postId)) {
-            ivBookmarkIndicator.setVisibility(View.VISIBLE);
-        } else {
-            ivBookmarkIndicator.setVisibility(View.GONE);
-        }
-    }
-
-    private void loadItemResource(ImageView ivTitle, String url) {
-        Glide.with(ivTitle.getContext())
-                .load(url)
-                .crossFade(200)
-                .thumbnail(0.1f)
-                .centerCrop()
-                .into(ivTitle);
     }
 
     public void clear() {
