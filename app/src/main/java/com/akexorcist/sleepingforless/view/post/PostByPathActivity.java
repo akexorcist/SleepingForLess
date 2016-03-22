@@ -1,6 +1,7 @@
 package com.akexorcist.sleepingforless.view.post;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.network.blogger.BloggerKey;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.network.blogger.model.PostByPath;
@@ -215,6 +217,11 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     @Override
     public void onLinkClickListener(String url) {
         ExternalBrowserUtility.getInstance().open(this, url);
+    }
+
+    @Override
+    public void onVideoClickListener(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     @Override

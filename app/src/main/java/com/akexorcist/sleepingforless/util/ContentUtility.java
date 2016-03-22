@@ -1,6 +1,7 @@
 package com.akexorcist.sleepingforless.util;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
@@ -8,6 +9,7 @@ import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
+import com.akexorcist.sleepingforless.view.post.model.VideoPost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +120,10 @@ public class ContentUtility {
         return !isCode(text) && !isImage(text) && !isHeaderText(text);
     }
 
+    public boolean isVideo(String text) {
+        return isMatcher(text, "<iframe.+>");
+    }
+
     public boolean isHeaderText(String text) {
         return isMatcher(text, "<h\\d>.+</h\\d>");
     }
@@ -154,6 +160,9 @@ public class ContentUtility {
                 listPost.add(ContentUtility.getInstance().convertImagePost(text).setType(PostType.IMAGE));
             } else if (ContentUtility.getInstance().isHeaderText(text)) {
                 listPost.add(ContentUtility.getInstance().convertHeaderPost(text).setType(PostType.HEADER));
+            } else if (ContentUtility.getInstance().isVideo(text)) {
+                Log.e("Check", "Text : " + text);
+                listPost.add(ContentUtility.getInstance().convertVideoPost(text).setType(PostType.VIDEO));
             } else {
                 listPost.add(ContentUtility.getInstance().convertPlainText("    " + text).setType(PostType.PLAIN_TEXT));
             }
@@ -211,6 +220,28 @@ public class ContentUtility {
         return linkList;
     }
 
+    public VideoPost convertVideoPost(String videoContent) {
+        Matcher matcher = getMatcher(videoContent, "<iframe.*?src=\"//www.youtube.com/embed/(.*?)\".*");
+        if (matcher.find()) {
+            String url = "https://www.youtube.com/watch?v=" + matcher.group(1).replaceAll("\\?.*", "");
+            return new VideoPost(url).setVideoType(VideoPost.TYPE_YOUTUBE);
+        }
+        matcher = getMatcher(videoContent, "<iframe.*?src=\".*?player.vimeo.com/video/(.*?)\".*");
+        if (matcher.find()) {
+            String url = "https://vimeo.com/" + matcher.group(1).replaceAll("\\?.*", "");
+            return new VideoPost(url).setVideoType(VideoPost.TYPE_VIMEO);
+        }
+        matcher = getMatcher(videoContent, "<iframe.*?src=\"(.*?)\"");
+        if (matcher.find()) {
+            String url = matcher.group(1);
+            if (url.startsWith("//")) {
+                url = "http:" + url;
+            }
+            return new VideoPost(url).setVideoType(VideoPost.TYPE_OTHER);
+        }
+        return null;
+    }
+
     public HeaderPost convertHeaderPost(String headerContent) {
         Matcher matcher = getMatcher(headerContent, "<h(\\d)>(.+)</h\\d>");
         if (matcher.find()) {
@@ -233,7 +264,6 @@ public class ContentUtility {
     }
 
     public String removeLabelFromTitle(String title) {
-        return title.replaceAll("^\\[.*?\\]", "")
-                .trim();
+        return title.replaceAll("^\\[.*?\\]", "").trim();
     }
 }

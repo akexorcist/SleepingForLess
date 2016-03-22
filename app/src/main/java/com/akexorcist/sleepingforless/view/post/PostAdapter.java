@@ -8,10 +8,16 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.network.blogger.BloggerKey;
+import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
 import com.akexorcist.sleepingforless.view.post.holder.CodePostViewHolder;
 import com.akexorcist.sleepingforless.view.post.holder.HeaderPostViewHolder;
@@ -23,6 +29,7 @@ import com.akexorcist.sleepingforless.view.post.model.CodePost;
 import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
+import com.akexorcist.sleepingforless.view.post.model.VideoPost;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -179,8 +186,22 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // Video
     private void addVideoContent(RecyclerView.ViewHolder holder, BasePost basePost) {
-//        VideoPost post = (VideoPost) basePost;
-        VideoPostViewHolder postViewHolder = (VideoPostViewHolder) holder;
+        final VideoPost post = (VideoPost) basePost;
+        final VideoPostViewHolder videoPostViewHolder = (VideoPostViewHolder) holder;
+        videoPostViewHolder.setButtonPlayClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (postClickListener != null) {
+                    postClickListener.onVideoClickListener(post.getUrl());
+                }
+            }
+        });
+        videoPostViewHolder.setVideoUrl(post.getUrl());
+//        if (post.isYouTube()) {
+//            videoPostViewHolder.setYouTubeVideoId(post.getId());
+//        } else {
+//            videoPostViewHolder.setOtherVideo();
+//        }
     }
 
     public interface PostClickListener {
@@ -189,5 +210,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onImageLongClickListener(String fullUrl);
 
         void onLinkClickListener(String url);
+
+        void onVideoClickListener(String url);
     }
 }

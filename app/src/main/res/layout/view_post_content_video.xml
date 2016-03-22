@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_video_thumbnail"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_margin_padding_small"
+    android:layout_marginTop="@dimen/default_margin_padding_small"
+    android:background="@color/colorPrimary"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/default_margin_padding_large"
+    android:paddingLeft="@dimen/default_margin_padding_large"
+    android:paddingRight="@dimen/default_margin_padding_large"
+    android:paddingTop="@dimen/default_margin_padding">
+
+    <ImageView
+        android:id="@+id/iv_youtube_play"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@color/transparent"
+        android:contentDescription="@null"
+        android:padding="@dimen/default_margin_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/vector_ic_play" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Click to watch video from"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_text_size" />
+
+    <TextView
+        android:id="@+id/tv_video_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_text_size_extra_extra_small" />
+</LinearLayout>

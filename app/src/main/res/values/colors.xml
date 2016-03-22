@@ -10,6 +10,7 @@
     <color name="dark_alpha_black">#E0000000</color>
     <color name="alpha_black">#A0000000</color>
     <color name="light_alpha_black">#80000000</color>
+    <color name="extra_light_alpha_black">#40000000</color>
     <color name="gray">#555555</color>
     <color name="alpha_gray">#70555555</color>
     <color name="dark_gray">#222222</color>
