@@ -34,8 +34,8 @@
                 android:id="@+id/btn_menu_update_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_large"
-                android:layout_marginRight="@dimen/default_margin_padding_large"
+                android:paddingLeft="@dimen/default_margin_padding"
+                android:paddingRight="@dimen/default_margin_padding"
                 app:mbIconSrc="@drawable/vector_ic_update"
                 app:mbText="@string/menu_update_all" />
 
@@ -43,8 +43,8 @@
                 android:id="@+id/btn_menu_remove_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_large"
-                android:layout_marginRight="@dimen/default_margin_padding_large"
+                android:paddingLeft="@dimen/default_margin_padding"
+                android:paddingRight="@dimen/default_margin_padding"
                 app:mbIconSrc="@drawable/vector_ic_remove"
                 app:mbText="@string/menu_remove_all" />
 
@@ -52,8 +52,8 @@
                 android:id="@+id/btn_menu_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_large"
-                android:layout_marginRight="@dimen/default_margin_padding_large"
+                android:paddingLeft="@dimen/default_margin_padding"
+                android:paddingRight="@dimen/default_margin_padding"
                 app:mbIconSrc="@drawable/vector_ic_info"
                 app:mbText="@string/menu_info" />
         </LinearLayout>
