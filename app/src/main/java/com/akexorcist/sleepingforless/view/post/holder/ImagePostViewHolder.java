@@ -1,10 +1,12 @@
 package com.akexorcist.sleepingforless.view.post.holder;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -17,7 +19,7 @@ import java.io.File;
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
-public class ImagePostViewHolder extends RecyclerView.ViewHolder {
+public class ImagePostViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
     public ImageView ivPostContentPlainImage;
     public DilatingDotsProgressBar pbPostContentImageLoading;
 
@@ -26,6 +28,7 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
         ivPostContentPlainImage = (ImageView) itemView.findViewById(R.id.iv_post_content_image);
         pbPostContentImageLoading = (DilatingDotsProgressBar) itemView.findViewById(R.id.pb_post_content_image_loading);
         pbPostContentImageLoading.showNow();
+        ivPostContentPlainImage.setOnTouchListener(this);
     }
 
     public void clearImage() {
@@ -74,6 +77,25 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
                     }
                 })
                 .into(ivPostContentPlainImage);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            scaleImageDown(v);
+        } else if (event.getAction() == MotionEvent.ACTION_UP ||
+                event.getAction() == MotionEvent.ACTION_CANCEL) {
+            scaleImageButtonBack(v);
+        }
+        return false;
+    }
+
+    private void scaleImageDown(View v) {
+        AnimationUtility.getInstance().scaleDown(v, 200);
+    }
+
+    private void scaleImageButtonBack(View v) {
+        AnimationUtility.getInstance().scaleBack(v, 200);
     }
 
     public void setImageClickListener(View.OnClickListener listener) {

@@ -113,14 +113,6 @@ public class AnimationUtility {
         objectAnimator.start();
     }
 
-    public void scaleUp(final View view, int duration, long startDelay) {
-        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_scale_up);
-        animatorSet.setTarget(view);
-        animatorSet.setDuration(duration);
-        animatorSet.setStartDelay(startDelay);
-        animatorSet.start();
-    }
-
     public void scaleUp(View view, long startDelay) {
         scaleUp(view, DEFAULT_DURATION, startDelay);
     }
@@ -133,8 +125,28 @@ public class AnimationUtility {
         scaleUp(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
     }
 
-    public void scaleBack(final View view, int duration, long startDelay) {
-        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_scale_back);
+    public void scaleUp(final View view, int duration, long startDelay) {
+        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_scale_up);
+        animatorSet.setTarget(view);
+        animatorSet.setDuration(duration);
+        animatorSet.setStartDelay(startDelay);
+        animatorSet.start();
+    }
+
+    public void scaleDown(View view, long startDelay) {
+        scaleDown(view, DEFAULT_DURATION, startDelay);
+    }
+
+    public void scaleDown(View view, int duration) {
+        scaleDown(view, duration, DEFAULT_START_DELAY);
+    }
+
+    public void scaleDown(View view) {
+        scaleDown(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
+    }
+
+    public void scaleDown(final View view, int duration, long startDelay) {
+        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_scale_down);
         animatorSet.setTarget(view);
         animatorSet.setDuration(duration);
         animatorSet.setStartDelay(startDelay);
@@ -151,6 +163,14 @@ public class AnimationUtility {
 
     public void scaleBack(View view) {
         scaleBack(view, DEFAULT_DURATION, DEFAULT_START_DELAY);
+    }
+
+    public void scaleBack(final View view, int duration, long startDelay) {
+        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(Contextor.getContext(), R.animator.animator_default_scale_back);
+        animatorSet.setTarget(view);
+        animatorSet.setDuration(duration);
+        animatorSet.setStartDelay(startDelay);
+        animatorSet.start();
     }
 
     public interface AnimationFinishCallback {
