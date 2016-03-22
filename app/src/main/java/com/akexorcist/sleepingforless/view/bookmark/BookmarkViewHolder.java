@@ -36,7 +36,7 @@ public class BookmarkViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setLabel(List<BookmarkLabel> labelList) {
-        if (labelList != null) {
+        if (labelList != null && labelList.size() > 0) {
             String label = "";
             for (int i = 0; i < labelList.size(); i++) {
                 label += labelList.get(i).getLabel();
