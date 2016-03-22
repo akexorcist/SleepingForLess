@@ -56,8 +56,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
-        realm = Realm.getDefaultInstance();
-
         bindView();
         setupView();
         setToolbar();
@@ -139,7 +137,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
     @Subscribe
@@ -200,11 +197,11 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
 
     @Override
     public void onItemLongClick(BookmarkViewHolder holder, Bookmark bookmark) {
-
+        // TODO Do something (No idea now)
     }
 
     private void onMenuUpdateAllClick() {
-
+        // TODO Update all bookmark content
     }
 
     private void onMenuDeleteAllClick() {
@@ -234,7 +231,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void onMenuInfoClick() {
-
+        // TODO Show bookmark info
     }
 
     private void removeAllBookmark() {

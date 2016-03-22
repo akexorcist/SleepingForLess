@@ -22,6 +22,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by Akexorcist on 3/17/2016 AD.
@@ -184,21 +185,11 @@ public class BookmarkManager {
         realm.beginTransaction();
         final RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
                 .findAll();
+        result.sort("published", Sort.DESCENDING);
         List<Bookmark> bookmarkList = new ArrayList<>();
-        for(BookmarkRealm bookmarkRealm : result) {
+        for (BookmarkRealm bookmarkRealm : result) {
             bookmarkList.add(convertBookmark(bookmarkRealm));
         }
-//        result.addChangeListener(new RealmChangeListener() {
-//            @Override
-//            public void onChange() {
-//
-//                bookmarkRealmList = result;
-//                setBookmark(bookmarkRealmList);
-//                result.removeChangeListeners();
-//                hideLoading();
-//                checkBookmarkAvailable();
-//            }
-//        });
         realm.commitTransaction();
         realm.close();
         return bookmarkList;
