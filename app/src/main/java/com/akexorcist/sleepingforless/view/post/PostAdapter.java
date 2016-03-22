@@ -1,23 +1,11 @@
 package com.akexorcist.sleepingforless.view.post;
 
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebViewClient;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.network.blogger.BloggerKey;
-import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
 import com.akexorcist.sleepingforless.view.post.holder.CodePostViewHolder;
 import com.akexorcist.sleepingforless.view.post.holder.HeaderPostViewHolder;
@@ -30,8 +18,6 @@ import com.akexorcist.sleepingforless.view.post.model.HeaderPost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 import com.akexorcist.sleepingforless.view.post.model.VideoPost;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,66 +92,38 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void addPlainTextContent(RecyclerView.ViewHolder holder, BasePost basePost) {
         PlainTextPost post = (PlainTextPost) basePost;
         PlainTextPostViewHolder postViewHolder = (PlainTextPostViewHolder) holder;
-        postViewHolder.tvPostContentPlainText.setText(setSpannable(post));
-        if (post.isLinkAvailable()) {
-            postViewHolder.tvPostContentPlainText.setMovementMethod(new LinkMovementMethod());
-        }
-    }
-
-    private Spannable setSpannable(PlainTextPost plainTextPost) {
-        Spannable spanText = Spannable.Factory.getInstance().newSpannable(plainTextPost.getText());
-        for (PlainTextPost.Highlight highlight : plainTextPost.getHighlightList()) {
-            spanText.setSpan(new ForegroundColorSpan(highlight.getColor()), highlight.getStart(), highlight.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        for (PlainTextPost.Link link : plainTextPost.getLinkList()) {
-            spanText.setSpan(new LinkClickable(link.getUrl(), new LinkClickable.LinkClickListener() {
-                @Override
-                public void onLinkClick(String url) {
-                    if (postClickListener != null) {
-                        postClickListener.onLinkClickListener(url);
-                    }
+        postViewHolder.setText(post);
+        postViewHolder.setLinkClickListener(new LinkClickable.LinkClickListener() {
+            @Override
+            public void onLinkClick(String url) {
+                if (postClickListener != null) {
+                    postClickListener.onLinkClickListener(url);
                 }
-            }), link.getStart(), link.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        return spanText;
+            }
+        });
     }
 
     // Header
     private void addHeaderContent(RecyclerView.ViewHolder holder, BasePost basePost) {
         HeaderPost post = (HeaderPost) basePost;
         HeaderPostViewHolder postViewHolder = (HeaderPostViewHolder) holder;
-        postViewHolder.tvPostContentHeader.setText(post.getText());
-        Resources resources = postViewHolder.itemView.getContext().getResources();
-        if (post.getSize() == 1) {
-            postViewHolder.tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.default_text_size_h1));
-        } else if (post.getSize() == 2) {
-            postViewHolder.tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.default_text_size_h2));
-        } else if (post.getSize() == 3) {
-            postViewHolder.tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.default_text_size_h3));
-        } else if (post.getSize() == 4) {
-            postViewHolder.tvPostContentHeader.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.default_text_size_h4));
-        }
+        postViewHolder.setHeaderText(post.getText());
+        postViewHolder.setHeaderSize(post.getSize());
     }
 
     // Code Text
     private void addCodeContent(RecyclerView.ViewHolder holder, BasePost basePost) {
         CodePost post = (CodePost) basePost;
         CodePostViewHolder postViewHolder = (CodePostViewHolder) holder;
-        postViewHolder.tvPostContentCode.setText(post.getCode());
+        postViewHolder.setCode(post.getCode());
     }
 
     // Image
     private void addImageContent(RecyclerView.ViewHolder holder, BasePost basePost) {
         final ImagePost post = (ImagePost) basePost;
         ImagePostViewHolder postViewHolder = (ImagePostViewHolder) holder;
-        postViewHolder.ivPostContentPlainImage.setImageDrawable(null);
-        Glide.with(holder.itemView.getContext())
-                .load(post.getPostUrl())
-                .override(500, 500)
-                .thumbnail(0.1f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(postViewHolder.ivPostContentPlainImage);
-        postViewHolder.ivPostContentPlainImage.setOnClickListener(new View.OnClickListener() {
+        postViewHolder.load(post.getPostUrl());
+        postViewHolder.setImageClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (postClickListener != null) {
@@ -173,7 +131,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         });
-        postViewHolder.ivPostContentPlainImage.setOnLongClickListener(new View.OnLongClickListener() {
+        postViewHolder.setImageLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if (postClickListener != null) {
@@ -197,11 +155,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
         videoPostViewHolder.setVideoUrl(post.getUrl());
-//        if (post.isYouTube()) {
-//            videoPostViewHolder.setYouTubeVideoId(post.getId());
-//        } else {
-//            videoPostViewHolder.setOtherVideo();
-//        }
     }
 
     public interface PostClickListener {

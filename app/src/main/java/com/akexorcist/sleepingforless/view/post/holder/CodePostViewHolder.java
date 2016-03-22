@@ -16,4 +16,8 @@ public class CodePostViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         tvPostContentCode = (TextView) itemView.findViewById(R.id.tv_post_content_code);
     }
+
+    public void setCode(String code) {
+        tvPostContentCode.setText(code);
+    }
 }
