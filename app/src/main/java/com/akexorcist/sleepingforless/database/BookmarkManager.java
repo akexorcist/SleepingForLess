@@ -42,22 +42,27 @@ public class BookmarkManager {
 
     public void downloadImageToBookmark(final String postId, List<BasePost> postList, final DownloadCallback callback) {
         bookmarkImageCount = 0;
-        for (BasePost basePost : postList) {
-            if (basePost instanceof ImagePost) {
-                bookmarkImageCount++;
-                ImagePost imagePost = (ImagePost) basePost;
-                final String url = imagePost.getPostUrl();
-                BookmarkManager.getInstance().downloadImage(url, new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        saveBookmarkImageBitmap(resource, postId, url);
-                        bookmarkImageCount--;
-                        if (bookmarkImageCount <= 0 && callback != null) {
-                            callback.onDownloadSuccess();
+        if (postList != null && postList.size() > 0) {
+            for (BasePost basePost : postList) {
+                if (basePost instanceof ImagePost) {
+                    bookmarkImageCount++;
+                    ImagePost imagePost = (ImagePost) basePost;
+                    final String url = imagePost.getPostUrl();
+                    BookmarkManager.getInstance().downloadImage(url, new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            saveBookmarkImageBitmap(resource, postId, url);
+                            bookmarkImageCount--;
+                            if (bookmarkImageCount <= 0 && callback != null) {
+                                callback.onDownloadSuccess();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
+        }
+        if (bookmarkImageCount <= 0 && callback != null) {
+            callback.onDownloadSuccess();
         }
     }
 

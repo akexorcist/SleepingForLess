@@ -53,7 +53,11 @@ public class BloggerManager {
         BloggerConnection.getInstance().getConnection().getPostList(BloggerConstant.BLOG_ID, sortBy, 30, includeBody, includeImage, nextPageToken).enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
-                BusProvider.getInstance().post(response.body());
+                if (response.isSuccessful()) {
+                    BusProvider.getInstance().post(response.body());
+                } else {
+                    BusProvider.getInstance().post(new PostListFailure(new NullPointerException("Something Error")));
+                }
             }
 
             @Override

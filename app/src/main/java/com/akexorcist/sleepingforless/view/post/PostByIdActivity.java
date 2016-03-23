@@ -62,6 +62,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     private RecyclerView rvPostList;
     private PostAdapter adapter;
 
+    private boolean isBookmarking;
     private PostList.Item postItem;
     private Post post;
     private List<BasePost> postList;
@@ -203,6 +204,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
             bslMenu.dismissSheet();
         } else if (flMenu.isFabExpanded()) {
             closeMenu();
+        } else if (isBookmarking) {
         } else {
             super.onBackPressed();
         }
@@ -233,6 +235,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
 
     @Override
     public void onDownloadSuccess() {
+        isBookmarking = false;
         hideBookmarkLoading();
         setBookmark(true);
         showBookmarkAddedMessage();
@@ -305,6 +308,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     }
 
     private void addBookmark() {
+        isBookmarking = true;
         addBookmarkTracking();
         showBookmarkLoading();
         new Handler().postDelayed(new Runnable() {

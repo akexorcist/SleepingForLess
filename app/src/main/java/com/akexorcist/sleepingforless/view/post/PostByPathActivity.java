@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -60,6 +59,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     private RecyclerView rvPostList;
     private PostAdapter adapter;
 
+    private boolean isBookmarking;
     private String postPath;
     private Post post;
     private List<BasePost> postList;
@@ -154,6 +154,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     @Subscribe
     public void onPostSuccess(PostByPath post) {
         this.post = post;
+        isBookmarking = false;
         setPost(post);
         checkIsBookmarked(post.getId());
         setTitle(ContentUtility.getInstance().removeLabelFromTitle(post.getTitle()));
@@ -164,7 +165,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
 
     @Subscribe
     public void onPostFailure(PostByPathFailure failure) {
-        Log.e("Check", "onPostFailure");
+        isBookmarking = false;
         pbPostLoading.hideNow();
         showUnavailableMessage();
     }
@@ -202,6 +203,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
             bslMenu.dismissSheet();
         } else if (flMenu.isFabExpanded()) {
             closeMenu();
+        } else if (isBookmarking) {
         } else {
             super.onBackPressed();
         }
@@ -304,6 +306,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     private void addBookmark() {
+        isBookmarking = true;
         addBookmarkTracking();
         showBookmarkLoading();
         new Handler().postDelayed(new Runnable() {
