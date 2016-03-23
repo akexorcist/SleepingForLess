@@ -17,22 +17,23 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.gcm.GcmRegisterService;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
-import com.akexorcist.sleepingforless.network.blogger.model.Failure;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.network.blogger.model.PostListFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
-import com.akexorcist.sleepingforless.database.BookmarkManager;
+import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
@@ -45,6 +46,7 @@ import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -77,6 +79,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        addScreenTracking();
         bindView();
         setupView();
         setToolbar();
@@ -176,6 +179,16 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         ablTitle.removeOnOffsetChangedListener(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
     @Subscribe
     public void onPostListSuccess(PostList postList) {
         this.postList = postList;
@@ -204,20 +217,25 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     public void onClick(View v) {
         if (v == fabMenu) {
             openMenu();
-        } else if (v == viewContentShadow) {
-            closeMenu();
         } else if (v == btnMenuBookmark) {
+//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.BOOKMARK_LIST);
             onMenuBookmarkClick();
         } else if (v == btnMenuRefresh) {
+//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.REFRESH);
             onMenuRefreshClick();
         } else if (v == btnMenuSearch) {
+//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.SEARCH);
             onMenuSearchClick();
         } else if (v == btnMenuSort) {
+//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.SORT);
             onMenuSortClick();
         } else if (v == btnMenuSettings) {
+//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.SETTINGS);
             onMenuSettingsClick();
         } else if (v == tvOpenBookmark) {
             onMenuOpenBookmarkClick();
+        } else if (v == viewContentShadow) {
+            closeMenu();
         }
     }
 
@@ -353,6 +371,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     private void changeFeedSortType(String sortType) {
+        sortPostTracking(sortType);
         adapter.clear();
         adapter.setSortType(sortType);
         this.sortType = sortType;
@@ -406,6 +425,12 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         flMenu.contractFab();
     }
 
+    private void cancelSwipeRefresh() {
+        if (srlFeedList.isRefreshing()) {
+            srlFeedList.setRefreshing(false);
+        }
+    }
+
     // Google Cloud Messaging
     private boolean isReceiverRegistered;
 
@@ -417,9 +442,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private BroadcastReceiver mRegistrationBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean sentToken = sharedPreferences.getBoolean(GcmRegisterService.SENT_TOKEN_TO_SERVER, false);
-            // TODO Do something here
+//            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//            boolean sentToken = sharedPreferences.getBoolean(GcmRegisterService.SENT_TOKEN_TO_SERVER, false);
+            // TODO Do something here when GCM was registered
         }
     };
 
@@ -435,9 +460,16 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         isReceiverRegistered = false;
     }
 
-    private void cancelSwipeRefresh() {
-        if (srlFeedList.isRefreshing()) {
-            srlFeedList.setRefreshing(false);
+    // Google Analytics
+    private void addScreenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.MAIN_PAGE);
+    }
+
+    private void sortPostTracking(String sortType) {
+        if (sortType.equalsIgnoreCase(BloggerManager.SORT_PUBLISHED_DATE)) {
+            EventTracking.getInstance().addSortPostTracking(EventKey.Label.SORT_BY_PUBLISHED);
+        } else if (sortType.equalsIgnoreCase(BloggerManager.SORT_UPDATED_DATE)) {
+            EventTracking.getInstance().addSortPostTracking(EventKey.Label.SORT_BY_UPDATED);
         }
     }
 }

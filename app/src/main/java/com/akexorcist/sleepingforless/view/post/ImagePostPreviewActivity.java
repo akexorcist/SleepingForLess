@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.util.StorageUtility;
@@ -47,7 +49,10 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_image_preview);
 
-        getBundleFromIntent();
+        if (savedInstanceState == null) {
+            getBundleFromIntent();
+        }
+        screenTracking();
         bindView();
         setupView();
         downloadImageToPreview();
@@ -119,5 +124,10 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
                 startActivity(intent);
             }
         }).show();
+    }
+
+    // Google Analytics
+    private void screenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.IMAGE_PREVIEW);
     }
 }

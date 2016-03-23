@@ -1,13 +1,17 @@
 package com.akexorcist.sleepingforless.view.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 
-public class SettingsActivity extends SFLActivity {
+public class SettingsActivity extends SFLActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private Toolbar tbTitle;
 
     @Override
@@ -18,7 +22,7 @@ public class SettingsActivity extends SFLActivity {
         if (savedInstanceState == null) {
             addSettingsFragment();
         }
-
+        screenTracking();
         bindView();
         setupView();
         setToolbar();
@@ -48,5 +52,46 @@ public class SettingsActivity extends SFLActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerPreferenceListener();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterPreferenceListener();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equalsIgnoreCase(getString(R.string.settings_key_push_notification))) {
+            boolean state = sharedPreferences.getBoolean(getString(R.string.settings_key_push_notification), false);
+            turnOffNotification(state);
+        }
+    }
+
+    private void registerPreferenceListener() {
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private void unregisterPreferenceListener() {
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    // Google Analytics
+    private void screenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.Settings);
+    }
+
+    private void turnOffNotification(boolean state) {
+        if (state) {
+            EventTracking.getInstance().addSettingsTracking(EventKey.Action.PUSH_NOTIFICATION, EventKey.Label.ENABLE);
+        } else {
+            EventTracking.getInstance().addSettingsTracking(EventKey.Action.PUSH_NOTIFICATION, EventKey.Label.DISABLE);
+        }
     }
 }

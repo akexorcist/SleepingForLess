@@ -12,16 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
-import com.akexorcist.sleepingforless.network.blogger.BloggerKey;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.network.blogger.model.PostById;
@@ -75,6 +75,8 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
             restoreIntentData();
         }
 
+        screenTracking();
+        readContentTracking();
         bindView();
         setupView();
         setToolbar();
@@ -247,7 +249,6 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
             adapter.setPostClickListener(this);
             rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             rvPostList.setAdapter(adapter);
-//            rvPostList.setAdapter(adapter);
         }
     }
 
@@ -289,6 +290,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     }
 
     private void sharePost(String url) {
+        shareContentTracking();
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, url);
         shareIntent.setType("text/plain");
@@ -303,6 +305,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     }
 
     private void addBookmark() {
+        addBookmarkTracking();
         showBookmarkLoading();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -314,6 +317,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     }
 
     private void removeBookmark() {
+        removeBookmarkTracking();
         removePostFromBookmark();
         BookmarkManager.getInstance().removeBookmarkImageFile(post.getId());
         setBookmark(false);
@@ -438,5 +442,33 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     private void hideUnavailableMessageImmediately() {
         tvUnavailableDescription.setVisibility(View.GONE);
         tvOpenBookmark.setVisibility(View.GONE);
+    }
+
+    // Google Analytics
+    private void screenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.READ_POST);
+    }
+
+    private void addBookmarkTracking() {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.ADD_BOOKMARK, getPostTitle());
+    }
+
+    private void removeBookmarkTracking() {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.REMOVE_BOOKMARK, getPostTitle());
+    }
+
+    private void shareContentTracking() {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.SHARE, getPostTitle());
+    }
+
+    private void readContentTracking() {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.READ, getPostTitle());
+    }
+
+    private String getPostTitle() {
+        if (postItem != null) {
+            return ContentUtility.getInstance().removeLabelFromTitle(postItem.getTitle());
+        }
+        return null;
     }
 }

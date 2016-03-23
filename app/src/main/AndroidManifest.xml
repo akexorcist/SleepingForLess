@@ -89,6 +89,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".view.settings.OpenSourceLicensesActivity" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
@@ -115,6 +117,7 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
+
         <service
             android:name=".gcm.GcmRegisterService"
             android:exported="false" />
@@ -122,8 +125,6 @@
         <meta-data
             android:name="com.akexorcist.sleepingforless.config.GlideConfiguration"
             android:value="GlideModule" />
-
-        <activity android:name=".view.settings.OpenSourceLicensesActivity"></activity>
     </application>
 
 </manifest>

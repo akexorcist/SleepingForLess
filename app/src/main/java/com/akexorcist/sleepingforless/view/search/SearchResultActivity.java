@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
@@ -47,6 +49,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
             restoreIntentData();
         }
 
+        screenTracking();
         bindView();
         setupView();
         setToolbar();
@@ -146,9 +149,9 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     @Override
     public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
 //        showBottomSheet();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
-        openActivity(DebugPostActivity.class, bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
+//        openActivity(DebugPostActivity.class, bundle);
     }
 
     @Override
@@ -192,4 +195,8 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         tvUnavailableDescription.setVisibility(View.GONE);
     }
 
+    // Google Analytics
+    private void screenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.SEARCH);
+    }
 }

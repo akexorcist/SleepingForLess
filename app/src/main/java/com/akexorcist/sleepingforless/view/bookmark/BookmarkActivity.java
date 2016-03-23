@@ -14,6 +14,8 @@ import android.view.View;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.config.ContentPreference;
 import com.akexorcist.sleepingforless.constant.Key;
@@ -34,10 +36,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import io.realm.Realm;
-
 public class BookmarkActivity extends SFLActivity implements View.OnTouchListener, View.OnClickListener, BookmarkAdapter.ItemListener {
-    private Realm realm;
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -56,6 +55,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
+        addScreenTracking();
         bindView();
         setupView();
         setToolbar();
@@ -238,6 +238,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         if (bookmarkList != null) {
             for (Bookmark bookmark : bookmarkList) {
                 BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
+                removeBookmarkTracking(ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()));
             }
             bookmarkList.clear();
             notifyDataChanged();
@@ -300,5 +301,14 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
 
     private void showSnackbar(int messageResId) {
         Snackbar.make(tbTitle, messageResId, Snackbar.LENGTH_SHORT).show();
+    }
+
+    // Google Analytics
+    private void addScreenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.BOOKMARK_LIST);
+    }
+
+    private void removeBookmarkTracking(String title) {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.REMOVE_BOOKMARK, title);
     }
 }

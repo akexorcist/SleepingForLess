@@ -22,6 +22,8 @@ import android.view.View;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.analytic.EventKey;
+import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
@@ -69,6 +71,8 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
             restoreIntentData();
         }
 
+        screenTracking();
+        readContentTracking();
         bindView();
         setupView();
         setToolbar();
@@ -232,6 +236,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     }
 
     public void removeBookmark() {
+        removeBookmarkTracking();
         BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
         finish();
         notifyBookmarkRemoved();
@@ -295,5 +300,25 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         Spannable spannableMessage = new SpannableString(message);
         spannableMessage.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.text_offline)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableMessage;
+    }
+
+    // Google Analytics
+    private void screenTracking() {
+        EventTracking.getInstance().addScreen(EventKey.Page.READ_BOOKMARK);
+    }
+
+    private void removeBookmarkTracking() {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.REMOVE_BOOKMARK, getPostTitle());
+    }
+
+    private void readContentTracking() {
+        EventTracking.getInstance().addContentTracking(EventKey.Action.READ, getPostTitle());
+    }
+
+    private String getPostTitle() {
+        if (bookmark != null) {
+            return ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle());
+        }
+        return null;
     }
 }
