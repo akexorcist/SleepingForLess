@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
@@ -33,7 +31,6 @@ import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.network.blogger.model.PostListFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
-import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
@@ -46,7 +43,6 @@ import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -218,19 +214,14 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         if (v == fabMenu) {
             openMenu();
         } else if (v == btnMenuBookmark) {
-//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.BOOKMARK_LIST);
             onMenuBookmarkClick();
         } else if (v == btnMenuRefresh) {
-//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.REFRESH);
             onMenuRefreshClick();
         } else if (v == btnMenuSearch) {
-//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.SEARCH);
             onMenuSearchClick();
         } else if (v == btnMenuSort) {
-//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.SORT);
             onMenuSortClick();
         } else if (v == btnMenuSettings) {
-//            EventTracking.getInstance().menuButtonClick(EventKey.Category.MENU_BUTTON, EventKey.Label.SETTINGS);
             onMenuSettingsClick();
         } else if (v == tvOpenBookmark) {
             onMenuOpenBookmarkClick();
