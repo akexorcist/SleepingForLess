@@ -123,6 +123,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
         tvOpenBookmark.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuShare.setOnClickListener(this);
+        viewPostBookmarkLoading.setOnClickListener(this);
         btnMenuBookmark.setOnTouchListener(this);
         btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
@@ -163,7 +164,6 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
 
     @Subscribe
     public void onPostFailure(PostByIdFailure failure) {
-        Log.e("Check", "onPostFailure");
         pbPostLoading.hideNow();
         showUnavailableMessage();
     }
@@ -180,6 +180,8 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
             onMenuShareClick();
         } else if (v == tvOpenBookmark) {
             onMenuOpenBookmarkClick();
+        } else if (v == viewPostBookmarkLoading) {
+            closeMenu();
         }
     }
 
@@ -331,7 +333,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     }
 
     private void notifyBookmarkChange() {
-        if(post != null) {
+        if (post != null) {
             checkIsBookmarked(post.getId());
         }
     }

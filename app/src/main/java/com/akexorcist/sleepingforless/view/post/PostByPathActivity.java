@@ -120,6 +120,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         tvOpenBookmark.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuShare.setOnClickListener(this);
+        viewPostBookmarkLoading.setOnClickListener(this);
         btnMenuBookmark.setOnTouchListener(this);
         btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
@@ -177,6 +178,8 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
             onMenuShareClick();
         } else if (v == tvOpenBookmark) {
             onMenuOpenBookmarkClick();
+        } else if (v == viewPostBookmarkLoading) {
+            closeMenu();
         }
     }
 
@@ -328,7 +331,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     private void notifyBookmarkChange() {
-        if(post != null) {
+        if (post != null) {
             checkIsBookmarked(post.getId());
         }
     }
