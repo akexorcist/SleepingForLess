@@ -36,11 +36,20 @@ public class PlainTextPostViewHolder extends RecyclerView.ViewHolder {
 
     private Spannable setSpannable(PlainTextPost plainTextPost) {
         Spannable spanText = Spannable.Factory.getInstance().newSpannable(plainTextPost.getText());
+
         for (PlainTextPost.Highlight highlight : plainTextPost.getHighlightList()) {
-            spanText.setSpan(new ForegroundColorSpan(highlight.getColor()), highlight.getStart(), highlight.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            try {
+                spanText.setSpan(new ForegroundColorSpan(highlight.getColor()), highlight.getStart(), highlight.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
         for (PlainTextPost.Link link : plainTextPost.getLinkList()) {
-            spanText.setSpan(new LinkClickable(link.getUrl(), linkClickListener), link.getStart(), link.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            try {
+                spanText.setSpan(new LinkClickable(link.getUrl(), linkClickListener), link.getStart(), link.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
         }
         return spanText;
     }

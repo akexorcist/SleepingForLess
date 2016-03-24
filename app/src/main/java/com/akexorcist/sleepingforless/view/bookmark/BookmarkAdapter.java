@@ -48,6 +48,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final int index = holder.getAdapterPosition();
         int viewType = getItemViewType(position);
         if (viewType == VIEW_TYPE_CONTENT) {
             Bookmark bookmark = bookmarkList.get(holder.getAdapterPosition());
@@ -58,7 +59,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     if (itemListener != null) {
-                        itemListener.onItemClick(bookmarkViewHolder, bookmarkList.get(bookmarkViewHolder.getAdapterPosition()));
+                        itemListener.onItemClick(bookmarkViewHolder, bookmarkList.get(index));
                     }
                 }
             });
@@ -66,7 +67,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemListener != null) {
-                        itemListener.onItemLongClick(bookmarkViewHolder, bookmarkList.get(bookmarkViewHolder.getAdapterPosition()));
+                        itemListener.onItemLongClick(bookmarkViewHolder, bookmarkList.get(index));
                     }
                     return true;
                 }

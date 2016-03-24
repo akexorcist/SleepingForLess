@@ -57,13 +57,20 @@
         <activity
             android:name=".view.offline.OfflineImagePostPreviewActivity"
             android:launchMode="singleTask" />
+
         <activity
             android:name=".view.deeplink.LinkActivity"
             android:theme="@android:style/Theme.NoDisplay" />
-        <activity android:name=".view.settings.SettingsActivity" />
+
+        <activity
+            android:name=".view.settings.SettingsActivity"
+            android:launchMode="singleTask" />
+
         <activity
             android:name=".view.settings.SettingsActionActivity"
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoDisplay" />
+
         <activity
             android:name="com.airbnb.deeplinkdispatch.DeepLinkActivity"
             android:theme="@android:style/Theme.NoDisplay">

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
@@ -21,6 +22,24 @@ public class SFLActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         overridePendingTransition(R.anim.anim_default_fade_in, R.anim.anim_default_fade_out);
         super.onCreate(savedInstanceState);
+    }
+
+    protected void openActivityDelayed(final Class<? extends Activity> activityClass) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                openActivity(activityClass);
+            }
+        }, 500);
+    }
+
+    protected void openActivityDelayed(final Class<? extends Activity> activityClass, final Bundle bundle) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                openActivity(activityClass, bundle);
+            }
+        }, 500);
     }
 
     protected void openActivity(Class<? extends Activity> activityClass) {

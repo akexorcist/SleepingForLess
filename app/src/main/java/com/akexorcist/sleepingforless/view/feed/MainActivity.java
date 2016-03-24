@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -179,7 +180,6 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         super.onResume();
         registerReceiver();
         closeMenu();
-        showFAB();
         if (adapter != null) {
             adapter.updateData();
         }
@@ -368,8 +368,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     public void onMenuBookmarkClick() {
-        openActivity(BookmarkActivity.class);
         closeMenu();
+        openActivityDelayed(BookmarkActivity.class);
     }
 
     public void onMenuRefreshClick() {
@@ -378,8 +378,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     public void onMenuSearchClick() {
-        openActivity(SearchActivity.class);
         closeMenu();
+        openActivityDelayed(SearchActivity.class);
     }
 
     public void onMenuSortClick() {
@@ -388,8 +388,8 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     }
 
     public void onMenuSettingsClick() {
-        openActivity(SettingsActivity.class);
         closeMenu();
+        openActivityDelayed(SettingsActivity.class);
     }
 
     public void onMenuOpenBookmarkClick() {
