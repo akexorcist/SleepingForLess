@@ -86,12 +86,13 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
                 .load(url)
                 .crossFade(200)
                 .thumbnail(0.1f)
+                .override(500, 500)
                 .centerCrop()
                 .into(ivTitle);
     }
 
-    public void setBookmarkIndicator(String postId) {
-        if (BookmarkManager.getInstance().isBookmark(postId)) {
+    public void setBookmarkIndicator(boolean isBookmark) {
+        if (isBookmark) {
             ivBookmarkIndicator.setVisibility(View.VISIBLE);
         } else {
             ivBookmarkIndicator.setVisibility(View.GONE);

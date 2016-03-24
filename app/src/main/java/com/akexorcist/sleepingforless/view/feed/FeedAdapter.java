@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ItemListener itemListener;
     private LoadMoreListener loadMoreListener;
     private List<PostList.Item> itemList;
+    private List<String> bookmarkIdList;
     private boolean isLoadMoreAvailable;
     private String sortType;
 
     public FeedAdapter() {
+        bookmarkIdList = BookmarkManager.getInstance().getBookmarkIdList();
     }
 
     public void setSortType(String sortType) {
@@ -97,7 +100,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         feedViewHolder.setLabel(postItem.getLabels());
         feedViewHolder.setSortDate(sortType, postItem.getPublished(), postItem.getUpdated());
         feedViewHolder.setImage(postItem.getImages());
-        feedViewHolder.setBookmarkIndicator(postItem.getId());
+        feedViewHolder.setBookmarkIndicator(isBookmark(postItem.getId()));
         feedViewHolder.setFeedClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,5 +151,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface LoadMoreListener {
         void onLoadMore();
+    }
+
+    public boolean isBookmark(String postId) {
+        for (String bookmarkId : bookmarkIdList) {
+            if (postId.equalsIgnoreCase(bookmarkId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
