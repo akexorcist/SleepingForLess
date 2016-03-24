@@ -181,7 +181,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         closeMenu();
         showFAB();
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.updateData();
         }
         ablTitle.addOnOffsetChangedListener(this);
     }
@@ -229,7 +229,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     @Subscribe
     public void onBookmarkResult(BookmarkResult result) {
-        adapter.notifyDataSetChanged();
+        adapter.updateData();
         showBookmarkAddedMessage();
     }
 

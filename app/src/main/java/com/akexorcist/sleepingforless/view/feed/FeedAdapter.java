@@ -28,7 +28,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String sortType;
 
     public FeedAdapter() {
-        bookmarkIdList = BookmarkManager.getInstance().getBookmarkIdList();
+        getBookmarkIdList();
     }
 
     public void setSortType(String sortType) {
@@ -37,7 +37,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setPostListItem(List<PostList.Item> itemList) {
         this.itemList = itemList;
-        notifyDataSetChanged();
+        updateData();
     }
 
     public void setItemListener(ItemListener listener) {
@@ -60,7 +60,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.itemList = new ArrayList<>();
         }
         this.itemList.addAll(itemList);
-        notifyDataSetChanged();
+        updateData();
     }
 
     @Override
@@ -132,6 +132,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (itemList != null) {
             itemList.clear();
         }
+        updateData();
+    }
+
+    public void updateData() {
+        getBookmarkIdList();
         notifyDataSetChanged();
     }
 
@@ -151,6 +156,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface LoadMoreListener {
         void onLoadMore();
+    }
+
+    private void getBookmarkIdList() {
+        bookmarkIdList = BookmarkManager.getInstance().getBookmarkIdList();
     }
 
     public boolean isBookmark(String postId) {
