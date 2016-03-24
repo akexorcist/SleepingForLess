@@ -6,12 +6,6 @@
     <dimen name="bookmark_item_width">@integer/match_parent</dimen>
     <dimen name="dot_progress_bar_radius">6dp</dimen>
     <dimen name="dot_progress_bar_spacing">30dp</dimen>
-
-    <dimen name="default_text_size_extra_extra_small">12sp</dimen>
-    <dimen name="default_text_size_extra_small">14sp</dimen>
-    <dimen name="default_text_size_small">18sp</dimen>
-    <dimen name="default_text_size">20sp</dimen>
-    <dimen name="default_text_size_large">22sp</dimen>
-    <dimen name="default_text_size_extra_large">26sp</dimen>
+    <dimen name="post_content_width">900dp</dimen>
 
 </resources>

@@ -124,9 +124,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     public void onPostListSuccess(PostList postList) {
         this.postList = postList;
         setPostList(postList);
-        hideLoading();
-        fabMenu.show();
-        hideUnavailableMessage();
     }
 
     @Subscribe
@@ -193,9 +190,12 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 //            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
             adapter.setLoadMoreAvailable(false);
             showContentFound();
+            hideLoading();
         } else {
             showContentNotFound();
         }
+        hideUnavailableMessage();
+        fabMenu.show();
     }
 
     public void onMenuSearchClick() {

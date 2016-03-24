@@ -34,6 +34,7 @@
     <dimen name="fab_button_size">60dp</dimen>
     <dimen name="fab_button_margin">16dp</dimen>
     <dimen name="post_image_height">190dp</dimen>
+    <dimen name="post_content_width">@integer/match_parent</dimen>
     <dimen name="app_bar_layout_height">190dp</dimen>
     <dimen name="header_logo_size">100dp</dimen>
     <dimen name="bookmark_indicator_size">64dp</dimen>

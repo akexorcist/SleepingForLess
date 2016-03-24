@@ -5,5 +5,13 @@
     <dimen name="feed_item_width">@integer/match_parent</dimen>
     <dimen name="bookmark_item_width">@integer/match_parent</dimen>
     <dimen name="menu_button_margin">15dp</dimen>
+    <dimen name="post_content_width">700dp</dimen>
+
+    <dimen name="default_text_size_extra_extra_small">12sp</dimen>
+    <dimen name="default_text_size_extra_small">14sp</dimen>
+    <dimen name="default_text_size_small">18sp</dimen>
+    <dimen name="default_text_size">20sp</dimen>
+    <dimen name="default_text_size_large">22sp</dimen>
+    <dimen name="default_text_size_extra_large">26sp</dimen>
 
 </resources>

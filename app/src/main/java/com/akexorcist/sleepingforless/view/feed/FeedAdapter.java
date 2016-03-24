@@ -40,6 +40,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         updateData();
     }
 
+    public List<PostList.Item> getItemList() {
+        return itemList;
+    }
+
     public void setItemListener(ItemListener listener) {
         this.itemListener = listener;
     }

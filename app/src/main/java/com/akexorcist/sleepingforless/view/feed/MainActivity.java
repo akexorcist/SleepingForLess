@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -53,9 +52,12 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
 public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
     private static final String KEY_POST_LIST = "key_post_list";
     private static final String KEY_SORT_TYPE = "key_sort_type";
+    private static final String KEY_ITEM_LIST = "ket_item_list";
 
     private Toolbar tbTitle;
     private AppBarLayout ablTitle;
@@ -209,10 +211,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     @Subscribe
     public void onPostListSuccess(PostList postList) {
         this.postList = postList;
-        setPostList(postList);
-        hideLoading();
-        hideUnavailableMessage();
-        cancelSwipeRefresh();
+        addPostList(postList);
     }
 
     @Subscribe
@@ -310,26 +309,47 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(KEY_POST_LIST, Parcels.wrap(postList));
         outState.putString(KEY_SORT_TYPE, sortType);
+        outState.putParcelable(KEY_POST_LIST, Parcels.wrap(postList));
+        outState.putParcelable(KEY_ITEM_LIST, Parcels.wrap(adapter.getItemList()));
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
         sortType = savedInstanceState.getString(KEY_SORT_TYPE);
-        onPostListSuccess(postList);
+        postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
+        List<PostList.Item> itemList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_ITEM_LIST));
+        setPostList(itemList, postList);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ablTitle.setExpanded(false, false);
         }
     }
 
-    public void setPostList(PostList postList) {
+    public void addPostList(PostList postList) {
         if (postList != null) {
             adapter.addPostListItem(postList.getItems());
             adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
+            hideLoading();
+            hideUnavailableMessageImmediately();
+            cancelSwipeRefresh();
+        } else {
+            showUnavailableMessage();
+            cancelSwipeRefresh();
+        }
+    }
+
+    public void setPostList(List<PostList.Item> itemList, PostList postList) {
+        if (postList != null) {
+            adapter.setPostListItem(itemList);
+            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
+            hideLoading();
+            hideUnavailableMessageImmediately();
+            cancelSwipeRefresh();
+        } else {
+            showUnavailableMessage();
+            cancelSwipeRefresh();
         }
     }
 
