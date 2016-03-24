@@ -33,7 +33,7 @@
         <item name="android:textSize">@dimen/default_text_size_extra_large</item>
     </style>
 
-    <style name="PostTitleTextView" parent="@android:style/TextAppearance">
+    <style name="SimpleTitleTextView" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/default_text_size_small</item>
     </style>
@@ -60,6 +60,7 @@
 
     <style name="DotsProgressBar.Primary" parent="DotsProgressBar">
         <item name="android:color">@color/colorPrimary</item>
+        <item name="android:padding">@dimen/default_margin_padding</item>
     </style>
 
     <style name="DotsProgressBar.Accent" parent="DotsProgressBar">

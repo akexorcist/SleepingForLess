@@ -1,0 +1,5 @@
+<resources>
+
+    <dimen name="feed_item_width">@integer/match_parent</dimen>
+
+</resources>

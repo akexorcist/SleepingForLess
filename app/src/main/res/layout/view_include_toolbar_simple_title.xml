@@ -2,8 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -12,7 +11,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_title"
             style="@style/Toolbar"
-            app:titleTextAppearance="@style/PostTitleTextView" />
+            app:titleTextAppearance="@style/SimpleTitleTextView" />
 
     </android.support.design.widget.AppBarLayout>
 </merge>

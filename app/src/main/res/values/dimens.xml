@@ -20,6 +20,10 @@
 
     <dimen name="bottom_menu_margin">15dp</dimen>
 
+    <dimen name="image_content_width">@integer/match_parent</dimen>
+    <dimen name="feed_item_width">@integer/match_parent</dimen>
+    <dimen name="bookmark_item_width">@integer/match_parent</dimen>
+    <dimen name="search_result_item_width">@integer/match_parent</dimen>
     <dimen name="app_bar_layout_elevation">5dp</dimen>
     <dimen name="dot_progress_bar_radius">4dp</dimen>
     <dimen name="dot_progress_bar_spacing">10dp</dimen>

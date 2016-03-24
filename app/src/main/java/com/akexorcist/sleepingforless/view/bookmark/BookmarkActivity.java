@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
@@ -94,7 +95,8 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         btnRemoveAll.setOnTouchListener(this);
         btnInfo.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
-        rvBookmarkList.setLayoutManager(new LinearLayoutManager(this));
+        int columnCount = getResources().getInteger(R.integer.bookmark_column_count);
+        rvBookmarkList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
     }
 
     private void setToolbar() {

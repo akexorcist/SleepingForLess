@@ -1,7 +1,6 @@
 package com.akexorcist.sleepingforless.database;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
@@ -55,13 +54,7 @@ public class BookmarkManager {
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             saveBookmarkImageBitmap(resource, postId, url);
                             bookmarkImageCount--;
-
-                            Log.e("Check", "onResourceReady");
-//                            if (bookmarkImageCount <= 0 && callback != null) {
-//                                callback.onDownloadSuccess();
-//                            }
                             if (bookmarkImageCount <= 0) {
-                                Log.e("Check", "Finish");
                                 BusProvider.getInstance().post(new BookmarkResult());
                             }
                         }
@@ -69,11 +62,7 @@ public class BookmarkManager {
                 }
             }
         }
-//        if (bookmarkImageCount <= 0 && callback != null) {
-//            callback.onDownloadSuccess();
-//        }
         if (bookmarkImageCount <= 0) {
-            Log.e("Check", "Finish");
             BusProvider.getInstance().post(new BookmarkResult());
         }
     }
@@ -96,7 +85,10 @@ public class BookmarkManager {
     }
 
     private void downloadImage(String url, SimpleTarget<Bitmap> targetCallback) {
-        Glide.with(Contextor.getContext()).load(url).asBitmap().into(targetCallback);
+        Glide.with(Contextor.getContext())
+                .load(url)
+                .asBitmap()
+                .into(targetCallback);
     }
 
     public File getBookmarkImageFile(String bookmarkPostId, String filename) {
@@ -151,6 +143,17 @@ public class BookmarkManager {
         boolean isBookmark = result != null && result.size() > 0;
         realm.close();
         return isBookmark;
+    }
+
+    public List<String> getBookmarkIdList() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<BookmarkRealm> result = realm.where(BookmarkRealm.class)
+                .findAll();
+        List<String> postIdList = new ArrayList<>();
+        for (BookmarkRealm bookmarkRealm : result) {
+            postIdList.add(bookmarkRealm.getPostId());
+        }
+        return postIdList;
     }
 
     public int getBookmarkCount() {

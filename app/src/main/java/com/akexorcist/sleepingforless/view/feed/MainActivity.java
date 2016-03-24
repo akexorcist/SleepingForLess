@@ -4,13 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -26,6 +29,7 @@ import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
+import com.akexorcist.sleepingforless.database.BookmarkResult;
 import com.akexorcist.sleepingforless.gcm.GcmRegisterService;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
@@ -54,6 +58,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     private Toolbar tbTitle;
     private AppBarLayout ablTitle;
+    private CollapsingToolbarLayout ctlTitle;
     private FeedAdapter adapter;
     private DilatingDotsProgressBar pbFeedListLoading;
     private RecyclerView rvFeedList;
@@ -99,6 +104,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     private void bindView() {
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         ablTitle = (AppBarLayout) findViewById(R.id.abl_title);
+        ctlTitle = (CollapsingToolbarLayout) findViewById(R.id.ctl_title);
         rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
         srlFeedList = (SwipeRefreshLayout) findViewById(R.id.srl_feed_list);
         pbFeedListLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_feed_list_loading);
@@ -139,8 +145,14 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         adapter.setSortType(sortType);
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
-        rvFeedList.setLayoutManager(new LinearLayoutManager(this));
+        int columnCount = getResources().getInteger(R.integer.feed_column_count);
+        rvFeedList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
         rvFeedList.setAdapter(adapter);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ablTitle.setExpanded(false, false);
+        }
+
     }
 
     private void callService() {
@@ -213,6 +225,12 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.SEARCH_REQUEST, Parcels.wrap(request));
         openActivity(SearchResultActivity.class, bundle);
+    }
+
+    @Subscribe
+    public void onBookmarkResult(BookmarkResult result) {
+        adapter.notifyDataSetChanged();
+        showBookmarkAddedMessage();
     }
 
     @Override
@@ -300,6 +318,9 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
         sortType = savedInstanceState.getString(KEY_SORT_TYPE);
         onPostListSuccess(postList);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ablTitle.setExpanded(false, false);
+        }
     }
 
     public void setPostList(PostList postList) {
@@ -312,6 +333,20 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     public void showBottomSheet() {
         FeedDetailBottomSheet modalBottomSheet = FeedDetailBottomSheet.newInstance();
         modalBottomSheet.show(getSupportFragmentManager(), "bottom_sheet");
+    }
+
+    private void showBookmarkAddedMessage() {
+        Snackbar.make(tbTitle, R.string.added_to_bookmark, Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_view, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToBookmarkList();
+                    }
+                }).show();
+    }
+
+    private void goToBookmarkList() {
+        openActivity(BookmarkActivity.class);
     }
 
     public void openMenu() {

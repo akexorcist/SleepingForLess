@@ -13,6 +13,6 @@
             android:id="@+id/tb_title"
             style="@style/Toolbar"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextAppearance="@style/PostTitleTextView" />
+            app:titleTextAppearance="@style/SimpleTitleTextView" />
     </android.support.design.widget.AppBarLayout>
 </merge>

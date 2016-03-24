@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -86,7 +87,8 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
-        rvSearchResultList.setLayoutManager(new LinearLayoutManager(this));
+        int columnCount = getResources().getInteger(R.integer.search_result_column_count);
+        rvSearchResultList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
         rvSearchResultList.setAdapter(adapter);
     }
 
