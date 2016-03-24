@@ -7,6 +7,7 @@ import com.akexorcist.sleepingforless.config.DeveloperConfig;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.util.Utility;
 
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -20,15 +21,31 @@ public class SFLApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Contextor.init(getApplicationContext());
+        initFont();
+        initRealm();
+        initCrashActivity();
+        initAnalyticsTrackers();
+    }
+
+    public void initFont() {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/CSPraJad.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
+    }
+
+    public void initRealm() {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
-        initAnalyticsTrackers();
+    }
+
+    public void initCrashActivity() {
+        CustomActivityOnCrash.install(this);
+        CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.drawable.ic_force_close);
+        CustomActivityOnCrash.setShowErrorDetails(true);
+        CustomActivityOnCrash.setEnableAppRestart(true);
     }
 
     public void initAnalyticsTrackers() {

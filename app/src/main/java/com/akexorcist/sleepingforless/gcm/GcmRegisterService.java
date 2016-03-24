@@ -78,7 +78,6 @@ public class GcmRegisterService extends IntentService implements SleepingForLess
      */
     private void sendRegistrationToServer(String token) {
         if (GcmTokenPreference.getInstance().isNewToken(token)) {
-            Log.e("Check", "Send Registration To Server");
             SleepingForLessManager.getInstance().removeGcmToken(GcmTokenPreference.getInstance().getTokenId(), null);
             SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL, this);
         }

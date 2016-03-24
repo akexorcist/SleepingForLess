@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.akexorcist.sleepingforless">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -98,6 +99,12 @@
 
         <activity android:name=".view.settings.OpenSourceLicensesActivity" />
 
+        <activity
+            android:name="cat.ereza.customactivityoncrash.activity.DefaultErrorActivity"
+            android:process=":error_activity"
+            android:theme="@style/AppTheme"
+            tools:replace="android:theme" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
@@ -117,6 +124,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
         <service
             android:name=".gcm.GcmTokenRefreshService"
             android:exported="false">
