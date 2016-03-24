@@ -26,7 +26,9 @@ import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentConverter;
+import com.akexorcist.sleepingforless.util.content.ContentResult;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
@@ -37,6 +39,7 @@ import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.github.javiersantos.materialstyleddialogs.enums.Duration;
+import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
@@ -208,6 +211,12 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
+    @Subscribe
+    public void onContentConvertResult(ContentResult result) {
+        postList = result.getBasePostList();
+        setPostList(postList);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_BOOKMARK, Parcels.wrap(bookmark));
@@ -277,8 +286,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
 
     private void setPost(Bookmark bookmark) {
         if (bookmark != null) {
-            postList = ContentUtility.getInstance().convertPost(bookmark.getContent());
-            setPostList(postList);
+            ContentConverter.getInstance().convert(bookmark.getContent());
         }
     }
 

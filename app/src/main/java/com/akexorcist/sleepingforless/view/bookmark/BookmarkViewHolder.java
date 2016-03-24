@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkLabel;
 import com.balysv.materialripple.MaterialRippleLayout;
 

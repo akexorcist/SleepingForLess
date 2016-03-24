@@ -17,7 +17,7 @@ import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.Failure;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;

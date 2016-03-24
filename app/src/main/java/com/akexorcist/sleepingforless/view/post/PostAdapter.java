@@ -68,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
         if (position < postList.size() - 1) {
-            BasePost basePost = postList.get(holder.getAdapterPosition());
+            BasePost basePost = postList.get(position);
             if (viewType == PostType.PLAIN_TEXT) {
                 addPlainTextContent(holder, basePost);
             } else if (viewType == PostType.HEADER) {

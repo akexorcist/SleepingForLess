@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
 

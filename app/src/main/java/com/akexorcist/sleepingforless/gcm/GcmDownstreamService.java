@@ -10,13 +10,12 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.config.SettingsPreference;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;

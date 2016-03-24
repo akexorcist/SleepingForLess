@@ -30,7 +30,7 @@ public class SFLActivity extends AppCompatActivity {
             public void run() {
                 openActivity(activityClass);
             }
-        }, 500);
+        }, 450);
     }
 
     protected void openActivityDelayed(final Class<? extends Activity> activityClass, final Bundle bundle) {
@@ -39,7 +39,7 @@ public class SFLActivity extends AppCompatActivity {
             public void run() {
                 openActivity(activityClass, bundle);
             }
-        }, 500);
+        }, 450);
     }
 
     protected void openActivity(Class<? extends Activity> activityClass) {

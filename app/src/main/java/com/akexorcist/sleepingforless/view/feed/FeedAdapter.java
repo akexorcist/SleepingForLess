@@ -87,15 +87,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
         if (viewType == VIEW_TYPE_CONTENT) {
-            addContentView(holder);
+            addContentView(holder, position);
         } else if (viewType == VIEW_TYPE_LOADING) {
             addLoadingView(holder);
         }
     }
 
-    private void addContentView(RecyclerView.ViewHolder holder) {
+    private void addContentView(RecyclerView.ViewHolder holder, final int position) {
         final FeedViewHolder feedViewHolder = (FeedViewHolder) holder;
-        PostList.Item postItem = itemList.get(holder.getAdapterPosition());
+        PostList.Item postItem = itemList.get(position);
         feedViewHolder.setTitle(postItem.getTitle());
         feedViewHolder.setLabel(postItem.getLabels());
         feedViewHolder.setSortDate(sortType, postItem.getPublished(), postItem.getUpdated());
@@ -105,7 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 if (itemListener != null) {
-                    itemListener.onItemClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
+                    itemListener.onItemClick(feedViewHolder, itemList.get(position));
                 }
             }
         });
@@ -113,7 +113,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public boolean onLongClick(View v) {
                 if (itemListener != null) {
-                    itemListener.onItemLongClick(feedViewHolder, itemList.get(feedViewHolder.getAdapterPosition()));
+                    itemListener.onItemLongClick(feedViewHolder, itemList.get(position));
                 }
                 return true;
             }

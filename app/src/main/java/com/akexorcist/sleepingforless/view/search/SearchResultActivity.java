@@ -2,7 +2,6 @@ package com.akexorcist.sleepingforless.view.search;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +17,7 @@ import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.network.blogger.model.PostListFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.feed.FeedViewHolder;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;

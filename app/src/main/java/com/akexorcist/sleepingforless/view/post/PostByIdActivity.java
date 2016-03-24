@@ -30,7 +30,9 @@ import com.akexorcist.sleepingforless.network.blogger.model.PostByIdFailure;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
-import com.akexorcist.sleepingforless.util.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.ContentConverter;
+import com.akexorcist.sleepingforless.util.content.ContentResult;
+import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
@@ -261,6 +263,12 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
         showBookmarkAddedMessage();
     }
 
+    @Subscribe
+    public void onContentConvertResult(ContentResult result) {
+        postList = result.getBasePostList();
+        setPostList(postList);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_IS_BOOKMARKING, isBookmarking);
@@ -298,8 +306,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
 
     private void setPost(Post post) {
         if (post != null) {
-            postList = ContentUtility.getInstance().convertPost(post.getContent());
-            setPostList(postList);
+            ContentConverter.getInstance().convert(post.getContent());
         }
     }
 

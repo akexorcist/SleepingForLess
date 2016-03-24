@@ -49,9 +49,9 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final int index = holder.getAdapterPosition();
-        int viewType = getItemViewType(position);
+        int viewType = getItemViewType(index);
         if (viewType == VIEW_TYPE_CONTENT) {
-            Bookmark bookmark = bookmarkList.get(holder.getAdapterPosition());
+            Bookmark bookmark = bookmarkList.get(index);
             final BookmarkViewHolder bookmarkViewHolder = (BookmarkViewHolder) holder;
             bookmarkViewHolder.setTitle(bookmark.getTitle());
             bookmarkViewHolder.setLabel(bookmark.getLabelList());
