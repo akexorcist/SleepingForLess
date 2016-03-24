@@ -49,6 +49,9 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 import org.parceler.Parcels;
 
 public class MainActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
+    private static final String KEY_POST_LIST = "key_post_list";
+    private static final String KEY_SORT_TYPE = "key_sort_type";
+
     private Toolbar tbTitle;
     private AppBarLayout ablTitle;
     private FeedAdapter adapter;
@@ -75,12 +78,15 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        addScreenTracking();
         bindView();
         setupView();
         setToolbar();
-        callService();
-        setupGcmRegister();
+
+        if (savedInstanceState == null) {
+            addScreenTracking();
+            callService();
+            setupGcmRegister();
+        }
     }
 
     private void setupGcmRegister() {
@@ -279,6 +285,21 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         srlFeedList.setEnabled(verticalOffset == 0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_POST_LIST, Parcels.wrap(postList));
+        outState.putString(KEY_SORT_TYPE, sortType);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
+        sortType = savedInstanceState.getString(KEY_SORT_TYPE);
+        onPostListSuccess(postList);
     }
 
     public void setPostList(PostList postList) {

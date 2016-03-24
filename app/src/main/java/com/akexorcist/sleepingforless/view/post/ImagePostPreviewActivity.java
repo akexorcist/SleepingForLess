@@ -39,6 +39,8 @@ import java.io.OutputStream;
  * Created by Akexorcist on 3/13/2016 AD.
  */
 public class ImagePostPreviewActivity extends SFLActivity implements View.OnClickListener {
+    private static final String KEY_FULL_URL = "key_full_url";
+
     private SubsamplingScaleImageView ivPreview;
     private FloatingActionButton fabClose;
     private FloatingActionButton fabDownload;
@@ -55,7 +57,10 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         screenTracking();
         bindView();
         setupView();
-        downloadImageToPreview();
+
+        if (savedInstanceState == null) {
+            downloadImageToPreview();
+        }
     }
 
     private void bindView() {
@@ -94,6 +99,19 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         } else if (v == fabDownload) {
             downloadImage();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_FULL_URL, fullUrl);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        fullUrl = savedInstanceState.getString(KEY_FULL_URL);
+        downloadImageToPreview();
     }
 
     private void downloadImage() {

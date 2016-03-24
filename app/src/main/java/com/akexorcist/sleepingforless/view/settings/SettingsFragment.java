@@ -42,8 +42,6 @@ public class SettingsFragment extends PreferenceFragment {
         updateCacheSize();
     }
 
-
-
     private void updateCacheSize() {
         Preference preference = findPreference(KEY_CLEAR_APP_CACHE);
         preference.setSummary(StorageUtility.getInstance().getAllCacheSize());

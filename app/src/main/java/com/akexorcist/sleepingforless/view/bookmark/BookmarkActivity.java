@@ -37,6 +37,8 @@ import org.parceler.Parcels;
 import java.util.List;
 
 public class BookmarkActivity extends SFLActivity implements View.OnTouchListener, View.OnClickListener, BookmarkAdapter.ItemListener {
+    private static final String KEY_BOOKMARK_LIST = "key_bookmark_list";
+
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -55,12 +57,15 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
-        addScreenTracking();
         bindView();
         setupView();
         setToolbar();
-        callDatabase();
-        showWarnOfflineBookmark();
+
+        if (savedInstanceState == null) {
+            addScreenTracking();
+            callDatabase();
+            showWarnOfflineBookmark();
+        }
     }
 
     private void bindView() {
@@ -112,8 +117,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     private void getBookmarkFromDatabase() {
         bookmarkList = BookmarkManager.getInstance().getBookmarkList();
         setBookmark(bookmarkList);
-        hideLoading();
-        checkBookmarkAvailable();
     }
 
     private void checkBookmarkAvailable() {
@@ -126,6 +129,8 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         adapter = new BookmarkAdapter(bookmarkList);
         adapter.setItemListener(this);
         rvBookmarkList.setAdapter(adapter);
+        hideLoading();
+        checkBookmarkAvailable();
     }
 
     @Override
@@ -198,6 +203,19 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     @Override
     public void onItemLongClick(BookmarkViewHolder holder, Bookmark bookmark) {
         // TODO Do something (No idea now)
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_BOOKMARK_LIST, Parcels.wrap(bookmarkList));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        bookmarkList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_BOOKMARK_LIST));
+        setBookmark(bookmarkList);
     }
 
     private void onMenuUpdateAllClick() {

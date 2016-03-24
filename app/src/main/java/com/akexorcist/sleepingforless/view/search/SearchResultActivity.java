@@ -20,7 +20,6 @@ import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.feed.FeedViewHolder;
-import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
@@ -28,6 +27,9 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 import org.parceler.Parcels;
 
 public class SearchResultActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
+    private static final String KEY_POST_LIST = "key_post_list";
+    private static final String KEY_SEARCH_REQUEST = "key_search_request";
+
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private DilatingDotsProgressBar pbSearchResultList;
@@ -49,11 +51,15 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
             restoreIntentData();
         }
 
-        screenTracking();
         bindView();
         setupView();
         setToolbar();
-        callService();
+
+        if (savedInstanceState == null) {
+            screenTracking();
+            setTitle(request);
+            callService();
+        }
     }
 
     public void callService() {
@@ -86,7 +92,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_search_result, request.getKeyword())));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +99,10 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
                 finish();
             }
         });
+    }
+
+    private void setTitle(SearchRequest request) {
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_search_result, request.getKeyword())));
     }
 
     private void restoreIntentData() {
@@ -128,7 +137,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     @Subscribe
     public void onSearchRequest(SearchRequest request) {
         this.request = request;
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_search_result, request.getKeyword())));
+        setTitle(request);
         callService();
     }
 
@@ -157,6 +166,22 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     @Override
     public void onLoadMore() {
         searchMorePost(postList.getNextPageToken());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_POST_LIST, Parcels.wrap(postList));
+        outState.putParcelable(KEY_SEARCH_REQUEST, Parcels.wrap(request));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
+        request = Parcels.unwrap(savedInstanceState.getParcelable(KEY_SEARCH_REQUEST));
+        onPostListSuccess(postList);
+        setTitle(request);
     }
 
     public void setPostList(PostList postList) {

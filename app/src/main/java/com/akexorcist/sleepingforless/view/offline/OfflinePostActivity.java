@@ -1,8 +1,5 @@
 package com.akexorcist.sleepingforless.view.offline;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,8 +24,8 @@ import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
-import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
+import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.util.Utility;
@@ -47,6 +44,9 @@ import org.parceler.Parcels;
 import java.util.List;
 
 public class OfflinePostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, OfflinePostAdapter.PostClickListener {
+    private static final String KEY_BOOKMARK = "key_bookmark";
+    private static final String KEY_POST_LIST = "key_post_list";
+
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -71,12 +71,15 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
             restoreIntentData();
         }
 
-        screenTracking();
-        readContentTracking();
         bindView();
         setupView();
         setToolbar();
-        setBookmark();
+
+        if (savedInstanceState == null) {
+            screenTracking();
+            readContentTracking();
+            setBookmark();
+        }
     }
 
     @Override
@@ -116,12 +119,11 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         btnMenuDelete.setOnTouchListener(this);
         btnMenuOpenFromOriginal.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
+        rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        String title = getString(R.string.title_offline, ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()));
-        setTitle(highlightText(title, "[Offline]"));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +135,13 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
 
     private void setBookmark() {
         showLoading();
+        setTitle(bookmark);
         setPost(bookmark);
+    }
+
+    private void setTitle(Bookmark bookmark) {
+        String title = getString(R.string.title_offline, ContentUtility.getInstance().removeLabelFromTitle(bookmark.getTitle()));
+        setTitle(highlightText(title, "[Offline]"));
     }
 
     private void restoreIntentData() {
@@ -200,6 +208,22 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_BOOKMARK, Parcels.wrap(bookmark));
+        outState.putParcelable(KEY_POST_LIST, Parcels.wrap(postList));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        bookmark = Parcels.unwrap(savedInstanceState.getParcelable(KEY_BOOKMARK));
+        postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
+        setTitle(bookmark);
+        setPostList(postList);
+    }
+
     private void onMenuUpdateClick() {
         // TODO update offline bookmark
     }
@@ -254,12 +278,15 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     private void setPost(Bookmark bookmark) {
         if (bookmark != null) {
             postList = ContentUtility.getInstance().convertPost(bookmark.getContent());
-            adapter = new OfflinePostAdapter(bookmark.getPostId(), postList);
-            adapter.setPostClickListener(this);
-            rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-            rvPostList.setAdapter(adapter);
-            hideLoading();
+            setPostList(postList);
         }
+    }
+
+    private void setPostList(List<BasePost> postList) {
+        adapter = new OfflinePostAdapter(bookmark.getPostId(), postList);
+        adapter.setPostClickListener(this);
+        rvPostList.setAdapter(adapter);
+        hideLoading();
     }
 
     public void openMenu() {

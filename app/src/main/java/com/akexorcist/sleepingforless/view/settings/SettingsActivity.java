@@ -22,10 +22,14 @@ public class SettingsActivity extends SFLActivity implements SharedPreferences.O
         if (savedInstanceState == null) {
             addSettingsFragment();
         }
-        screenTracking();
+        
         bindView();
         setupView();
         setToolbar();
+
+        if (savedInstanceState == null) {
+            screenTracking();
+        }
     }
 
     private void addSettingsFragment() {

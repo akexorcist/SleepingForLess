@@ -1,7 +1,9 @@
 package com.akexorcist.sleepingforless.database;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
+import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
@@ -53,16 +55,26 @@ public class BookmarkManager {
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             saveBookmarkImageBitmap(resource, postId, url);
                             bookmarkImageCount--;
-                            if (bookmarkImageCount <= 0 && callback != null) {
-                                callback.onDownloadSuccess();
+
+                            Log.e("Check", "onResourceReady");
+//                            if (bookmarkImageCount <= 0 && callback != null) {
+//                                callback.onDownloadSuccess();
+//                            }
+                            if (bookmarkImageCount <= 0) {
+                                Log.e("Check", "Finish");
+                                BusProvider.getInstance().post(new BookmarkResult());
                             }
                         }
                     });
                 }
             }
         }
-        if (bookmarkImageCount <= 0 && callback != null) {
-            callback.onDownloadSuccess();
+//        if (bookmarkImageCount <= 0 && callback != null) {
+//            callback.onDownloadSuccess();
+//        }
+        if (bookmarkImageCount <= 0) {
+            Log.e("Check", "Finish");
+            BusProvider.getInstance().post(new BookmarkResult());
         }
     }
 

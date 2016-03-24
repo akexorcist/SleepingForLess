@@ -22,6 +22,7 @@ import com.akexorcist.sleepingforless.analytic.EventKey;
 import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.database.BookmarkResult;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.network.blogger.model.PostById;
@@ -46,6 +47,11 @@ import org.parceler.Parcels;
 import java.util.List;
 
 public class PostByIdActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
+    private static final String KEY_IS_BOOKMARKING = "key_is_bookmarking";
+    private static final String KEY_POST_ITEM = "key_post_item";
+    private static final String KEY_POST = "key_post";
+    private static final String KEY_POST_LIST = "key_post_list";
+
     private Toolbar tbTitle;
     private FloatingActionButton fabMenu;
     private FooterLayout flMenu;
@@ -76,12 +82,18 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
             restoreIntentData();
         }
 
-        screenTracking();
-        readContentTracking();
         bindView();
         setupView();
         setToolbar();
-        callService();
+
+        if (savedInstanceState == null) {
+            screenTracking();
+            readContentTracking();
+            callService();
+            checkIsBookmarked(postItem.getId());
+            setTitle(postItem);
+            hideBookmarkLoadingImmediately();
+        }
     }
 
     @Override
@@ -130,13 +142,12 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
         btnMenuBookmark.setOnTouchListener(this);
         btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
-        checkIsBookmarked(postItem.getId());
+        rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         hideBookmarkLoadingImmediately();
     }
 
     private void setToolbar() {
         setSupportActionBar(tbTitle);
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(postItem.getTitle()));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
         tbTitle.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +155,10 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
                 finish();
             }
         });
+    }
+
+    private void setTitle(PostList.Item postItem) {
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(postItem.getTitle()));
     }
 
     private void restoreIntentData() {
@@ -160,9 +175,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     public void onPostSuccess(PostById post) {
         this.post = post;
         setPost(post);
-        hideLoading();
         fabMenu.show();
-        hideUnavailableMessage();
     }
 
     @Subscribe
@@ -235,10 +248,48 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
 
     @Override
     public void onDownloadSuccess() {
+//        hideBookmarkLoading();
+//        setBookmark(true);
+//        showBookmarkAddedMessage();
+    }
+
+    @Subscribe
+    public void onDownloadResult(BookmarkResult result) {
         isBookmarking = false;
         hideBookmarkLoading();
         setBookmark(true);
         showBookmarkAddedMessage();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_IS_BOOKMARKING, isBookmarking);
+        outState.putParcelable(KEY_POST_ITEM, Parcels.wrap(postItem));
+        outState.putParcelable(KEY_POST, Parcels.wrap(post));
+        outState.putParcelable(KEY_POST_LIST, Parcels.wrap(postList));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        isBookmarking = savedInstanceState.getBoolean(KEY_IS_BOOKMARKING);
+        postItem = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_ITEM));
+        post = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST));
+        postList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_POST_LIST));
+
+        setBookmarking(isBookmarking);
+        checkIsBookmarked(postItem.getId());
+        setPostList(postList);
+        setTitle(postItem);
+    }
+
+    private void setBookmarking(boolean isBookmarking) {
+        if (isBookmarking) {
+            showBookmarkLoadingImmediately();
+        } else {
+            hideBookmarkLoadingImmediately();
+        }
     }
 
     private void copyFullUrl(String fullUrl) {
@@ -248,10 +299,17 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
     private void setPost(Post post) {
         if (post != null) {
             postList = ContentUtility.getInstance().convertPost(post.getContent());
+            setPostList(postList);
+        }
+    }
+
+    private void setPostList(List<BasePost> postList) {
+        if (postList != null) {
             adapter = new PostAdapter(postList);
             adapter.setPostClickListener(this);
-            rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             rvPostList.setAdapter(adapter);
+            hideLoading();
+            hideUnavailableMessage();
         }
     }
 
@@ -382,6 +440,14 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
         pbPostBookmarkLoading.showNow();
         AnimationUtility.getInstance().fadeIn(layoutPostBookmarkLoading);
         AnimationUtility.getInstance().fadeIn(viewPostBookmarkLoading);
+    }
+
+    private void showBookmarkLoadingImmediately() {
+        fabMenu.hide();
+        flMenu.hide();
+        pbPostBookmarkLoading.showNow();
+        layoutPostBookmarkLoading.setVisibility(View.VISIBLE);
+        viewPostBookmarkLoading.setVisibility(View.VISIBLE);
     }
 
     private void hideBookmarkLoading() {
