@@ -65,9 +65,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (itemList == null || itemList.size() == 0) {
-            return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_blank, parent, false));
-        } else if (viewType == VIEW_TYPE_CONTENT) {
+        if (viewType == VIEW_TYPE_CONTENT) {
             return new FeedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_item, parent, false));
         } else if (viewType == VIEW_TYPE_LOADING) {
             return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_loading, parent, false));
@@ -143,7 +141,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         if (itemList == null) {
-            return 1;
+            return 0;
         }
         return isLoadMoreAvailable ? itemList.size() + 1 : itemList.size();
     }
