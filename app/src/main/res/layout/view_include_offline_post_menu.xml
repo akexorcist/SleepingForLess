@@ -34,8 +34,8 @@
                 android:id="@+id/btn_menu_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_update"
                 app:mbText="@string/menu_update" />
 
@@ -43,8 +43,8 @@
                 android:id="@+id/btn_menu_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_remove"
                 app:mbText="@string/menu_delete" />
 
@@ -52,8 +52,8 @@
                 android:id="@+id/btn_menu_open_from_original"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_open_from_original"
                 app:mbText="@string/menu_open_from_original" />
         </LinearLayout>

@@ -12,6 +12,4 @@
     <dimen name="default_text_size_large">22sp</dimen>
     <dimen name="default_text_size_extra_large">26sp</dimen>
 
-    <dimen name="bottom_menu_margin">60dp</dimen>
-
 </resources>

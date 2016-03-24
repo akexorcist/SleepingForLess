@@ -16,4 +16,15 @@
         android:fillViewport="false"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <TextView
+        android:id="@+id/tv_search_result_not_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/default_margin_padding"
+        android:layout_marginTop="@dimen/default_margin_padding"
+        android:text="@string/post_not_found"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/default_text_size_large" />
 </merge>

@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -45,6 +46,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     private DilatingDotsProgressBar pbBookmarkList;
     private RecyclerView rvBookmarkList;
     private View viewContentShadow;
+    private TextView tvBookmarkNotFound;
     private MenuButton btnUpdateAll;
     private MenuButton btnRemoveAll;
     private MenuButton btnInfo;
@@ -72,6 +74,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         pbBookmarkList = (DilatingDotsProgressBar) findViewById(R.id.pb_bookmark_list_loading);
         rvBookmarkList = (RecyclerView) findViewById(R.id.rv_bookmark_list);
         viewContentShadow = findViewById(R.id.view_content_shadow);
+        tvBookmarkNotFound = (TextView) findViewById(R.id.tv_bookmark_not_found);
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
         fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
         flMenu = (FooterLayout) findViewById(R.id.fl_menu);
@@ -127,11 +130,17 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void setBookmark(List<Bookmark> bookmarkList) {
-        adapter = new BookmarkAdapter(bookmarkList);
-        adapter.setItemListener(this);
-        rvBookmarkList.setAdapter(adapter);
-        hideLoading();
-        checkBookmarkAvailable();
+        if (bookmarkList != null && bookmarkList.size() > 0) {
+            adapter = new BookmarkAdapter(bookmarkList);
+            adapter.setItemListener(this);
+            rvBookmarkList.setAdapter(adapter);
+            hideLoading();
+            showContentFound();
+            checkBookmarkAvailable();
+        } else {
+            hideLoading();
+            showContentNotFound();
+        }
     }
 
     @Override
@@ -263,6 +272,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
             notifyDataChanged();
             closeMenu();
             fabMenu.hide();
+            showContentNotFound();
             showSnackbar(R.string.removed_all_bookmark);
         }
     }
@@ -286,13 +296,21 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     private void showLoading() {
-        rvBookmarkList.setVisibility(View.GONE);
         pbBookmarkList.showNow();
     }
 
     private void hideLoading() {
-        rvBookmarkList.setVisibility(View.VISIBLE);
         pbBookmarkList.hideNow();
+    }
+
+    private void showContentFound() {
+        rvBookmarkList.setVisibility(View.VISIBLE);
+        tvBookmarkNotFound.setVisibility(View.GONE);
+    }
+
+    private void showContentNotFound() {
+        rvBookmarkList.setVisibility(View.GONE);
+        tvBookmarkNotFound.setVisibility(View.VISIBLE);
     }
 
     private void showWarnOfflineBookmark() {

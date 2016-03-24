@@ -19,6 +19,7 @@
     <dimen name="default_text_size_h1">24sp</dimen>
 
     <dimen name="bottom_menu_margin">15dp</dimen>
+    <dimen name="menu_button_margin">5dp</dimen>
 
     <dimen name="image_content_width">@integer/match_parent</dimen>
     <dimen name="feed_item_width">@integer/match_parent</dimen>

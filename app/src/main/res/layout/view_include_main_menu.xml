@@ -34,8 +34,8 @@
                 android:id="@+id/btn_menu_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_bookmark_menu"
                 app:mbText="@string/menu_bookmark" />
 
@@ -43,8 +43,8 @@
                 android:id="@+id/btn_menu_refresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_refresh"
                 app:mbText="@string/menu_refresh" />
 
@@ -52,8 +52,8 @@
                 android:id="@+id/btn_menu_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_search"
                 app:mbText="@string/menu_search" />
 
@@ -61,8 +61,8 @@
                 android:id="@+id/btn_menu_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_sort"
                 app:mbText="@string/menu_sort" />
 
@@ -70,8 +70,8 @@
                 android:id="@+id/btn_menu_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_padding_small"
-                android:layout_marginRight="@dimen/default_margin_padding_small"
+                android:paddingLeft="@dimen/menu_button_margin"
+                android:paddingRight="@dimen/menu_button_margin"
                 app:mbIconSrc="@drawable/vector_ic_settings"
                 app:mbText="@string/menu_settings" />
         </LinearLayout>

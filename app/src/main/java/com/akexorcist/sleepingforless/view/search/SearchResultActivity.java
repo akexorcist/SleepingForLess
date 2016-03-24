@@ -35,6 +35,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     private DilatingDotsProgressBar pbSearchResultList;
     private RecyclerView rvSearchResultList;
     private View viewContentShadow;
+    private TextView tvSearchResultNotFound;
     private TextView tvUnavailableDescription;
     private TextView tvOpenBookmark;
 
@@ -72,6 +73,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         pbSearchResultList = (DilatingDotsProgressBar) findViewById(R.id.pb_search_result_list_loading);
         rvSearchResultList = (RecyclerView) findViewById(R.id.rv_search_result_list);
         viewContentShadow = findViewById(R.id.view_content_shadow);
+        tvSearchResultNotFound = (TextView) findViewById(R.id.tv_search_result_not_found);
         tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
         tvOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
@@ -186,10 +188,13 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     }
 
     public void setPostList(PostList postList) {
-        if (postList != null) {
+        if (postList != null && postList.getItems() != null && postList.getItems().size() > 0) {
             adapter.setPostListItem(postList.getItems());
 //            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
             adapter.setLoadMoreAvailable(false);
+            showContentFound();
+        } else {
+            showContentNotFound();
         }
     }
 
@@ -199,13 +204,23 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 
     private void showLoading() {
         fabMenu.hide();
-        rvSearchResultList.setVisibility(View.GONE);
         pbSearchResultList.showNow();
+        tvSearchResultNotFound.setVisibility(View.GONE);
+        rvSearchResultList.setVisibility(View.GONE);
     }
 
     private void hideLoading() {
-        rvSearchResultList.setVisibility(View.VISIBLE);
         pbSearchResultList.hideNow();
+    }
+
+    private void showContentFound() {
+        tvSearchResultNotFound.setVisibility(View.GONE);
+        rvSearchResultList.setVisibility(View.VISIBLE);
+    }
+
+    private void showContentNotFound() {
+        tvSearchResultNotFound.setVisibility(View.VISIBLE);
+        rvSearchResultList.setVisibility(View.GONE);
     }
 
     private void showUnavailableMessage() {
