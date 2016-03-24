@@ -193,8 +193,8 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
     }
 
     @Override
-    public void onImageLongClickListener(String fullUrl) {
-        Utility.getInstance().copyTextToClipboard("Image URL", fullUrl);
+    public void onImageLongClickListener(String url) {
+        Utility.getInstance().copyTextToClipboard("Image URL", url);
         Snackbar.make(tbTitle, R.string.copy_image_url_to_clipboard, Snackbar.LENGTH_SHORT).show();
     }
 
