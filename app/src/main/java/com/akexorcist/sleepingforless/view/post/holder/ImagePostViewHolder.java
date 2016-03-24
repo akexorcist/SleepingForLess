@@ -50,7 +50,7 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder implements View
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                        pbPostContentImageLoading.hideNow();
+                        pbPostContentImageLoading.hide();
                         return false;
                     }
                 })
@@ -72,7 +72,7 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder implements View
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, File model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                        pbPostContentImageLoading.hideNow();
+                        pbPostContentImageLoading.hide();
                         return false;
                     }
                 })

@@ -147,7 +147,10 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
         int columnCount = getResources().getInteger(R.integer.feed_column_count);
-        rvFeedList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        layoutManager.setAutoMeasureEnabled(true);
+        layoutManager.setMeasurementCacheEnabled(true);
+        rvFeedList.setLayoutManager(layoutManager);
         rvFeedList.setAdapter(adapter);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {

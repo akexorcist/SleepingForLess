@@ -42,14 +42,13 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
     public void setLabel(List<String> labelList) {
         if (labelList != null && labelList.size() > 0) {
-            String label = "";
-            for (int i = 0; i < labelList.size(); i++) {
-                label += labelList.get(i);
-                if (i < labelList.size() - 1) {
-                    label += ", ";
-                }
+            String resultLabel = "";
+            for (String label : labelList) {
+                resultLabel += label + ", ";
             }
-            tvLabel.setText(label);
+            resultLabel.replaceAll(", $", "");
+            tvLabel.setText(resultLabel);
+            tvLabel.setVisibility(View.VISIBLE);
         } else {
             tvLabel.setVisibility(View.GONE);
         }
