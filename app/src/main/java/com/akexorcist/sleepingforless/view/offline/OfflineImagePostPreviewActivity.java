@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -29,11 +28,6 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Created by Akexorcist on 3/13/2016 AD.
@@ -59,6 +53,7 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
         screenTracking();
         bindView();
         setupView();
+        initRuntimePermissionRequest();
 
         if (savedInstanceState == null) {
             setImagePreview();
@@ -79,6 +74,10 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
     public void getBundleFromIntent() {
         url = getIntent().getStringExtra(Key.IMAGE_PATH);
         postId = getIntent().getStringExtra(Key.POST_ID);
+    }
+
+    private void initRuntimePermissionRequest() {
+        Assent.setActivity(this, this);
     }
 
     @Override
