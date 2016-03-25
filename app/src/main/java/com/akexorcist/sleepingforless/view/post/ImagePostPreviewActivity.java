@@ -6,12 +6,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 
+import com.afollestad.assent.Assent;
+import com.afollestad.assent.AssentCallback;
+import com.afollestad.assent.PermissionResultSet;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.analytic.EventKey;
 import com.akexorcist.sleepingforless.analytic.EventTracking;
@@ -57,6 +61,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         screenTracking();
         bindView();
         setupView();
+        initRuntimePermissionRequest();
 
         if (savedInstanceState == null) {
             downloadImageToPreview();
@@ -74,18 +79,8 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         fabDownload.setOnClickListener(this);
     }
 
-    private void downloadImageToPreview() {
-        Glide.with(this)
-                .load(fullUrl)
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .thumbnail(0.1f)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        ivPreview.setImage(ImageSource.bitmap(resource));
-                    }
-                });
+    private void initRuntimePermissionRequest() {
+        Assent.setActivity(this, this);
     }
 
     public void getBundleFromIntent() {
@@ -114,11 +109,50 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         downloadImageToPreview();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Assent.handleResult(permissions, grantResults);
+    }
+
+    private void downloadImageToPreview() {
+        Glide.with(this)
+                .load(fullUrl)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.1f)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        ivPreview.setImage(ImageSource.bitmap(resource));
+                    }
+                });
+    }
+
     private void downloadImage() {
+        grantExternalStoragePermission();
+    }
+
+    private void grantExternalStoragePermission() {
+        if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
+            Assent.requestPermissions(new AssentCallback() {
+                @Override
+                public void onPermissionResult(PermissionResultSet result) {
+                    if (result.isGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
+                        startDownload();
+                    } else {
+                        Snackbar.make(ivPreview, R.string.please_accept_write_external_storage_permission, Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }, 5, Assent.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void startDownload() {
         download(fullUrl, new SimpleTarget<File>() {
             @Override
             public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
-                File destinationFile = new File(StorageUtility.getInstance().getDownloadsDirectory(), file.getName().replaceAll(".", "_") + ".jpg");
+                File destinationFile = new File(StorageUtility.getInstance().getDownloadsDirectory(), file.getName().replaceAll("\\.", "_") + ".jpg");
                 StorageUtility.getInstance().copyToDownloadsDirectory(file, destinationFile);
                 StorageUtility.getInstance().updateImageToMediaScanner(destinationFile);
                 showSavedMessage(destinationFile);
