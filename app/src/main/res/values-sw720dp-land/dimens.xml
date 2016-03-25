@@ -1,11 +1,7 @@
 <resources>
 
     <dimen name="app_bar_layout_height">130dp</dimen>
-    <dimen name="image_content_width">500dp</dimen>
-    <dimen name="feed_item_width">@dimen/match_parent</dimen>
     <dimen name="bookmark_item_width">@dimen/match_parent</dimen>
-    <dimen name="dot_progress_bar_radius">6dp</dimen>
-    <dimen name="dot_progress_bar_spacing">30dp</dimen>
     <dimen name="post_content_width">900dp</dimen>
 
 </resources>

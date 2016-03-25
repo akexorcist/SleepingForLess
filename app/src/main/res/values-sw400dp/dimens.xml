@@ -1,6 +1,5 @@
 <resources>
 
-    <dimen name="feed_item_width">@dimen/match_parent</dimen>
     <dimen name="menu_button_margin">10dp</dimen>
 
 </resources>

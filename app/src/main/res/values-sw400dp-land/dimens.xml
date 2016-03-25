@@ -4,6 +4,5 @@
     <dimen name="image_content_width">400dp</dimen>
     <dimen name="feed_item_width">@dimen/match_parent</dimen>
     <dimen name="bookmark_item_width">@dimen/match_parent</dimen>
-    <dimen name="menu_button_margin">10dp</dimen>
 
 </resources>

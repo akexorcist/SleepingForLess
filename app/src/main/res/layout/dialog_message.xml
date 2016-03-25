@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:layout_width="300dp"
+        android:layout_width="@dimen/dialog_message_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:clickable="true"
