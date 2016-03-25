@@ -71,10 +71,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_CONTENT) {
             return new FeedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_item, parent, false));
-        } else if (viewType == VIEW_TYPE_LOADING) {
-            return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_loading, parent, false));
         }
-        return null;
+        return new LoadingViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_feed_loading, parent, false));
     }
 
     @Override
