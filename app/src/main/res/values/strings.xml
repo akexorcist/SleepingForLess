@@ -60,4 +60,6 @@
     <string name="settings_category_notification">Notifications</string>
     <string name="settings_category_storage">Storage</string>
     <string name="settings_category_other">Other</string>
+    <string name="splash_screen_sfl_description">Android Developer for Android Developers</string>
+    <string name="splash_screen_sfl_title">Sleeping For Less</string>
 </resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<it.sephiroth.android.library.viewrevealanimator.ViewRevealAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vra_splash_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:animateFirstView="true"
+    android:animationDuration="@android:integer/config_longAnimTime"
+    android:background="@color/white"
+    android:inAnimation="@anim/anim_splash_screen_in"
+    android:interpolator="@android:interpolator/accelerate_decelerate"
+    android:measureAllChildren="true"
+    android:outAnimation="@anim/anim_splash_screen_out"
+    app:vra_hideBeforeReveal="true"
+    tools:context=".view.splashscreen.SplashScreenActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/splash_screen_image_size"
+            android:layout_height="@dimen/splash_screen_image_size"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_sfl_avatar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/splash_screen_sfl_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_size_large" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/splash_screen_sfl_description"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_size_extra_small" />
+
+    </LinearLayout>
+
+</it.sephiroth.android.library.viewrevealanimator.ViewRevealAnimator>
