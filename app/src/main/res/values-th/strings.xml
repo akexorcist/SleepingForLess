@@ -57,9 +57,6 @@
     <string name="settings_app_version">เวอร์ชัน</string>
     <string name="settings_open_source_licenses_title">Open Source Licenses</string>
     <string name="settings_open_source_licenses_detail">ข้อมูล License สำหรับ open source software</string>
-    <string name="settings_key_push_notification">key_push_notification</string>
-    <string name="settings_key_clear_app_cache">key_clear_app_cache</string>
-    <string name="settings_key_app_version">key_app_version</string>
     <string name="settings_category_notification">การแจ้งเตือน</string>
     <string name="settings_category_storage">พื้นที่เก็บข้อมูล</string>
     <string name="settings_category_other">อื่นๆ</string>

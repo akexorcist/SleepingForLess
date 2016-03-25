@@ -57,10 +57,10 @@
     <string name="settings_app_version">App Version</string>
     <string name="settings_open_source_licenses_title">Open Source Licenses</string>
     <string name="settings_open_source_licenses_detail">License details for open source software</string>
-    <string name="settings_key_push_notification">key_push_notification</string>
-    <string name="settings_key_clear_app_cache">key_clear_app_cache</string>
-    <string name="settings_key_about_me">key_about_me</string>
-    <string name="settings_key_app_version">key_app_version</string>
+    <string name="settings_key_push_notification" translatable="false">key_push_notification</string>
+    <string name="settings_key_clear_app_cache" translatable="false">key_clear_app_cache</string>
+    <string name="settings_key_about_me" translatable="false">key_about_me</string>
+    <string name="settings_key_app_version" translatable="false">key_app_version</string>
     <string name="settings_category_notification">Notifications</string>
     <string name="settings_category_storage">Storage</string>
     <string name="settings_category_other">Other</string>
