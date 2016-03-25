@@ -1,7 +1,8 @@
 package com.akexorcist.sleepingforless.view.splashscreen;
 
-import android.os.Handler;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
@@ -28,11 +29,12 @@ public class SplashScreenActivity extends SFLActivity {
     }
 
     private void checkFirstLaunch() {
-        if (FirstLaunchPreference.getInstance().isSplashWasLaunchedBefore()) {
-            goToFeedActivity();
-        } else {
-            setupScreenAndSplash();
-        }
+//        if (FirstLaunchPreference.getInstance().isSplashWasLaunchedBefore()) {
+//            goToFeedActivity();
+//        } else {
+//            setupScreenAndSplash();
+//        }
+        setupScreenAndSplash();
     }
 
     private void goToFeedActivity() {
@@ -44,7 +46,18 @@ public class SplashScreenActivity extends SFLActivity {
         setContentView(R.layout.activity_splash_screen);
         vraSplashScreen = (ViewRevealAnimator) findViewById(R.id.vra_splash_screen);
         isScreenShowing = true;
-        startSplash();
+        setupView();
+    }
+
+    private void setupView() {
+        // Avoid animator start on a detached view
+        vraSplashScreen.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                startSplash();
+            }
+        });
     }
 
     private void startSplash() {
