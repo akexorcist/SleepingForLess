@@ -1,15 +1,12 @@
 package com.akexorcist.sleepingforless.view.splashscreen;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.config.FirstLaunchPreference;
-import com.akexorcist.sleepingforless.view.feed.MainActivity;
+import com.akexorcist.sleepingforless.view.feed.FeedActivity;
 
 import it.sephiroth.android.library.viewrevealanimator.ViewRevealAnimator;
 
@@ -39,7 +36,7 @@ public class SplashScreenActivity extends SFLActivity {
     }
 
     private void goToFeedActivity() {
-        openActivity(MainActivity.class);
+        openActivity(FeedActivity.class);
         finish();
     }
 
@@ -65,7 +62,7 @@ public class SplashScreenActivity extends SFLActivity {
             @Override
             public void run() {
                 if (isScreenShowing) {
-                    openActivity(MainActivity.class);
+                    openActivity(FeedActivity.class);
                     FirstLaunchPreference.getInstance().setSplashWasLaunched();
                     finish();
                 }

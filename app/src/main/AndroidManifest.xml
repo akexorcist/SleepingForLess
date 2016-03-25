@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.feed.MainActivity"
+            android:name=".view.feed.FeedActivity"
             android:launchMode="singleTask"
             android:screenOrientation="fullSensor" />
         <activity
