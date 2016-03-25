@@ -10,14 +10,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin_padding_extra_large" />
 
-    <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
+    <ImageView
         android:id="@+id/iv_post_content_image"
         android:layout_width="@dimen/image_content_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/default_margin_padding_small"
         android:layout_marginTop="@dimen/default_margin_padding_small"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:contentDescription="@null" />
 </FrameLayout>
 
 

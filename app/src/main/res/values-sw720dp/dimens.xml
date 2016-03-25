@@ -1,6 +1,6 @@
 <resources>
 
-    <dimen name="feed_item_width">@integer/match_parent</dimen>
+    <dimen name="feed_item_width">@dimen/match_parent</dimen>
     <dimen name="image_content_width">500dp</dimen>
     <dimen name="dot_progress_bar_radius">6dp</dimen>
     <dimen name="dot_progress_bar_spacing">30dp</dimen>

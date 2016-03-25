@@ -18,6 +18,7 @@ import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.util.Utility;
+import com.akexorcist.sleepingforless.view.message.MessageActivity;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.google.android.gms.gcm.GcmListenerService;
 
@@ -34,22 +35,39 @@ public class GcmDownstreamService extends GcmListenerService {
     public static final String KEY_URL = "url";
     public static final String KEY_ICON = "icon";
     public static final String KEY_TYPE = "type";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_CONTENT = "content";
 
     public static final String TYPE_NOTIFICATION = "notification";
+    public static final String TYPE_MESSAGE_WITH_DIALOG = "message_with_dialog";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String title = data.getString(KEY_TITLE);
-        String id = data.getString(KEY_ID);
-        String url = data.getString(KEY_URL);
-        String icon = data.getString(KEY_ICON);
         String type = data.getString(KEY_TYPE);
 
         if (type != null &&
                 type.equalsIgnoreCase(TYPE_NOTIFICATION) &&
                 SettingsPreference.getInstance().isNotificationEnable()) {
-            showNotification(new PostList.Item(title, id, url), icon);
+            createNotification(data);
+        } else if (type != null &&
+                type.equalsIgnoreCase(TYPE_MESSAGE_WITH_DIALOG)) {
+            createMessageWithDialog(data);
         }
+    }
+
+    private void createNotification(Bundle data) {
+        String title = data.getString(KEY_TITLE);
+        String id = data.getString(KEY_ID);
+        String url = data.getString(KEY_URL);
+        String icon = data.getString(KEY_ICON);
+        showNotification(new PostList.Item(title, id, url), icon);
+    }
+
+    private void createMessageWithDialog(Bundle data) {
+        String title = data.getString(KEY_TITLE);
+        String message = data.getString(KEY_MESSAGE);
+        String content = data.getString(KEY_CONTENT);
+        showMessage(title, message, content);
     }
 
     private void showNotification(PostList.Item postItem, String icon) {
@@ -70,6 +88,24 @@ public class GcmDownstreamService extends GcmListenerService {
             iconResourceId = randomNotificationIcon();
         }
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), iconResourceId);
+        builder.setLargeIcon(bitmap);
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(new Random().nextInt(100000), notification);
+    }
+
+    private void showMessage(String title, String message, String content) {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra(MessageActivity.KEY_MESSAGE, content);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.ic_small_push_notification)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_push_notification_02);
         builder.setLargeIcon(bitmap);
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

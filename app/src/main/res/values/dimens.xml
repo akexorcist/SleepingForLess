@@ -1,4 +1,6 @@
 <resources>
+    <item name="match_parent" type="dimen">-1</item>
+    <item name="wrap_content" type="dimen">-2</item>
 
     <dimen name="default_text_size_extra_extra_small">10sp</dimen>
     <dimen name="default_text_size_extra_small">12sp</dimen>
@@ -23,10 +25,10 @@
     <dimen name="toolbar_height">64dp</dimen>
 
     <dimen name="splash_screen_image_size">120dp</dimen>
-    <dimen name="image_content_width">@integer/match_parent</dimen>
-    <dimen name="feed_item_width">@integer/match_parent</dimen>
-    <dimen name="bookmark_item_width">@integer/match_parent</dimen>
-    <dimen name="search_result_item_width">@integer/match_parent</dimen>
+    <dimen name="image_content_width">@dimen/match_parent</dimen>
+    <dimen name="feed_item_width">@dimen/match_parent</dimen>
+    <dimen name="bookmark_item_width">@dimen/match_parent</dimen>
+    <dimen name="search_result_item_width">@dimen/match_parent</dimen>
     <dimen name="app_bar_layout_elevation">5dp</dimen>
     <dimen name="dot_progress_bar_radius">4dp</dimen>
     <dimen name="dot_progress_bar_spacing">10dp</dimen>
@@ -35,7 +37,7 @@
     <dimen name="fab_button_size">60dp</dimen>
     <dimen name="fab_button_margin">16dp</dimen>
     <dimen name="post_image_height">190dp</dimen>
-    <dimen name="post_content_width">@integer/match_parent</dimen>
+    <dimen name="post_content_width">@dimen/match_parent</dimen>
     <dimen name="app_bar_layout_height">190dp</dimen>
     <dimen name="header_logo_size">100dp</dimen>
     <dimen name="bookmark_indicator_size">64dp</dimen>
