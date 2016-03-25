@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +48,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostByPathActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback {
+public class PostByPathActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final String KEY_IS_BOOKMARKING = "key_is_bookmarking";
     private static final String KEY_POST_PATH = "key_post_path";
     private static final String KEY_POST = "key_post";
@@ -67,6 +68,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     private MenuButton btnMenuShare;
     private BottomSheetLayout bslMenu;
     private RecyclerView rvPostList;
+    private SwipeRefreshLayout srlPostList;
     private PostAdapter adapter;
 
     private boolean isBookmarking;
@@ -127,6 +129,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
         rvPostList = (RecyclerView) findViewById(R.id.rv_post_list);
+        srlPostList = (SwipeRefreshLayout) findViewById(R.id.srl_post_list);
     }
 
     private void setupView() {
@@ -141,6 +144,8 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        srlPostList.setOnRefreshListener(this);
+        srlPostList.setColorSchemeResources(R.color.colorAccent);
         hideBookmarkLoadingImmediately();
     }
 
@@ -220,6 +225,11 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        callService();
     }
 
     @Override
@@ -315,6 +325,9 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
             rvPostList.setAdapter(adapter);
             hideLoading();
             hideUnavailableMessage();
+        }
+        if (srlPostList.isRefreshing()) {
+            srlPostList.setRefreshing(false);
         }
     }
 
