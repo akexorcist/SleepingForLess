@@ -12,17 +12,15 @@ import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.util.Utility;
-import com.ms.square.android.etsyblur.BlurDialogFragmentHelper;
 
 /**
  * Created by Akexorcist on 3/25/2016 AD.
  */
-public class MessageDialogFragment extends DialogFragment implements View.OnLongClickListener {
+public class MessageDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final String KEY_MESSAGE = "key_message";
 
     private TextView tvDialogMessage;
 
-    private BlurDialogFragmentHelper mHelper;
     private OnDismissListener listener;
     private String message;
 
@@ -37,10 +35,6 @@ public class MessageDialogFragment extends DialogFragment implements View.OnLong
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHelper = new BlurDialogFragmentHelper(this);
-        mHelper.onCreate();
-        mHelper.setBgColorResId(R.color.light_alpha_black);
-        mHelper.setAnimDuration(1000);
     }
 
     @Override
@@ -60,12 +54,7 @@ public class MessageDialogFragment extends DialogFragment implements View.OnLong
 
         tvDialogMessage = (TextView) view.findViewById(R.id.tv_dialog_message);
         tvDialogMessage.setText(message);
-        tvDialogMessage.setOnLongClickListener(this);
-    }
-
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mHelper.onActivityCreated();
+        tvDialogMessage.setOnClickListener(this);
     }
 
     @Override
@@ -75,14 +64,7 @@ public class MessageDialogFragment extends DialogFragment implements View.OnLong
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mHelper.onStart();
-    }
-
-    @Override
     public void onDismiss(DialogInterface dialog) {
-        mHelper.onDismiss();
         super.onDismiss(dialog);
         if (listener != null) {
             listener.onDismiss();
@@ -94,10 +76,9 @@ public class MessageDialogFragment extends DialogFragment implements View.OnLong
     }
 
     @Override
-    public boolean onLongClick(View v) {
+    public void onClick(View v) {
         Utility.getInstance().copyTextToClipboard("Message", message);
         Snackbar.make(tvDialogMessage, R.string.copy_message_to_clipboard, Snackbar.LENGTH_SHORT).show();
-        return true;
     }
 
     public interface OnDismissListener {

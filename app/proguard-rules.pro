@@ -143,11 +143,6 @@
 -keep class com.zl.reik.dilatingdotsprogressbar.** { *; }
 -keep interface com.zl.reik.dilatingdotsprogressbar.** { *; }
 
-# Etsy Blur
--dontwarn com.ms.square.android.etsyblur.**
--keep class com.ms.square.android.etsyblur.** { *; }
--keep interface com.ms.square.android.etsyblur.** { *; }
-
 # Floating Search View
 -dontwarn com.mypopsy.widget.**
 -keep class com.mypopsy.widget.** { *; }
