@@ -14,11 +14,11 @@
 
         <include layout="@layout/view_include_toolbar_main_title" />
 
-        <include layout="@layout/view_include_main_content" />
+        <include layout="@layout/view_include_feed_content" />
 
         <include layout="@layout/view_include_network_unavailable" />
 
-        <include layout="@layout/view_include_main_menu" />
+        <include layout="@layout/view_include_feed_menu" />
 
     </android.support.design.widget.CoordinatorLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>
