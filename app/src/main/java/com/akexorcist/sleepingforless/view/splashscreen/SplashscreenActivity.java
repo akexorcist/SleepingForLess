@@ -29,12 +29,11 @@ public class SplashScreenActivity extends SFLActivity {
     }
 
     private void checkFirstLaunch() {
-//        if (FirstLaunchPreference.getInstance().isSplashWasLaunchedBefore()) {
-//            goToFeedActivity();
-//        } else {
-//            setupScreenAndSplash();
-//        }
-        setupScreenAndSplash();
+        if (FirstLaunchPreference.getInstance().isSplashWasLaunchedBefore()) {
+            goToFeedActivity();
+        } else {
+            setupScreenAndSplash();
+        }
     }
 
     private void goToFeedActivity() {
