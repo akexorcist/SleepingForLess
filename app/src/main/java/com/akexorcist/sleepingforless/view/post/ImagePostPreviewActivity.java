@@ -145,6 +145,8 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
                     }
                 }
             }, 5, Assent.WRITE_EXTERNAL_STORAGE);
+        } else {
+            startDownload();
         }
     }
 

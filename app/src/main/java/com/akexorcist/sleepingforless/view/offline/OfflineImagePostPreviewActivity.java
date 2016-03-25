@@ -141,6 +141,8 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
                     }
                 }
             }, 5, Assent.WRITE_EXTERNAL_STORAGE);
+        } else {
+            startDownload();
         }
     }
 

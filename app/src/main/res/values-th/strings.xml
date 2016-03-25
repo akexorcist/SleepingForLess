@@ -52,6 +52,7 @@
     <string name="settings_push_notification_title">การแจ้งเตือน</string>
     <string name="settings_push_notification_detail">เปิด/ปิดการแจ้งเตือน</string>
     <string name="settings_clear_app_cache">ลบไฟล์แคชทิ้ง</string>
+    <string name="settings_about_me">ข้อมูลผู้พัฒนา</string>
     <string name="settings_loading">&#8230;</string>
     <string name="settings_app_version">เวอร์ชัน</string>
     <string name="settings_open_source_licenses_title">Open Source Licenses</string>

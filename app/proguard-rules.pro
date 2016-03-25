@@ -177,3 +177,8 @@
 -dontwarn com.davemorrissey.labs.subscaleview.**
 -keep class com.davemorrissey.labs.subscaleview.** { *; }
 -keep interface com.davemorrissey.labs.subscaleview.** { *; }
+
+# Assent
+-dontwarn com.afollestad.assent.**
+-keep class com.afollestad.assent.** { *; }
+-keep interface com.afollestad.assent.** { *; }
