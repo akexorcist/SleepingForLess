@@ -37,6 +37,17 @@
 
         <!--</com.jenzz.materialpreference.Preference>-->
 
+        <!--<com.jenzz.materialpreference.Preference-->
+            <!--android:key="@string/settings_key_about_me"-->
+            <!--android:title="@string/settings_about_me">-->
+
+            <!--<intent-->
+                <!--android:action="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity.ACTION_CLEAR_CACHE"-->
+                <!--android:targetClass="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity"-->
+                <!--android:targetPackage="com.akexorcist.sleepingforless" />-->
+
+        <!--</com.jenzz.materialpreference.Preference>-->
+
         <com.jenzz.materialpreference.Preference
             android:key="@string/settings_key_app_version"
             android:summary="@string/settings_loading"
