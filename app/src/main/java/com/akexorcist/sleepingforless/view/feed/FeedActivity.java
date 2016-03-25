@@ -477,7 +477,11 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
         int start = message.indexOf(highlight);
         int end = start + highlight.length();
         Spannable spannableMessage = new SpannableString(message);
-        spannableMessage.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        try {
+            spannableMessage.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
         return spannableMessage;
     }
 
