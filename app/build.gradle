@@ -9,8 +9,8 @@ android {
         applicationId "com.akexorcist.sleepingforless"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -55,6 +55,9 @@ dependencies {
     apt 'org.parceler:parceler:1.0.4'
     compile 'com.airbnb:deeplinkdispatch:1.5.0'
     apt 'com.airbnb:deeplinkdispatch-processor:1.5.0'
+    compile('com.github.afollestad:assent:0.2.0') {
+        transitive = true
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
