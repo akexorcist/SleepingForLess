@@ -120,6 +120,14 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         BloggerManager.getInstance().getNextPostList(nextPageToken, false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.updateData();
+        }
+    }
+
     @Subscribe
     public void onPostListSuccess(PostList postList) {
         this.postList = postList;
