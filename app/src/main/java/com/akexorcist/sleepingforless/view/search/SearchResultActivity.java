@@ -190,10 +190,10 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
 //            adapter.setLoadMoreAvailable(postList.getNextPageToken() != null);
             adapter.setLoadMoreAvailable(false);
             showContentFound();
-            hideLoading();
         } else {
             showContentNotFound();
         }
+        hideLoading();
         hideUnavailableMessage();
         fabMenu.show();
     }
