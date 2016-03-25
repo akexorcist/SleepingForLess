@@ -19,5 +19,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="bottom|center_horizontal"
-        app:srcCompat="@drawable/vector_ic_exit" />
+        app:srcCompat="@drawable/vector_ic_close" />
 </RelativeLayout>
