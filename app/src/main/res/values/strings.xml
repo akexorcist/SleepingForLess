@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sleeping For Less</string>
     <string name="sample">Sample</string>
-    <string name="download_image_successful">"Saved image to Downloads directory."</string>
+    <string name="download_image_successful">Saved image to Downloads directory.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="action_view">View</string>
@@ -35,13 +35,13 @@
     <string name="menu_share">Share</string>
     <string name="menu_open_from_original">Open from Original</string>
     <string name="hint_search">Search</string>
-    <string name="bookmark_not_found">ไม่มีบทความที่ Bookmark ไว้</string>
-    <string name="post_not_found">ไม่มีบทความที่ต้องการค้นหา</string>
-    <string name="bookmark_downloading">กำลังดาวน์โหลดข้อมูล\nเพื่อบันทึกลง Bookmark</string>
-    <string name="network_unavailable">อินเตอร์เน็ตใช้งานไม่ได้</string>
-    <string name="network_unavailable_with_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nแต่อ่านบทความจาก Bookmark ได้นะ</string>
-    <string name="network_unavailable_no_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nคราวหน้าลอง Bookmark เก็บไว้ดูนะ\nจะได้เปิดอ่านแบบออฟไลน์ได้</string>
-    <string name="warn_offline_bookmark">Bookmark คือบทความที่เก็บออฟไลน์ในเครื่อง</string>
+    <string name="bookmark_not_found">Empty bookmark</string>
+    <string name="post_not_found">Result not found.\nPlease try another keyword.</string>
+    <string name="bookmark_downloading">Downloading&#8230;\nSave this post to bookmark.</string>
+    <string name="network_unavailable">Internet unavailable.</string>
+    <string name="network_unavailable_with_bookmark">Internet unavailable.\nBut you can read any post from bookmark.</string>
+    <string name="network_unavailable_no_bookmark">Internet unavailable.\nTry to bookmark any post to read in offline mode.</string>
+    <string name="warn_offline_bookmark">Bookmark is a post that available in offline mode.</string>
     <string name="remove_confirm_title">Delete this bookmark?</string>
     <string name="remove_all_confirm_title">Delete all bookmarks?</string>
     <string name="remove_all_confirm_description">This can\'t be undone.</string>

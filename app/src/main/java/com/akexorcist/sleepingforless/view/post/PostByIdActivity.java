@@ -316,7 +316,7 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
             adapter.setPostClickListener(this);
             rvPostList.setAdapter(adapter);
             hideLoading();
-            hideUnavailableMessage();
+            hideUnavailableMessageImmediately();
         }
     }
 

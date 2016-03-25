@@ -299,6 +299,7 @@ public class MainActivity extends SFLActivity implements View.OnClickListener, F
 
     @Override
     public void onRefresh() {
+        adapter.clear();
         callService();
     }
 
