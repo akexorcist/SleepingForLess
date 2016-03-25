@@ -8,4 +8,16 @@ import org.parceler.Parcel;
 
 @Parcel(parcelsIndex = false)
 public class BookmarkResult {
+    String postId;
+
+    public BookmarkResult() {
+    }
+
+    public BookmarkResult(String postId) {
+        this.postId = postId;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
 }

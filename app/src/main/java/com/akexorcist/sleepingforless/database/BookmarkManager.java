@@ -55,7 +55,7 @@ public class BookmarkManager {
                             saveBookmarkImageBitmap(resource, postId, url);
                             bookmarkImageCount--;
                             if (bookmarkImageCount <= 0) {
-                                BusProvider.getInstance().post(new BookmarkResult());
+                                BusProvider.getInstance().post(new BookmarkResult(postId));
                             }
                         }
                     });
@@ -63,7 +63,7 @@ public class BookmarkManager {
             }
         }
         if (bookmarkImageCount <= 0) {
-            BusProvider.getInstance().post(new BookmarkResult());
+            BusProvider.getInstance().post(new BookmarkResult(postId));
         }
     }
 

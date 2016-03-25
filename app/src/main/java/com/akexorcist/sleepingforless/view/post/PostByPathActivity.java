@@ -264,9 +264,11 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
 
     @Subscribe
     public void onDownloadResult(BookmarkResult result) {
-        isBookmarking = false;
-        hideBookmarkLoading();
-        setBookmark(true);
+        if (post != null && result.getPostId().equalsIgnoreCase(post.getId())) {
+            isBookmarking = false;
+            hideBookmarkLoading();
+            setBookmark(true);
+        }
         showBookmarkAddedMessage();
     }
 

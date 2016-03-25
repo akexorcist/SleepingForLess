@@ -267,9 +267,11 @@ public class PostByIdActivity extends SFLActivity implements View.OnClickListene
 
     @Subscribe
     public void onDownloadResult(BookmarkResult result) {
-        isBookmarking = false;
-        hideBookmarkLoading();
-        setBookmark(true);
+        if (result.getPostId().equalsIgnoreCase(postItem.getId())) {
+            isBookmarking = false;
+            hideBookmarkLoading();
+            setBookmark(true);
+        }
         showBookmarkAddedMessage();
     }
 
