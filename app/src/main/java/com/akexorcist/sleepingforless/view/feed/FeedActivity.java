@@ -27,6 +27,7 @@ import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.analytic.EventKey;
 import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
+import com.akexorcist.sleepingforless.config.DeveloperConfig;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.database.BookmarkResult;
@@ -271,9 +272,11 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
     @Override
     public void onItemLongClick(FeedViewHolder holder, PostList.Item item) {
 //        showBottomSheet();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
-        openActivity(DebugPostActivity.class, bundle);
+        if (DeveloperConfig.ALLOW_DEBUG_CONTENT) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
+            openActivity(DebugPostActivity.class, bundle);
+        }
     }
 
     @Override
