@@ -177,10 +177,11 @@ public class ContentUtility {
     }
 
     public PlainTextPost convertPlainText(String plainText) {
+        plainText = plainText.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
         List<PlainTextPost.Highlight> highlightList = convertPlainTextHighLight(plainText);
         List<PlainTextPost.Link> linkList = convertPlainTextLink(plainText);
-        plainText = plainText.replaceAll("<color:#[a-z0-9]{3,8}>(.*?)</color>", "$1");
-        plainText = plainText.replaceAll("<a:.+?>(.*?)</a>", "$1");
+        plainText = plainText.replaceAll("<color:#[a-z0-9]{3,8}>(.*?)</color>", "$1")
+                .replaceAll("<a:.+?>(.*?)</a>", "$1");
         return new PlainTextPost(plainText, highlightList, linkList);
     }
 
