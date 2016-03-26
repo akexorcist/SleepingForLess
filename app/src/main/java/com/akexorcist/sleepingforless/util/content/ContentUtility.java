@@ -171,7 +171,7 @@ public class ContentUtility {
     public ImagePost convertImagePost(String imageContent) {
         Matcher matcher = getMatcher(imageContent, "<a:(.+)><img:(.+)>");
         if (matcher.find()) {
-            return new ImagePost(matcher.group(1), matcher.group(2));
+            return new ImagePost(imageContent, matcher.group(1), matcher.group(2));
         }
         return null;
     }
@@ -201,7 +201,12 @@ public class ContentUtility {
         return highlightList;
     }
 
+    private String removePlainTextHighLight(String plainText) {
+        return plainText.replaceAll("(<color:(#[a-z0-9]{3,8})>)(.*?)(</color>)", "$3");
+    }
+
     private List<PlainTextPost.Link> convertPlainTextLink(String plainText) {
+        plainText = removePlainTextHighLight(plainText);
         int codeCount = 0;
         List<PlainTextPost.Link> linkList = new ArrayList<>();
         Matcher matcher = getMatcher(plainText, "(<a:(.+?)>)(.*?)(</a>)");
@@ -222,12 +227,12 @@ public class ContentUtility {
         Matcher matcher = getMatcher(videoContent, "<iframe.*?src=\"//www.youtube.com/embed/(.*?)\".*");
         if (matcher.find()) {
             String url = "https://www.youtube.com/watch?v=" + matcher.group(1).replaceAll("\\?.*", "");
-            return new VideoPost(url).setVideoType(VideoPost.TYPE_YOUTUBE);
+            return new VideoPost(videoContent, url).setVideoType(VideoPost.TYPE_YOUTUBE);
         }
         matcher = getMatcher(videoContent, "<iframe.*?src=\".*?player.vimeo.com/video/(.*?)\".*");
         if (matcher.find()) {
             String url = "https://vimeo.com/" + matcher.group(1).replaceAll("\\?.*", "");
-            return new VideoPost(url).setVideoType(VideoPost.TYPE_VIMEO);
+            return new VideoPost(videoContent, url).setVideoType(VideoPost.TYPE_VIMEO);
         }
         matcher = getMatcher(videoContent, "<iframe.*?src=\"(.*?)\"");
         if (matcher.find()) {
@@ -235,7 +240,7 @@ public class ContentUtility {
             if (url.startsWith("//")) {
                 url = "http:" + url;
             }
-            return new VideoPost(url).setVideoType(VideoPost.TYPE_OTHER);
+            return new VideoPost(videoContent, url).setVideoType(VideoPost.TYPE_OTHER);
         }
         return null;
     }
@@ -243,7 +248,7 @@ public class ContentUtility {
     public HeaderPost convertHeaderPost(String headerContent) {
         Matcher matcher = getMatcher(headerContent, "<h(\\d)>(.+)</h\\d>");
         if (matcher.find()) {
-            return new HeaderPost(Integer.parseInt(matcher.group(1)), matcher.group(2));
+            return new HeaderPost(headerContent, Integer.parseInt(matcher.group(1)), matcher.group(2));
         }
         return null;
     }
@@ -251,7 +256,7 @@ public class ContentUtility {
     public CodePost convertCodePost(String headerContent) {
         Matcher matcher = getMatcher(headerContent, "<code:(java|markup)>");
         if (matcher.find()) {
-            return new CodePost(headerContent.replaceAll("<code:(java|markup)>", ""), matcher.group(1));
+            return new CodePost(headerContent, headerContent.replaceAll("<code:(java|markup)>", ""), matcher.group(1));
         }
         return null;
     }
