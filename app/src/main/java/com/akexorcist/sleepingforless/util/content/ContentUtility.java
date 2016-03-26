@@ -189,6 +189,7 @@ public class ContentUtility {
     }
 
     private List<PlainTextPost.Highlight> convertPlainTextHighLight(String plainText) {
+        plainText = removePlainTextLink(plainText);
         int codeCount = 0;
         List<PlainTextPost.Highlight> highlightList = new ArrayList<>();
         Matcher matcher = getMatcher(plainText, "(<color:(#[a-z0-9]{3,8})>)(.*?)(</color>)");
@@ -225,6 +226,10 @@ public class ContentUtility {
             linkList.add(link);
         }
         return linkList;
+    }
+
+    private String removePlainTextLink(String plainText) {
+        return plainText.replaceAll("(<a:(.+?)>)(.*?)(</a>)", "$3");
     }
 
     public VideoPost convertVideoPost(String videoContent) {
