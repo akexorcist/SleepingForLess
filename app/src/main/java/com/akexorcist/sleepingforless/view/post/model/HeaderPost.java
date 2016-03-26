@@ -14,7 +14,8 @@ public class HeaderPost extends BasePost {
     public HeaderPost() {
     }
 
-    public HeaderPost(int size, String text) {
+    public HeaderPost(String raw, int size, String text) {
+        setRaw(raw);
         this.size = size;
         this.text = text;
     }

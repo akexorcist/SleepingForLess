@@ -20,7 +20,8 @@ public class VideoPost extends BasePost {
     public VideoPost() {
     }
 
-    public VideoPost(String url) {
+    public VideoPost(String raw, String url) {
+        setRaw(raw);
         this.url = url;
     }
 

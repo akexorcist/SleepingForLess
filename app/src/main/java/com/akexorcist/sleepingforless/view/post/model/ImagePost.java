@@ -14,7 +14,8 @@ public class ImagePost extends BasePost {
     public ImagePost() {
     }
 
-    public ImagePost(String fullSizeUrl, String postUrl) {
+    public ImagePost(String raw, String fullSizeUrl, String postUrl) {
+        setRaw(raw);
         this.postUrl = postUrl;
         this.fullSizeUrl = fullSizeUrl;
     }

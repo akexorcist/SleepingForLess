@@ -23,4 +23,9 @@ public class BasePost {
     public String getRaw() {
         return raw;
     }
+
+    public BasePost setRaw(String raw) {
+        this.raw = raw;
+        return this;
+    }
 }

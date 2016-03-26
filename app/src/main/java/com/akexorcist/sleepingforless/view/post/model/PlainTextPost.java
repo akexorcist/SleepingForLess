@@ -18,6 +18,7 @@ public class PlainTextPost extends BasePost {
     }
 
     public PlainTextPost(String text, List<Highlight> highlightList, List<Link> linkList) {
+        setRaw(text);
         this.text = text;
         this.highlightList = highlightList;
         this.linkList = linkList;
