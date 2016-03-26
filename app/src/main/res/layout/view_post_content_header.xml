@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/default_margin_padding_small"
     android:layout_marginRight="@dimen/default_margin_padding_small"
     android:paddingBottom="@dimen/default_margin_padding_small"
-    android:paddingTop="@dimen/default_margin_padding_large"
+    android:paddingTop="@dimen/default_margin_padding_extra_large"
     android:textColor="@color/text_header"
     android:textIsSelectable="true"
     android:textSize="@dimen/default_text_size"
