@@ -30,7 +30,7 @@ public class ContentUtility {
 
     public List<String> wrapContent(String content) {
         String[] t = moveCodeCloseTagToNewline(replaceNewlineWithBR(removeNewlineFromHeader(removeSpaceCode(removeDivTag(content))))).split("<br .*/>");
-        return removeBlankLine(wrapCode(wrapTextColor(removeUnusedATagLine(wrapLinkTag(wrapImageTag(removeBlankLine(removeUnusedCodeLine(t))))))));
+        return removeBlankLine(wrapCode(wrapTextColor(wrapLinkTag(removeUnusedATagLine(wrapImageTag(removeBlankLine(removeUnusedCodeLine(t))))))));
     }
 
     private String removeDivTag(String text) {
@@ -56,7 +56,7 @@ public class ContentUtility {
     private List<String> removeUnusedCodeLine(String[] texts) {
         ArrayList<String> wrapTextList = new ArrayList<>();
         for (String text : texts) {
-            wrapTextList.add(text.replaceAll("<<code class=\\\\\".+\\\\\">$", "")
+            wrapTextList.add(text.replaceAll("<code class=\\\\\".+\\\\\">$", "")
                     .replaceAll("^</code>$", "")
                     .replaceAll("<b>", "")
                     .replaceAll("</b>", ""));
@@ -93,7 +93,7 @@ public class ContentUtility {
     private List<String> wrapLinkTag(List<String> textList) {
         ArrayList<String> wrapTextList = new ArrayList<>();
         for (String text : textList) {
-            wrapTextList.add(text.replaceAll("<a.+href=\\\\?[\\'\"]?([^\\'\" >]+)\".+\\\">(.+)</a>", "<a:$1>$2</a>"));
+            wrapTextList.add(text.replaceAll("<a.*?href=\"(.+?)\".*?>(.+?)</a>", "<a:$1>$2</a>"));
         }
         return wrapTextList;
     }
@@ -177,7 +177,10 @@ public class ContentUtility {
     }
 
     public PlainTextPost convertPlainText(String plainText) {
-        plainText = plainText.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+        plainText = plainText.replaceAll("&lt;", "<")
+                .replaceAll("&gt;", ">")
+                .replaceAll("<i>", "")
+                .replaceAll("</i>", "");
         List<PlainTextPost.Highlight> highlightList = convertPlainTextHighLight(plainText);
         List<PlainTextPost.Link> linkList = convertPlainTextLink(plainText);
         plainText = plainText.replaceAll("<color:#[a-z0-9]{3,8}>(.*?)</color>", "$1")
@@ -247,6 +250,10 @@ public class ContentUtility {
     }
 
     public HeaderPost convertHeaderPost(String headerContent) {
+        headerContent = headerContent.replaceAll("&lt;", "<")
+                .replaceAll("&gt;", ">")
+                .replaceAll("<i>", "")
+                .replaceAll("</i>", "");
         Matcher matcher = getMatcher(headerContent, "<h(\\d)>(.+)</h\\d>");
         if (matcher.find()) {
             return new HeaderPost(headerContent, Integer.parseInt(matcher.group(1)), matcher.group(2));
