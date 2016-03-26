@@ -5,5 +5,6 @@ package com.akexorcist.sleepingforless.config;
  */
 public class DeveloperConfig {
     public static final boolean ALLOW_ANALYTICS = false;
+    public static final boolean ALLOW_CRASH_ACTIVITY = false;
     public static final boolean ALLOW_DEBUG_CONTENT = true;
 }

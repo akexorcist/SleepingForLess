@@ -42,10 +42,12 @@ public class SFLApplication extends Application {
     }
 
     public void initCrashActivity() {
-        CustomActivityOnCrash.install(this);
-        CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.drawable.ic_force_close);
-        CustomActivityOnCrash.setShowErrorDetails(true);
-        CustomActivityOnCrash.setEnableAppRestart(true);
+        if (DeveloperConfig.ALLOW_CRASH_ACTIVITY) {
+            CustomActivityOnCrash.install(this);
+            CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.drawable.ic_force_close);
+            CustomActivityOnCrash.setShowErrorDetails(true);
+            CustomActivityOnCrash.setEnableAppRestart(true);
+        }
     }
 
     public void initAnalyticsTrackers() {
