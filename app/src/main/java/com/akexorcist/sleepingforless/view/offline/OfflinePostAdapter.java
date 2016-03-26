@@ -60,13 +60,13 @@ public class OfflinePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        return position < postList.size() - 1 ? postList.get(position).getType() : PostType.BLANK;
+        return position < postList.size() ? postList.get(position).getType() : PostType.BLANK;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        if (position < postList.size() - 1) {
+        if (position < postList.size()) {
             BasePost basePost = postList.get(position);
             if (viewType == PostType.PLAIN_TEXT) {
                 addPlainTextContent(holder, basePost);
