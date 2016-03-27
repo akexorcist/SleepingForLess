@@ -26,7 +26,7 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-public class SearchResultActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
+public class SearchResultActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener, View.OnLongClickListener {
     private static final String KEY_POST_LIST = "key_post_list";
     private static final String KEY_SEARCH_REQUEST = "key_search_request";
 
@@ -85,6 +85,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         viewContentShadow.setOnClickListener(this);
         tvOpenBookmark.setVisibility(View.GONE);
         fabMenu.setOnClickListener(this);
+        fabMenu.setOnLongClickListener(this);
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
@@ -154,6 +155,14 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         if (v == fabMenu) {
             onMenuSearchClick();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == fabMenu) {
+            rvSearchResultList.smoothScrollToPosition(0);
+        }
+        return true;
     }
 
     @Override

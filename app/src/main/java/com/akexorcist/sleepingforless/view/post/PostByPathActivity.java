@@ -48,7 +48,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostByPathActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener {
+public class PostByPathActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener, View.OnLongClickListener {
     private static final String KEY_IS_BOOKMARKING = "key_is_bookmarking";
     private static final String KEY_POST_PATH = "key_post_path";
     private static final String KEY_POST = "key_post";
@@ -136,6 +136,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
+        fabMenu.setOnLongClickListener(this);
         tvOpenBookmark.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuShare.setOnClickListener(this);
@@ -203,6 +204,14 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         } else if (v == viewPostBookmarkLoading) {
             closeMenu();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == fabMenu) {
+            rvPostList.smoothScrollToPosition(0);
+        }
+        return true;
     }
 
     @Override

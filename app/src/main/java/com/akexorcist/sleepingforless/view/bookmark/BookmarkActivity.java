@@ -37,7 +37,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class BookmarkActivity extends SFLActivity implements View.OnTouchListener, View.OnClickListener, BookmarkAdapter.ItemListener {
+public class BookmarkActivity extends SFLActivity implements View.OnTouchListener, View.OnClickListener, BookmarkAdapter.ItemListener, View.OnLongClickListener {
     private static final String KEY_BOOKMARK_LIST = "key_bookmark_list";
 
     private Toolbar tbTitle;
@@ -88,6 +88,7 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         viewContentShadow.setOnClickListener(this);
         fabMenu.hide();
         fabMenu.setOnClickListener(this);
+        fabMenu.setOnLongClickListener(this);
         btnUpdateAll.setVisibility(View.GONE);
         btnInfo.setVisibility(View.GONE);
         btnUpdateAll.setOnClickListener(this);
@@ -192,6 +193,14 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         } else if (v == btnInfo) {
             onMenuInfoClick();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == fabMenu) {
+            rvBookmarkList.smoothScrollToPosition(0);
+        }
+        return true;
     }
 
     @Override

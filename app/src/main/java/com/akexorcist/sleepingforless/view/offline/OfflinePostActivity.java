@@ -46,7 +46,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class OfflinePostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, OfflinePostAdapter.PostClickListener {
+public class OfflinePostActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, OfflinePostAdapter.PostClickListener, View.OnLongClickListener {
     private static final String KEY_BOOKMARK = "key_bookmark";
     private static final String KEY_POST_LIST = "key_post_list";
 
@@ -114,6 +114,7 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
+        fabMenu.setOnLongClickListener(this);
         btnMenuUpdate.setVisibility(View.GONE);
         btnMenuUpdate.setOnClickListener(this);
         btnMenuDelete.setOnClickListener(this);
@@ -164,6 +165,14 @@ public class OfflinePostActivity extends SFLActivity implements View.OnClickList
         } else if (v == btnMenuOpenFromOriginal) {
             onMenuOpenInOnlineClick();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == fabMenu) {
+            rvPostList.smoothScrollToPosition(0);
+        }
+        return true;
     }
 
     @Override
