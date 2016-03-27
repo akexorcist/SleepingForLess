@@ -25,6 +25,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.io.File;
 
@@ -37,6 +38,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
     private SubsamplingScaleImageView ivPreview;
     private FloatingActionButton fabClose;
     private FloatingActionButton fabDownload;
+    private DilatingDotsProgressBar pbImagePreviewLoading;
     private String fullUrl;
 
     @Override
@@ -61,11 +63,13 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         ivPreview = (SubsamplingScaleImageView) findViewById(R.id.iv_preview);
         fabClose = (FloatingActionButton) findViewById(R.id.fab_preview_close);
         fabDownload = (FloatingActionButton) findViewById(R.id.fab_preview_download);
+        pbImagePreviewLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_image_preview_loading);
     }
 
     private void setupView() {
         fabClose.setOnClickListener(this);
         fabDownload.setOnClickListener(this);
+        pbImagePreviewLoading.showNow();
     }
 
     private void initRuntimePermissionRequest() {
@@ -113,6 +117,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        pbImagePreviewLoading.hideNow();
                         ivPreview.setImage(ImageSource.bitmap(resource));
                     }
                 });
