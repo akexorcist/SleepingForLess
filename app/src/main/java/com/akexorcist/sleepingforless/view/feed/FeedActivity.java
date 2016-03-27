@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,6 +30,7 @@ import com.akexorcist.sleepingforless.analytic.EventKey;
 import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.config.DeveloperConfig;
+import com.akexorcist.sleepingforless.config.FirstLaunchPreference;
 import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.database.BookmarkResult;
@@ -44,6 +47,7 @@ import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.search.SearchRequest;
 import com.akexorcist.sleepingforless.view.search.SearchResultActivity;
 import com.akexorcist.sleepingforless.view.settings.SettingsActivity;
+import com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -55,10 +59,14 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class FeedActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
+import it.sephiroth.android.library.tooltip.Tooltip;
+
+public class FeedActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, View.OnTouchListener, FeedAdapter.LoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, View.OnLongClickListener, FloatingActionButtonBehavior.FabVisibilityChangeListener {
     private static final String KEY_POST_LIST = "key_post_list";
     private static final String KEY_SORT_TYPE = "key_sort_type";
     private static final String KEY_ITEM_LIST = "ket_item_list";
+
+    private static final int TOOLTIPS_ID = 1;
 
     private Toolbar tbTitle;
     private AppBarLayout ablTitle;
@@ -129,7 +137,9 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
         btnMenuRefresh.setVisibility(View.GONE);
         viewContentShadow.setVisibility(View.GONE);
         viewContentShadow.setOnClickListener(this);
+        tbTitle.setOnClickListener(this);
         fabMenu.setOnClickListener(this);
+        fabMenu.setOnLongClickListener(this);
         tvOpenBookmark.setOnClickListener(this);
         btnMenuBookmark.setOnClickListener(this);
         btnMenuRefresh.setOnClickListener(this);
@@ -160,6 +170,7 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
             ablTitle.setExpanded(false, false);
         }
 
+        setFabForScrolToTopToolTips();
     }
 
     private void callService() {
@@ -179,6 +190,12 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
     private void setToolbar() {
         setSupportActionBar(tbTitle);
         setTitle(getString(R.string.app_name));
+    }
+
+    private void setFabForScrolToTopToolTips() {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
+        FloatingActionButtonBehavior fabBehavior = (FloatingActionButtonBehavior) params.getBehavior();
+        fabBehavior.setFabVisibilityChangeListener(this);
     }
 
     @Override
@@ -309,6 +326,24 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         srlFeedList.setEnabled(verticalOffset == 0);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == fabMenu) {
+            rvFeedList.smoothScrollToPosition(0);
+        }
+        return true;
+    }
+
+    @Override
+    public void onFabShow() {
+        showScrollToTopTooltips();
+    }
+
+    @Override
+    public void onFabHide() {
+        removeScrollToTopTooltips();
     }
 
     @Override
@@ -450,6 +485,35 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
         adapter.setSortType(sortType);
         this.sortType = sortType;
         callService();
+    }
+
+    private void showScrollToTopTooltips() {
+        if (!FirstLaunchPreference.getInstance().isGoToTopWasLaunchedBefore()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Tooltip.Builder builder = new Tooltip.Builder(TOOLTIPS_ID)
+                            .anchor(fabMenu, Tooltip.Gravity.TOP)
+                            .activateDelay(800)
+                            .closePolicy(new Tooltip.ClosePolicy()
+                                    .insidePolicy(true, true)
+                                    .outsidePolicy(true, true), 2000)
+                            .showDelay(300)
+                            .text(getString(R.string.tooltips_go_to_top_hint))
+                            .withArrow(true)
+                            .withStyleId(R.style.Tooltips)
+                            .withOverlay(false)
+                            .floatingAnimation(Tooltip.AnimationBuilder.DEFAULT)
+                            .build();
+                    Tooltip.make(FeedActivity.this, builder).show();
+                    FirstLaunchPreference.getInstance().setGoToTopWasLaunched();
+                }
+            }, 200);
+        }
+    }
+
+    private void removeScrollToTopTooltips() {
+        Tooltip.remove(this, TOOLTIPS_ID);
     }
 
     private void showLoading() {

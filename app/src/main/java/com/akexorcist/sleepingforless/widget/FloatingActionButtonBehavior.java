@@ -11,6 +11,8 @@ import android.view.View;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class FloatingActionButtonBehavior extends FloatingActionButton.Behavior {
+    private FabVisibilityChangeListener listener;
+
     public FloatingActionButtonBehavior(Context context, AttributeSet attrs) {
         super();
     }
@@ -31,9 +33,25 @@ public class FloatingActionButtonBehavior extends FloatingActionButton.Behavior 
         if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
             // User scrolled down and the FAB is currently visible -> hide the FAB
             child.hide();
+            if (listener != null) {
+                listener.onFabHide();
+            }
         } else if (dyConsumed < 0 && child.getVisibility() != View.VISIBLE) {
             // User scrolled up and the FAB is currently not visible -> show the FAB
             child.show();
+            if (listener != null) {
+                listener.onFabShow();
+            }
         }
+    }
+
+    public void setFabVisibilityChangeListener(FabVisibilityChangeListener listener) {
+        this.listener = listener;
+    }
+
+    public interface FabVisibilityChangeListener {
+        void onFabShow();
+
+        void onFabHide();
     }
 }

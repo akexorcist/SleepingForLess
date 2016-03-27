@@ -11,6 +11,7 @@ import com.akexorcist.sleepingforless.util.Contextor;
 public class FirstLaunchPreference {
     private static final String FIRST_LAUNCH_PREFERENCE = "first_launcher_preference";
     private static final String KEY_SPLASH_SCREEN = "splash_screen";
+    private static final String KEY_GO_TO_TOP = "go_to_top";
 
     private static FirstLaunchPreference contentPreference;
 
@@ -34,5 +35,16 @@ public class FirstLaunchPreference {
 
     public boolean isSplashWasLaunchedBefore() {
         return getPreference().getBoolean(KEY_SPLASH_SCREEN, false);
+    }
+
+    public void setGoToTopWasLaunched() {
+        getPreference()
+                .edit()
+                .putBoolean(KEY_GO_TO_TOP, true)
+                .apply();
+    }
+
+    public boolean isGoToTopWasLaunchedBefore() {
+        return getPreference().getBoolean(KEY_GO_TO_TOP, false);
     }
 }
