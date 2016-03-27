@@ -11,6 +11,10 @@ import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.List;
 
@@ -24,6 +28,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     public ImageView ivTitle;
     public ImageView ivBookmarkIndicator;
     public MaterialRippleLayout mrlFeedButton;
+    public DilatingDotsProgressBar pbFeedImageLoading;
 
     public FeedViewHolder(View itemView) {
         super(itemView);
@@ -33,6 +38,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         ivTitle = (ImageView) itemView.findViewById(R.id.iv_feed_title);
         ivBookmarkIndicator = (ImageView) itemView.findViewById(R.id.iv_feed_bookmark_indicator);
         mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_feed_button);
+        pbFeedImageLoading = (DilatingDotsProgressBar) itemView.findViewById(R.id.pb_feed_image_loading);
     }
 
     public void setTitle(String title) {
@@ -70,6 +76,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
     public void setImage(List<PostList.Image> imageList) {
         if (imageList != null && !imageList.isEmpty() && imageList.size() > 0) {
+            pbFeedImageLoading.showNow();
             ivTitle.setImageDrawable(null);
             ivTitle.setVisibility(View.VISIBLE);
             String url = imageList.get(0).getUrl();
@@ -86,6 +93,18 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
                 .thumbnail(0.1f)
                 .override(500, 500)
                 .centerCrop()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        pbFeedImageLoading.hideNow();
+                        return false;
+                    }
+                })
                 .into(ivTitle);
     }
 

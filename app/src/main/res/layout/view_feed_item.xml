@@ -51,6 +51,13 @@
                         android:scaleType="fitCenter"
                         android:src="@mipmap/ic_bookmark_indicator"
                         android:visibility="gone" />
+
+                    <com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar
+                        android:id="@+id/pb_feed_image_loading"
+                        style="@style/DotsProgressBar.Primary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                 </FrameLayout>
 
                 <Space
