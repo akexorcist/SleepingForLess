@@ -497,7 +497,7 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
                             .activateDelay(800)
                             .closePolicy(new Tooltip.ClosePolicy()
                                     .insidePolicy(true, true)
-                                    .outsidePolicy(true, true), 2000)
+                                    .outsidePolicy(true, true), 3000)
                             .showDelay(300)
                             .text(getString(R.string.tooltips_go_to_top_hint))
                             .withArrow(true)
