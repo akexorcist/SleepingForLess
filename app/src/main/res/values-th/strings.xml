@@ -40,6 +40,7 @@
     <string name="bookmark_not_found">ไม่มีบทความที่ Bookmark ไว้</string>
     <string name="post_not_found">ไม่มีบทความที่ต้องการค้นหา</string>
     <string name="bookmark_downloading">กำลังดาวน์โหลดข้อมูล\nเพื่อบันทึกลง Bookmark</string>
+    <string name="click_to_watch_video">กดเพื่อดูวีดีโอจาก</string>
     <string name="network_unavailable">อินเตอร์เน็ตใช้งานไม่ได้</string>
     <string name="network_unavailable_with_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nแต่อ่านบทความจาก Bookmark ได้นะ</string>
     <string name="network_unavailable_no_bookmark">อินเตอร์เน็ตใช้งานไม่ได้\nคราวหน้าลอง Bookmark เก็บไว้ดูนะ\nจะได้เปิดอ่านแบบออฟไลน์ได้</string>

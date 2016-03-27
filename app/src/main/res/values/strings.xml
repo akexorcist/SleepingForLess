@@ -40,6 +40,7 @@
     <string name="bookmark_not_found">Empty bookmark</string>
     <string name="post_not_found">Result not found.\nPlease try another keyword.</string>
     <string name="bookmark_downloading">Downloading&#8230;\nSave this post to bookmark.</string>
+    <string name="click_to_watch_video">Click to watch video from</string>
     <string name="network_unavailable">Internet unavailable.</string>
     <string name="network_unavailable_with_bookmark">Internet unavailable.\nBut you can read any post from bookmark.</string>
     <string name="network_unavailable_no_bookmark">Internet unavailable.\nTry to bookmark any post to read in offline mode.</string>
