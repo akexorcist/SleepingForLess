@@ -35,20 +35,20 @@ public class GcmTokenPreference {
     }
 
     public boolean isNewTokenSent() {
-        return getPreference().getBoolean(KEY_TOKEN_ID, false);
+        return getPreference().getBoolean(KEY_TOKEN_SENT, false);
     }
 
     public void setNewTokenSent() {
         getPreference()
                 .edit()
-                .putBoolean(KEY_TOKEN_ID, true)
+                .putBoolean(KEY_TOKEN_SENT, true)
                 .apply();
     }
 
     public void clearNewTokenSent() {
         getPreference()
                 .edit()
-                .putBoolean(KEY_TOKEN_ID, false)
+                .putBoolean(KEY_TOKEN_SENT, false)
                 .apply();
     }
 
