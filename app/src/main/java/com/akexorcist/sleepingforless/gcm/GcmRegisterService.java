@@ -3,14 +3,11 @@ package com.akexorcist.sleepingforless.gcm;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.akexorcist.sleepingforless.R;
-import com.akexorcist.sleepingforless.config.GcmTokenPreference;
-import com.akexorcist.sleepingforless.network.sfl.SleepingForLessManager;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -21,7 +18,7 @@ import java.io.IOException;
  * Created by Akexorcist on 3/19/2016 AD.
  */
 
-public class GcmRegisterService extends IntentService implements SleepingForLessManager.GcmTokenCallback {
+public class GcmRegisterService extends IntentService {
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
@@ -77,23 +74,7 @@ public class GcmRegisterService extends IntentService implements SleepingForLess
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        if (GcmTokenPreference.getInstance().isNewToken(token)) {
-            SleepingForLessManager.getInstance().removeGcmToken(GcmTokenPreference.getInstance().getTokenId(), null);
-            SleepingForLessManager.getInstance().addGcmToken(token, Build.SERIAL, this);
-        }
-    }
-
-    @Override
-    public void onTokenAdded(String token) {
-        GcmTokenPreference.getInstance().setTokenId(token);
-    }
-
-    @Override
-    public void onTokenRemoved(String token) {
-    }
-
-    @Override
-    public void onTokenFailed(String token) {
+        GcmTokenManager.getInstance().sendTokenToServer(token);
     }
 
     /**

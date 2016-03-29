@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.akexorcist.sleepingforless.analytic.AnalyticsTrackers;
 import com.akexorcist.sleepingforless.config.DeveloperConfig;
+import com.akexorcist.sleepingforless.config.GcmTokenPreference;
+import com.akexorcist.sleepingforless.gcm.GcmTokenManager;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.util.Utility;
 
@@ -23,25 +25,26 @@ public class SFLApplication extends Application {
         Contextor.init(getApplicationContext());
         initFont();
         initRealm();
+        initGcmToken();
         initCrashActivity();
         initAnalyticsTrackers();
     }
 
-    public void initFont() {
+    private void initFont() {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/CSPraJad.otf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
     }
 
-    public void initRealm() {
+    private void initRealm() {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
     }
 
-    public void initCrashActivity() {
+    private void initCrashActivity() {
         if (DeveloperConfig.ALLOW_CRASH_ACTIVITY) {
             CustomActivityOnCrash.install(this);
             CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.drawable.ic_force_close);
@@ -50,11 +53,18 @@ public class SFLApplication extends Application {
         }
     }
 
-    public void initAnalyticsTrackers() {
+    private void initAnalyticsTrackers() {
         if (DeveloperConfig.ALLOW_ANALYTICS) {
             AnalyticsTrackers.getInstance().getTracker().setAppId(getPackageName());
             AnalyticsTrackers.getInstance().getTracker().setAppVersion(Utility.getInstance().getAppVersion());
             AnalyticsTrackers.getInstance().getTracker().setAppName(getString(R.string.app_name));
+        }
+    }
+
+    private void initGcmToken() {
+        if(!GcmTokenPreference.getInstance().isNewTokenSent()) {
+            String token = GcmTokenPreference.getInstance().getTokenId();
+            GcmTokenManager.getInstance().sendTokenToServer(token);
         }
     }
 }

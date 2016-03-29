@@ -11,6 +11,7 @@ import com.akexorcist.sleepingforless.util.Contextor;
 public class GcmTokenPreference {
     private static final String GCM_TOKEN_PREFERENCE = "gcm_token_preference";
     private static final String KEY_TOKEN_ID = "token_id";
+    private static final String KEY_TOKEN_SENT = "token_sent";
 
     private static GcmTokenPreference gcmTokenPreference;
 
@@ -26,7 +27,29 @@ public class GcmTokenPreference {
     }
 
     public boolean isNewToken(String tokenId) {
-        return !tokenId.equalsIgnoreCase(getTokenId());
+        boolean isNewToken = !tokenId.equalsIgnoreCase(getTokenId());
+        if (isNewToken) {
+            clearNewTokenSent();
+        }
+        return isNewToken;
+    }
+
+    public boolean isNewTokenSent() {
+        return getPreference().getBoolean(KEY_TOKEN_ID, false);
+    }
+
+    public void setNewTokenSent() {
+        getPreference()
+                .edit()
+                .putBoolean(KEY_TOKEN_ID, true)
+                .apply();
+    }
+
+    public void clearNewTokenSent() {
+        getPreference()
+                .edit()
+                .putBoolean(KEY_TOKEN_ID, false)
+                .apply();
     }
 
     public void setTokenId(String tokenId) {
