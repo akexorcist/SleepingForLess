@@ -23,6 +23,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile files('src/main/libs/sdk-v1.0.0.jar')
+    compile files('src/main/libs/multiwindow-v1.3.1.jar')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:cardview-v7:23.2.1'
