@@ -1,9 +1,7 @@
 package com.akexorcist.sleepingforless.network.sfl;
 
-import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenRequest;
 import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenResponse;
-import com.akexorcist.sleepingforless.network.sfl.model.InsertTokenResponseFailure;
 import com.akexorcist.sleepingforless.network.sfl.model.RemoveTokenRequest;
 import com.akexorcist.sleepingforless.network.sfl.model.RemoveTokenResponse;
 
