@@ -9,6 +9,7 @@ import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.util.content.ContentUtility;
+import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -43,6 +44,13 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
     public void setTitle(String title) {
         title = ContentUtility.getInstance().removeLabelFromTitle(title);
+
+        // Easter Egg for April Fool Day
+        if (EasterEggUtility.newInstance().isAprilFoolDay()) {
+            title = title.replaceAll("Android", " iOS ");
+            title = title.replaceAll("แอนดรอยด์", " iOS ");
+        }
+
         tvTitle.setText(title);
     }
 
@@ -53,6 +61,12 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
                 resultLabel += label + ", ";
             }
             resultLabel.replaceAll(", $", "");
+
+            // Easter Egg for April Fool Day
+            if (EasterEggUtility.newInstance().isAprilFoolDay()) {
+                resultLabel = resultLabel.replaceAll("Android", "iOS");
+            }
+
             tvLabel.setText(resultLabel);
             tvLabel.setVisibility(View.VISIBLE);
         } else {

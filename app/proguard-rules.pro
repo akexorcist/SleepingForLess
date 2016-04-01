@@ -182,3 +182,8 @@
 -dontwarn com.afollestad.assent.**
 -keep class com.afollestad.assent.** { *; }
 -keep interface com.afollestad.assent.** { *; }
+
+# Assent
+-dontwarn com.samsung.android.sdk.multiwindow.**
+-keep class com.samsung.android.sdk.multiwindow.** { *; }
+-keep interface com.samsung.android.sdk.multiwindow.** { *; }

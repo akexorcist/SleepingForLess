@@ -35,6 +35,7 @@ import com.akexorcist.sleepingforless.util.content.ContentResult;
 import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
 import com.akexorcist.sleepingforless.util.Utility;
+import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
@@ -162,7 +163,15 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     }
 
     private void setTitle(Post post) {
-        setTitle(ContentUtility.getInstance().removeLabelFromTitle(post.getTitle()));
+        String title = post.getTitle();
+
+        // Easter Egg for April Fool Day
+        if(EasterEggUtility.newInstance().isAprilFoolDay()) {
+            title = title.replaceAll("Android", "iOS");
+            title = title.replaceAll("แอนดรอยด์", " iOS ");
+        }
+
+        setTitle(ContentUtility.getInstance().removeLabelFromTitle(title));
     }
 
     private void restoreIntentData() {

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 
 /**
  * Created by Akexorcist on 3/10/2016 AD.
@@ -19,6 +20,12 @@ public class HeaderPostViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setHeaderText(String text) {
+        // Easter Egg for April Fool Day
+        if(EasterEggUtility.newInstance().isAprilFoolDay()) {
+            text = text.replaceAll("Android", " iOS ");
+            text = text.replaceAll("แอนดรอยด์", " iOS ");
+        }
+
         tvPostContentHeader.setText(text);
     }
 

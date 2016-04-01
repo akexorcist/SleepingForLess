@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.post.LinkClickable;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 
@@ -35,8 +36,15 @@ public class PlainTextPostViewHolder extends RecyclerView.ViewHolder {
     }
 
     private Spannable setSpannable(PlainTextPost plainTextPost) {
-        Spannable spanText = Spannable.Factory.getInstance().newSpannable(plainTextPost.getText());
+        String plainText = plainTextPost.getText();
 
+        // Easter Egg for April Fool Day
+        if(EasterEggUtility.newInstance().isAprilFoolDay()) {
+            plainText = plainText.replaceAll(" Android", " iOS");
+            plainText = plainText.replaceAll("แอนดรอยด์", " iOS ");
+        }
+
+        Spannable spanText = Spannable.Factory.getInstance().newSpannable(plainText);
         for (PlainTextPost.Highlight highlight : plainTextPost.getHighlightList()) {
             try {
                 spanText.setSpan(new ForegroundColorSpan(highlight.getColor()), highlight.getStart(), highlight.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

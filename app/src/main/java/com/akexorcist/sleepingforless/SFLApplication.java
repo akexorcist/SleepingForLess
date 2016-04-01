@@ -8,6 +8,7 @@ import com.akexorcist.sleepingforless.config.GcmTokenPreference;
 import com.akexorcist.sleepingforless.gcm.GcmTokenManager;
 import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.util.Utility;
+import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.realm.Realm;
@@ -28,6 +29,7 @@ public class SFLApplication extends Application {
         initGcmToken();
         initCrashActivity();
         initAnalyticsTrackers();
+        initEasterEgg();
     }
 
     private void initFont() {
@@ -47,7 +49,7 @@ public class SFLApplication extends Application {
     private void initCrashActivity() {
         if (DeveloperConfig.ALLOW_CRASH_ACTIVITY) {
             CustomActivityOnCrash.install(this);
-            CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.drawable.ic_force_close);
+            CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_force_close);
             CustomActivityOnCrash.setShowErrorDetails(true);
             CustomActivityOnCrash.setEnableAppRestart(true);
         }
@@ -62,9 +64,13 @@ public class SFLApplication extends Application {
     }
 
     private void initGcmToken() {
-        if(!GcmTokenPreference.getInstance().isNewTokenSent()) {
+        if (!GcmTokenPreference.getInstance().isNewTokenSent()) {
             String token = GcmTokenPreference.getInstance().getTokenId();
             GcmTokenManager.getInstance().sendTokenToServer(token);
         }
+    }
+
+    private void initEasterEgg() {
+        EasterEggUtility.newInstance().updateToday();
     }
 }

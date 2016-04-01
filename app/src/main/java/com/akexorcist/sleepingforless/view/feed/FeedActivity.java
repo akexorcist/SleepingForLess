@@ -23,6 +23,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
@@ -40,6 +41,7 @@ import com.akexorcist.sleepingforless.network.blogger.model.PostList;
 import com.akexorcist.sleepingforless.network.blogger.model.PostListFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 import com.akexorcist.sleepingforless.util.Utility;
+import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.DebugPostActivity;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
@@ -69,6 +71,7 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
     private static final int TOOLTIPS_ID = 1;
 
     private Toolbar tbTitle;
+    private ImageView ivTitle;
     private AppBarLayout ablTitle;
     private CollapsingToolbarLayout ctlTitle;
     private FeedAdapter adapter;
@@ -115,6 +118,7 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
 
     private void bindView() {
         tbTitle = (Toolbar) findViewById(R.id.tb_title);
+        ivTitle = (ImageView) findViewById(R.id.iv_title);
         ablTitle = (AppBarLayout) findViewById(R.id.abl_title);
         ctlTitle = (CollapsingToolbarLayout) findViewById(R.id.ctl_title);
         rvFeedList = (RecyclerView) findViewById(R.id.rv_feed_list);
@@ -170,7 +174,7 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
             ablTitle.setExpanded(false, false);
         }
 
-        setFabForScrolToTopToolTips();
+        setFabForScrollToTopToolTips();
     }
 
     private void callService() {
@@ -190,9 +194,17 @@ public class FeedActivity extends SFLActivity implements View.OnClickListener, F
     private void setToolbar() {
         setSupportActionBar(tbTitle);
         setTitle(getString(R.string.app_name));
+        setImageTitle();
     }
 
-    private void setFabForScrolToTopToolTips() {
+    private void setImageTitle() {
+        // Easter Egg for April Fool Day
+        if (EasterEggUtility.newInstance().isAprilFoolDay()) {
+            ivTitle.setImageResource(R.mipmap.ic_apple_logo);
+        }
+    }
+
+    private void setFabForScrollToTopToolTips() {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fabMenu.getLayoutParams();
         FloatingActionButtonBehavior fabBehavior = (FloatingActionButtonBehavior) params.getBehavior();
         fabBehavior.setFabVisibilityChangeListener(this);
