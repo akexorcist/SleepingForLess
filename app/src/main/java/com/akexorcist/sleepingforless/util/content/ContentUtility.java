@@ -180,7 +180,8 @@ public class ContentUtility {
         plainText = plainText.replaceAll("&lt;", "<")
                 .replaceAll("&gt;", ">")
                 .replaceAll("<i>", "")
-                .replaceAll("</i>", "");
+                .replaceAll("</i>", "")
+                .replaceAll("&amp;", "&");
         List<PlainTextPost.Highlight> highlightList = convertPlainTextHighLight(plainText);
         List<PlainTextPost.Link> linkList = convertPlainTextLink(plainText);
         plainText = plainText.replaceAll("<color:#[a-z0-9]{3,8}>(.*?)</color>", "$1")
@@ -258,7 +259,8 @@ public class ContentUtility {
         headerContent = headerContent.replaceAll("&lt;", "<")
                 .replaceAll("&gt;", ">")
                 .replaceAll("<i>", "")
-                .replaceAll("</i>", "");
+                .replaceAll("</i>", "")
+                .replaceAll("&amp;", "&");
         Matcher matcher = getMatcher(headerContent, "<h(\\d)>(.+)</h\\d>");
         if (matcher.find()) {
             return new HeaderPost(headerContent, Integer.parseInt(matcher.group(1)), matcher.group(2));
