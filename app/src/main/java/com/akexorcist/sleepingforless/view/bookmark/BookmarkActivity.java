@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,29 +36,51 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class BookmarkActivity extends SFLActivity implements View.OnTouchListener, View.OnClickListener, BookmarkAdapter.ItemListener, View.OnLongClickListener {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.ItemListener {
     private static final String KEY_BOOKMARK_LIST = "key_bookmark_list";
 
-    private Toolbar tbTitle;
-    private FloatingActionButton fabMenu;
-    private FooterLayout flMenu;
-    private DilatingDotsProgressBar pbBookmarkList;
-    private RecyclerView rvBookmarkList;
-    private View viewContentShadow;
-    private TextView tvBookmarkNotFound;
-    private MenuButton btnUpdateAll;
-    private MenuButton btnRemoveAll;
-    private MenuButton btnInfo;
+    @Bind(R.id.tb_title)
+    Toolbar tbTitle;
 
-    private BookmarkAdapter adapter;
-    private List<Bookmark> bookmarkList;
+    @Bind(R.id.fab_menu)
+    FloatingActionButton fabMenu;
+
+    @Bind(R.id.fl_menu)
+    FooterLayout flMenu;
+
+    @Bind(R.id.pb_bookmark_list_loading)
+    DilatingDotsProgressBar pbBookmarkList;
+
+    @Bind(R.id.rv_bookmark_list)
+    RecyclerView rvBookmarkList;
+
+    @Bind(R.id.view_content_shadow)
+    View viewContentShadow;
+
+    @Bind(R.id.tv_bookmark_not_found)
+    TextView tvBookmarkNotFound;
+
+    @Bind(R.id.btn_menu_update_all)
+    MenuButton btnUpdateAll;
+
+    @Bind(R.id.btn_menu_remove_all)
+    MenuButton btnRemoveAll;
+
+    @Bind(R.id.btn_menu_info)
+    MenuButton btnInfo;
+
+    BookmarkAdapter adapter;
+    List<Bookmark> bookmarkList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
-
-        bindView();
+        ButterKnife.bind(this);
         setupView();
         setToolbar();
 
@@ -70,33 +91,11 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         }
     }
 
-    private void bindView() {
-        pbBookmarkList = (DilatingDotsProgressBar) findViewById(R.id.pb_bookmark_list_loading);
-        rvBookmarkList = (RecyclerView) findViewById(R.id.rv_bookmark_list);
-        viewContentShadow = findViewById(R.id.view_content_shadow);
-        tvBookmarkNotFound = (TextView) findViewById(R.id.tv_bookmark_not_found);
-        tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
-        flMenu = (FooterLayout) findViewById(R.id.fl_menu);
-        btnUpdateAll = (MenuButton) findViewById(R.id.btn_menu_update_all);
-        btnRemoveAll = (MenuButton) findViewById(R.id.btn_menu_remove_all);
-        btnInfo = (MenuButton) findViewById(R.id.btn_menu_info);
-    }
-
     private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
-        viewContentShadow.setOnClickListener(this);
         fabMenu.hide();
-        fabMenu.setOnClickListener(this);
-        fabMenu.setOnLongClickListener(this);
         btnUpdateAll.setVisibility(View.GONE);
         btnInfo.setVisibility(View.GONE);
-        btnUpdateAll.setOnClickListener(this);
-        btnRemoveAll.setOnClickListener(this);
-        btnInfo.setOnClickListener(this);
-        btnUpdateAll.setOnTouchListener(this);
-        btnRemoveAll.setOnTouchListener(this);
-        btnInfo.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         int columnCount = getResources().getInteger(R.integer.bookmark_column_count);
         rvBookmarkList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
@@ -171,39 +170,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            scaleMenuButtonUp(v);
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            scaleMenuButtonBack(v);
-        }
-        return false;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == fabMenu) {
-            openMenu();
-        } else if (v == viewContentShadow) {
-            closeMenu();
-        } else if (v == btnUpdateAll) {
-            onMenuUpdateAllClick();
-        } else if (v == btnRemoveAll) {
-            onMenuDeleteAllClick();
-        } else if (v == btnInfo) {
-            onMenuInfoClick();
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (v == fabMenu) {
-            rvBookmarkList.smoothScrollToPosition(0);
-        }
-        return true;
-    }
-
-    @Override
     public void onBackPressed() {
         if (flMenu.isFabExpanded()) {
             closeMenu();
@@ -237,11 +203,13 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         setBookmark(bookmarkList);
     }
 
-    private void onMenuUpdateAllClick() {
+    @OnClick(R.id.btn_menu_update_all)
+    public void onMenuUpdateAllClick() {
         // TODO Update all bookmark content
     }
 
-    private void onMenuDeleteAllClick() {
+    @OnClick(R.id.btn_menu_remove_all)
+    public void onMenuDeleteAllClick() {
         new MaterialStyledDialog(this)
                 .setCancelable(true)
                 .setTitle(getString(R.string.remove_all_confirm_title))
@@ -267,8 +235,26 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
         closeMenu();
     }
 
-    private void onMenuInfoClick() {
+    @OnClick(R.id.btn_menu_info)
+    public void onMenuInfoClick() {
         // TODO Show bookmark info
+    }
+
+    @OnClick(R.id.fab_menu)
+    public void openMenu() {
+        flMenu.expandFab();
+        AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
+    }
+
+    @OnClick(R.id.view_content_shadow)
+    public void closeMenu() {
+        flMenu.contractFab();
+        AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
+    }
+
+    @OnClick(R.id.fab_menu)
+    public void scrollContentToTop() {
+        rvBookmarkList.smoothScrollToPosition(0);
     }
 
     private void removeAllBookmark() {
@@ -284,24 +270,6 @@ public class BookmarkActivity extends SFLActivity implements View.OnTouchListene
             showContentNotFound();
             showSnackbar(R.string.removed_all_bookmark);
         }
-    }
-
-    private void openMenu() {
-        flMenu.expandFab();
-        AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
-    }
-
-    private void closeMenu() {
-        flMenu.contractFab();
-        AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
-    }
-
-    private void scaleMenuButtonUp(View v) {
-        AnimationUtility.getInstance().scaleUp(v, 200);
-    }
-
-    private void scaleMenuButtonBack(View v) {
-        AnimationUtility.getInstance().scaleBack(v, 200);
     }
 
     private void showLoading() {
