@@ -39,6 +39,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.ItemListener {
     private static final String KEY_BOOKMARK_LIST = "key_bookmark_list";
@@ -252,9 +253,10 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.fab_menu)
-    public void scrollContentToTop() {
+    @OnLongClick(R.id.fab_menu)
+    public boolean scrollContentToTop() {
         rvBookmarkList.smoothScrollToPosition(0);
+        return true;
     }
 
     private void removeAllBookmark() {
