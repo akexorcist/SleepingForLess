@@ -3,11 +3,14 @@ package com.akexorcist.sleepingforless.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
+import com.akexorcist.sleepingforless.util.AnimationUtility;
 
 /**
  * Created by Akexorcist on 3/15/2016 AD.
@@ -73,5 +76,23 @@ public class MenuButton extends LinearLayout {
 
     public int getIconResourceId() {
         return iconResId;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            scaleMenuButtonUp(this);
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            scaleMenuButtonBack(this);
+        }
+        return super.onTouchEvent(event);
+    }
+
+    private void scaleMenuButtonUp(View v) {
+        AnimationUtility.getInstance().scaleUp(v, 200);
+    }
+
+    private void scaleMenuButtonBack(View v) {
+        AnimationUtility.getInstance().scaleBack(v, 200);
     }
 }
