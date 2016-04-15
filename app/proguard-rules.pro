@@ -183,7 +183,18 @@
 -keep class com.afollestad.assent.** { *; }
 -keep interface com.afollestad.assent.** { *; }
 
-# Assent
+# Samsung MultiWindow
 -dontwarn com.samsung.android.sdk.multiwindow.**
 -keep class com.samsung.android.sdk.multiwindow.** { *; }
 -keep interface com.samsung.android.sdk.multiwindow.** { *; }
+
+# Butter Knife
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
