@@ -3,11 +3,13 @@ package com.akexorcist.sleepingforless.ui;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.Display;
 import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
+import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.settings.SettingsActivity;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -50,12 +52,6 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
         super.tearDown();
-    }
-
-    public void testRun() {
-        solo.waitForActivity("FeedActivity", 1000);
-        solo.clickOnView(solo.getView(R.id.fab_menu));
-        solo.sleep(1000);
     }
 
     public void testFabMenuClick() {
@@ -115,22 +111,17 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
             }
         }, 4000);
         assertEquals(31, feedAdapter.getItemCount());
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                pullRefresh.setRefreshing(true);
-            }
-        });
+        Display display = solo.getCurrentActivity().getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        solo.drag(width / 2, width / 2, height / 2, height / 2 + height / 3, 20);
+        assertEquals(true, pullRefresh.isRefreshing());
+        solo.sleep(300);
+        assertEquals(1, feedAdapter.getItemCount());
         solo.waitForCondition(new Condition() {
             @Override
             public boolean isSatisfied() {
                 return !pullRefresh.isRefreshing();
-            }
-        }, 4000);
-        solo.waitForCondition(new Condition() {
-            @Override
-            public boolean isSatisfied() {
-                return feedAdapter.getItemCount() > 1;
             }
         }, 4000);
         assertEquals(31, feedAdapter.getItemCount());
@@ -144,7 +135,7 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.clickOnView(fabMenu);
         solo.sleep(500);
         solo.clickOnView(menuSettings);
-        solo.sleep(1000);
+        solo.waitForActivity(settingActivityName, 1000);
         assertEquals(settingActivityName, solo.getCurrentActivity().getClass().getSimpleName());
     }
 
@@ -156,7 +147,7 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.clickOnView(fabMenu);
         solo.sleep(500);
         solo.clickOnView(menuSettings);
-        solo.sleep(1000);
+        solo.waitForActivity(bookmarkActivityName, 1000);
         assertEquals(bookmarkActivityName, solo.getCurrentActivity().getClass().getSimpleName());
     }
 
@@ -169,7 +160,24 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.sleep(500);
         solo.clickOnView(menuSettings);
         solo.sleep(1000);
+        solo.waitForActivity(searchActivityName, 1000);
         assertEquals(searchActivityName, solo.getCurrentActivity().getClass().getSimpleName());
+    }
+
+    public void testClickOnPost() {
+        String postActivityName = PostByIdActivity.class.getSimpleName();
+        solo.waitForActivity(ACTIVITY_NAME, 1000);
+        final RecyclerView feedList = (RecyclerView) solo.getView(R.id.rv_feed_list);
+
+        solo.waitForCondition(new Condition() {
+            @Override
+            public boolean isSatisfied() {
+                return feedList.getAdapter().getItemCount() > 0;
+            }
+        }, 4000);
+        solo.clickInRecyclerView(0);
+        solo.sleep(800);
+        assertEquals(postActivityName, solo.getCurrentActivity().getClass().getSimpleName());
     }
 
     public void testClickOnSameSortType() {
@@ -188,7 +196,7 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         assertEquals(false, bottomSheetSort.isSheetShowing());
     }
 
-    public void testClickOnDefferentSortType() {
+    public void testClickOnDifferentSortType() {
         solo.waitForActivity(ACTIVITY_NAME, 1000);
         RecyclerView feedList = (RecyclerView) solo.getView(R.id.rv_feed_list);
         View fabMenu = solo.getView(R.id.fab_menu);
