@@ -26,22 +26,42 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-public class SearchResultActivity extends SFLActivity implements View.OnClickListener, FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener, View.OnLongClickListener {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
+
+public class SearchResultActivity extends SFLActivity implements FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
     private static final String KEY_POST_LIST = "key_post_list";
     private static final String KEY_SEARCH_REQUEST = "key_search_request";
 
-    private Toolbar tbTitle;
-    private FloatingActionButton fabMenu;
-    private DilatingDotsProgressBar pbSearchResultList;
-    private RecyclerView rvSearchResultList;
-    private View viewContentShadow;
-    private TextView tvSearchResultNotFound;
-    private TextView tvUnavailableDescription;
-    private TextView tvOpenBookmark;
+    @Bind(R.id.tb_title)
+    Toolbar tbTitle;
 
-    private FeedAdapter adapter;
-    private PostList postList;
-    private SearchRequest request;
+    @Bind(R.id.fab_menu)
+    FloatingActionButton fabMenu;
+
+    @Bind(R.id.pb_search_result_list_loading)
+    DilatingDotsProgressBar pbSearchResultList;
+
+    @Bind(R.id.rv_search_result_list)
+    RecyclerView rvSearchResultList;
+
+    @Bind(R.id.view_content_shadow)
+    View viewContentShadow;
+
+    @Bind(R.id.tv_search_result_not_found)
+    TextView tvSearchResultNotFound;
+
+    @Bind(R.id.tv_network_unavailable_description)
+    TextView tvUnavailableDescription;
+
+    @Bind(R.id.tv_network_unavailable_open_bookmark)
+    TextView tvUnavailableOpenBookmark;
+
+    FeedAdapter adapter;
+    PostList postList;
+    SearchRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +72,7 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
             restoreIntentData();
         }
 
-        bindView();
+        ButterKnife.bind(this);
         setupView();
         setToolbar();
 
@@ -69,23 +89,9 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         searchPost(request.getKeyword());
     }
 
-    private void bindView() {
-        pbSearchResultList = (DilatingDotsProgressBar) findViewById(R.id.pb_search_result_list_loading);
-        rvSearchResultList = (RecyclerView) findViewById(R.id.rv_search_result_list);
-        viewContentShadow = findViewById(R.id.view_content_shadow);
-        tvSearchResultNotFound = (TextView) findViewById(R.id.tv_search_result_not_found);
-        tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
-        tvOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
-        tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
-    }
-
     private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
-        viewContentShadow.setOnClickListener(this);
-        tvOpenBookmark.setVisibility(View.GONE);
-        fabMenu.setOnClickListener(this);
-        fabMenu.setOnLongClickListener(this);
+        tvUnavailableOpenBookmark.setVisibility(View.GONE);
         adapter = new FeedAdapter();
         adapter.setItemListener(this);
         adapter.setLoadMoreListener(this);
@@ -151,21 +157,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
     }
 
     @Override
-    public void onClick(View v) {
-        if (v == fabMenu) {
-            onMenuSearchClick();
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (v == fabMenu) {
-            rvSearchResultList.smoothScrollToPosition(0);
-        }
-        return true;
-    }
-
-    @Override
     public void onItemClick(FeedViewHolder holder, PostList.Item item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Key.POST_ITEM, Parcels.wrap(item));
@@ -201,6 +192,17 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         setTitle(request);
     }
 
+    @OnClick(R.id.fab_menu)
+    public void onMenuSearchClick() {
+        openActivity(SearchActivity.class);
+    }
+
+    @OnLongClick(R.id.fab_menu)
+    public boolean scrollContentToTop() {
+        rvSearchResultList.smoothScrollToPosition(0);
+        return true;
+    }
+
     public void setPostList(PostList postList) {
         if (postList != null && postList.getItems() != null && postList.getItems().size() > 0) {
             adapter.setPostListItem(postList.getItems());
@@ -213,10 +215,6 @@ public class SearchResultActivity extends SFLActivity implements View.OnClickLis
         hideLoading();
         hideUnavailableMessage();
         fabMenu.show();
-    }
-
-    public void onMenuSearchClick() {
-        openActivity(SearchActivity.class);
     }
 
     private void showLoading() {
