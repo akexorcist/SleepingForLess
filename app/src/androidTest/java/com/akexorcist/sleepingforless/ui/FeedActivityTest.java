@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
+import com.akexorcist.sleepingforless.view.feed.FeedActivity;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
 import com.akexorcist.sleepingforless.view.search.SearchActivity;
@@ -19,19 +20,17 @@ import com.robotium.solo.Solo;
 /**
  * Created by Akexorcist on 4/17/2016 AD.
  */
-@SuppressWarnings("rawtypes")
-public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
 
-    private static final String PACKAGE_NAME = "com.akexorcist.sleepingforless.view.feed";
-    private static final String ACTIVITY_NAME = "FeedActivity";
+public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
+    private static Class targetActivity = FeedActivity.class;
+    private static String ACTIVITY_NAME = targetActivity.getName();
 
     private Solo solo;
-
     private static Class<?> launcherActivityClass;
 
     static {
         try {
-            launcherActivityClass = Class.forName(PACKAGE_NAME + "." + ACTIVITY_NAME);
+            launcherActivityClass = Class.forName(targetActivity.getCanonicalName());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -58,14 +57,29 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.waitForActivity(ACTIVITY_NAME, 1000);
         View fabMenu = solo.getView(R.id.fab_menu);
         View shadow = solo.getView(R.id.view_content_shadow);
-        solo.clickOnView(fabMenu);
         solo.sleep(500);
+        solo.clickOnView(fabMenu);
+        solo.sleep(600);
         assertEquals(View.INVISIBLE, fabMenu.getVisibility());
         assertEquals(View.VISIBLE, shadow.getVisibility());
         solo.clickOnView(shadow);
-        solo.sleep(500);
+        solo.sleep(600);
         assertEquals(View.VISIBLE, fabMenu.getVisibility());
         assertEquals(View.GONE, shadow.getVisibility());
+    }
+
+    public void testAvailableMenu() {
+        solo.waitForActivity(ACTIVITY_NAME, 1000);
+        View menuSettings = solo.getView(R.id.btn_menu_settings);
+        View menuSort = solo.getView(R.id.btn_menu_sort);
+        View menuBookmark = solo.getView(R.id.btn_menu_bookmark);
+        View menuSearch = solo.getView(R.id.btn_menu_search);
+        View menuRefresh = solo.getView(R.id.btn_menu_refresh);
+        assertEquals(View.VISIBLE, menuSettings.getVisibility());
+        assertEquals(View.VISIBLE, menuSort.getVisibility());
+        assertEquals(View.VISIBLE, menuBookmark.getVisibility());
+        assertEquals(View.VISIBLE, menuSearch.getVisibility());
+        assertEquals(View.GONE, menuRefresh.getVisibility());
     }
 
     public void testPostFetch() {
@@ -96,9 +110,10 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
                 return feedList.getAdapter().getItemCount() > 31;
             }
         }, 4000);
-        assertEquals(61, feedList.getAdapter().getItemCount());
+        assertTrue(feedList.getAdapter().getItemCount() > 31);
     }
 
+    @SuppressWarnings("deprecation")
     public void testPostPullToRefresh() {
         solo.waitForActivity(ACTIVITY_NAME, 1000);
         final RecyclerView feedList = (RecyclerView) solo.getView(R.id.rv_feed_list);
@@ -116,7 +131,7 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         int height = display.getHeight();
         solo.drag(width / 2, width / 2, height / 2, height / 2 + height / 3, 20);
         assertEquals(true, pullRefresh.isRefreshing());
-        solo.sleep(300);
+        solo.sleep(500);
         assertEquals(1, feedAdapter.getItemCount());
         solo.waitForCondition(new Condition() {
             @Override
@@ -135,7 +150,7 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.clickOnView(fabMenu);
         solo.sleep(500);
         solo.clickOnView(menuSettings);
-        solo.waitForActivity(settingActivityName, 1000);
+        solo.sleep(1000);
         assertEquals(settingActivityName, solo.getCurrentActivity().getClass().getSimpleName());
     }
 
@@ -147,7 +162,7 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.clickOnView(fabMenu);
         solo.sleep(500);
         solo.clickOnView(menuSettings);
-        solo.waitForActivity(bookmarkActivityName, 1000);
+        solo.sleep(1000);
         assertEquals(bookmarkActivityName, solo.getCurrentActivity().getClass().getSimpleName());
     }
 
@@ -160,7 +175,6 @@ public class FeedActivityTest extends ActivityInstrumentationTestCase2 {
         solo.sleep(500);
         solo.clickOnView(menuSettings);
         solo.sleep(1000);
-        solo.waitForActivity(searchActivityName, 1000);
         assertEquals(searchActivityName, solo.getCurrentActivity().getClass().getSimpleName());
     }
 
