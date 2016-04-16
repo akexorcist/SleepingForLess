@@ -29,17 +29,29 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.io.File;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by Akexorcist on 3/13/2016 AD.
  */
-public class ImagePostPreviewActivity extends SFLActivity implements View.OnClickListener {
+public class ImagePostPreviewActivity extends SFLActivity {
     private static final String KEY_FULL_URL = "key_full_url";
 
-    private SubsamplingScaleImageView ivPreview;
-    private FloatingActionButton fabClose;
-    private FloatingActionButton fabDownload;
-    private DilatingDotsProgressBar pbImagePreviewLoading;
-    private String fullUrl;
+    @Bind(R.id.iv_preview)
+    SubsamplingScaleImageView ivPreview;
+
+    @Bind(R.id.fab_preview_close)
+    FloatingActionButton fabClose;
+
+    @Bind(R.id.fab_preview_download)
+    FloatingActionButton fabDownload;
+
+    @Bind(R.id.pb_image_preview_loading)
+    DilatingDotsProgressBar pbImagePreviewLoading;
+
+    String fullUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +61,8 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         if (savedInstanceState == null) {
             getBundleFromIntent();
         }
+        ButterKnife.bind(this);
         screenTracking();
-        bindView();
         setupView();
         initRuntimePermissionRequest();
 
@@ -59,16 +71,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         }
     }
 
-    private void bindView() {
-        ivPreview = (SubsamplingScaleImageView) findViewById(R.id.iv_preview);
-        fabClose = (FloatingActionButton) findViewById(R.id.fab_preview_close);
-        fabDownload = (FloatingActionButton) findViewById(R.id.fab_preview_download);
-        pbImagePreviewLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_image_preview_loading);
-    }
-
     private void setupView() {
-        fabClose.setOnClickListener(this);
-        fabDownload.setOnClickListener(this);
         pbImagePreviewLoading.showNow();
     }
 
@@ -78,15 +81,6 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
 
     public void getBundleFromIntent() {
         fullUrl = getIntent().getStringExtra(Key.KEY_FULL_URL);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == fabClose) {
-            finish();
-        } else if (v == fabDownload) {
-            downloadImage();
-        }
     }
 
     @Override
@@ -108,6 +102,16 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
         Assent.handleResult(permissions, grantResults);
     }
 
+    @OnClick(R.id.fab_preview_download)
+    public void downloadImage() {
+        grantExternalStoragePermission();
+    }
+
+    @OnClick(R.id.fab_preview_close)
+    public void closePreview() {
+        finish();
+    }
+
     private void downloadImageToPreview() {
         Glide.with(this)
                 .load(fullUrl)
@@ -123,11 +127,7 @@ public class ImagePostPreviewActivity extends SFLActivity implements View.OnClic
                 });
     }
 
-    private void downloadImage() {
-        grantExternalStoragePermission();
-    }
-
-    private void grantExternalStoragePermission() {
+    public void grantExternalStoragePermission() {
         if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
             Assent.requestPermissions(new AssentCallback() {
                 @Override
