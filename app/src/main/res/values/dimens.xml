@@ -36,6 +36,7 @@
     <dimen name="card_view_corner_radius">0dp</dimen>
     <dimen name="menu_button_icon_size">30dp</dimen>
     <dimen name="fab_button_size">60dp</dimen>
+    <dimen name="fab_dialog_button_size">56dp</dimen>
     <dimen name="fab_button_margin">16dp</dimen>
     <dimen name="post_image_height">190dp</dimen>
     <dimen name="post_content_width">@dimen/match_parent</dimen>

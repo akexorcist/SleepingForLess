@@ -1,17 +1,24 @@
 package com.akexorcist.sleepingforless.view.message;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.util.Utility;
+import com.akexorcist.sleepingforless.view.feed.FeedActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,6 +32,12 @@ public class MessageDialogFragment extends DialogFragment {
 
     @Bind(R.id.tv_dialog_message)
     TextView tvDialogMessage;
+
+    @Bind(R.id.fab_dialog_close)
+    FloatingActionButton fabClose;
+
+    @Bind(R.id.fab_dialog_open_app)
+    FloatingActionButton fabOpenApp;
 
     OnDismissListener listener;
     String message;
@@ -45,6 +58,16 @@ public class MessageDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_message, container, false);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        // Remove background and title in Pre-Lollipop
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        return dialog;
     }
 
     @Override
@@ -81,14 +104,25 @@ public class MessageDialogFragment extends DialogFragment {
         ButterKnife.unbind(this);
     }
 
-    public void setOnDismissListener(OnDismissListener listener) {
-        this.listener = listener;
-    }
-
     @OnClick(R.id.tv_dialog_message)
     public void copyMessageToClipboard() {
         Utility.getInstance().copyTextToClipboard("Message", message);
         Snackbar.make(tvDialogMessage, R.string.copy_message_to_clipboard, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.fab_dialog_close)
+    public void closeDialog() {
+        dismiss();
+    }
+
+    @OnClick(R.id.fab_dialog_open_app)
+    public void openSFLApp() {
+        startActivity(new Intent(getContext(), FeedActivity.class));
+        dismiss();
+    }
+
+    public void setOnDismissListener(OnDismissListener listener) {
+        this.listener = listener;
     }
 
     public interface OnDismissListener {

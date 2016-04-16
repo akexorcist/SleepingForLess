@@ -2,6 +2,7 @@ package com.akexorcist.sleepingforless.view.message;
 
 import android.os.Bundle;
 
+import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 
 public class MessageActivity extends SFLActivity implements MessageDialogFragment.OnDismissListener {
@@ -17,6 +18,12 @@ public class MessageActivity extends SFLActivity implements MessageDialogFragmen
             restoreIntentData();
             showDialogFragment();
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_default_fade_in, R.anim.anim_default_fade_out);
     }
 
     private void restoreIntentData() {
