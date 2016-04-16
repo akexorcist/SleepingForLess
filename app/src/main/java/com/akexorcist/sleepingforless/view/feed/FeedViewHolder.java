@@ -19,27 +19,37 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class FeedViewHolder extends RecyclerView.ViewHolder {
+    @Bind(R.id.tv_feed_title)
     public TextView tvTitle;
+
+    @Bind(R.id.tv_feed_label)
     public TextView tvLabel;
+
+    @Bind(R.id.tv_feed_date)
     public TextView tvDate;
+
+    @Bind(R.id.iv_feed_title)
     public ImageView ivTitle;
+
+    @Bind(R.id.iv_feed_bookmark_indicator)
     public ImageView ivBookmarkIndicator;
+
+    @Bind(R.id.mrl_feed_button)
     public MaterialRippleLayout mrlFeedButton;
+
+    @Bind(R.id.pb_feed_image_loading)
     public DilatingDotsProgressBar pbFeedImageLoading;
 
     public FeedViewHolder(View itemView) {
         super(itemView);
-        tvTitle = (TextView) itemView.findViewById(R.id.tv_feed_title);
-        tvLabel = (TextView) itemView.findViewById(R.id.tv_feed_label);
-        tvDate = (TextView) itemView.findViewById(R.id.tv_feed_date);
-        ivTitle = (ImageView) itemView.findViewById(R.id.iv_feed_title);
-        ivBookmarkIndicator = (ImageView) itemView.findViewById(R.id.iv_feed_bookmark_indicator);
-        mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_feed_button);
-        pbFeedImageLoading = (DilatingDotsProgressBar) itemView.findViewById(R.id.pb_feed_image_loading);
+        ButterKnife.bind(this, itemView);
     }
 
     public void setTitle(String title) {
