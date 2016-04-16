@@ -46,6 +46,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 
@@ -97,6 +98,7 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
             restoreIntentData();
         }
 
+        ButterKnife.bind(this);
         setupView();
         setToolbar();
 
@@ -210,12 +212,12 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
     }
 
     @OnClick(R.id.btn_menu_update)
-    private void onMenuUpdateClick() {
+    public void onMenuUpdateClick() {
         // TODO update offline bookmark
     }
 
     @OnClick(R.id.btn_menu_delete)
-    private void onMenuDeleteClick() {
+    public void onMenuDeleteClick() {
         new MaterialStyledDialog(this)
                 .setCancelable(true)
                 .setTitle(getString(R.string.remove_confirm_title))
@@ -242,7 +244,7 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
     }
 
     @OnClick(R.id.btn_menu_open_from_original)
-    private void onMenuOpenInOnlineClick() {
+    public void onMenuOpenInOnlineClick() {
         ExternalBrowserUtility.getInstance().open(this, bookmark.getUrl());
         closeMenu();
     }
