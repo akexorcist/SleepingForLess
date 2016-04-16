@@ -13,16 +13,21 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.util.Utility;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by Akexorcist on 3/25/2016 AD.
  */
-public class MessageDialogFragment extends DialogFragment implements View.OnClickListener {
+public class MessageDialogFragment extends DialogFragment {
     private static final String KEY_MESSAGE = "key_message";
 
-    private TextView tvDialogMessage;
+    @Bind(R.id.tv_dialog_message)
+    TextView tvDialogMessage;
 
-    private OnDismissListener listener;
-    private String message;
+    OnDismissListener listener;
+    String message;
 
     public static MessageDialogFragment newInstance(String message) {
         MessageDialogFragment fragment = new MessageDialogFragment();
@@ -45,6 +50,7 @@ public class MessageDialogFragment extends DialogFragment implements View.OnClic
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
         if (savedInstanceState == null) {
             message = getArguments().getString(KEY_MESSAGE);
@@ -52,9 +58,7 @@ public class MessageDialogFragment extends DialogFragment implements View.OnClic
             message = savedInstanceState.getString(KEY_MESSAGE);
         }
 
-        tvDialogMessage = (TextView) view.findViewById(R.id.tv_dialog_message);
         tvDialogMessage.setText(message);
-        tvDialogMessage.setOnClickListener(this);
     }
 
     @Override
@@ -71,12 +75,18 @@ public class MessageDialogFragment extends DialogFragment implements View.OnClic
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
     public void setOnDismissListener(OnDismissListener listener) {
         this.listener = listener;
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick(R.id.tv_dialog_message)
+    public void copyMessageToClipboard() {
         Utility.getInstance().copyTextToClipboard("Message", message);
         Snackbar.make(tvDialogMessage, R.string.copy_message_to_clipboard, Snackbar.LENGTH_SHORT).show();
     }
