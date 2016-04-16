@@ -16,19 +16,24 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.io.File;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnTouch;
+
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
-public class ImagePostViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
+public class ImagePostViewHolder extends RecyclerView.ViewHolder {
+    @Bind(R.id.iv_post_content_image)
     public ImageView ivPostContentPlainImage;
+
+    @Bind(R.id.pb_post_content_image_loading)
     public DilatingDotsProgressBar pbPostContentImageLoading;
 
     public ImagePostViewHolder(View itemView) {
         super(itemView);
-        ivPostContentPlainImage = (ImageView) itemView.findViewById(R.id.iv_post_content_image);
-        pbPostContentImageLoading = (DilatingDotsProgressBar) itemView.findViewById(R.id.pb_post_content_image_loading);
+        ButterKnife.bind(this, itemView);
         pbPostContentImageLoading.showNow();
-        ivPostContentPlainImage.setOnTouchListener(this);
     }
 
     public void clearImage() {
@@ -79,8 +84,8 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder implements View
                 .into(ivPostContentPlainImage);
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    @OnTouch(R.id.iv_post_content_image)
+    public boolean onContentImageTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             scaleImageDown(v);
         } else if (event.getAction() == MotionEvent.ACTION_UP ||

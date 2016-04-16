@@ -12,16 +12,21 @@ import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.post.LinkClickable;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class PlainTextPostViewHolder extends RecyclerView.ViewHolder {
+    @Bind(R.id.tv_post_content_plain_text)
     public TextView tvPostContentPlainText;
+
     public LinkClickable.LinkClickListener linkClickListener;
 
     public PlainTextPostViewHolder(View itemView) {
         super(itemView);
-        tvPostContentPlainText = (TextView) itemView.findViewById(R.id.tv_post_content_plain_text);
+        ButterKnife.bind(this, itemView);
     }
 
     public void setText(PlainTextPost plainTextPost) {
@@ -39,7 +44,7 @@ public class PlainTextPostViewHolder extends RecyclerView.ViewHolder {
         String plainText = plainTextPost.getText();
 
         // Easter Egg for April Fool Day
-        if(EasterEggUtility.newInstance().isAprilFoolDay()) {
+        if (EasterEggUtility.newInstance().isAprilFoolDay()) {
             plainText = plainText.replaceAll(" Android", " iOS");
             plainText = plainText.replaceAll("แอนดรอยด์", " iOS ");
         }
