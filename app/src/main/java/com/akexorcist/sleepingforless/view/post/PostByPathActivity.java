@@ -49,6 +49,7 @@ import org.parceler.Parcels;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 
@@ -118,7 +119,7 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
             restoreIntentData();
         }
 
-        bindView();
+        ButterKnife.bind(this);
         setupView();
         setToolbar();
 
@@ -145,24 +146,6 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
     protected void onStop() {
         super.onStop();
         ExternalBrowserUtility.getInstance().unbindService(this);
-    }
-
-    private void bindView() {
-        tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
-        flMenu = (FooterLayout) findViewById(R.id.fl_menu);
-        viewContentShadow = findViewById(R.id.view_content_shadow);
-        pbPostLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_loading);
-        pbPostBookmarkLoading = (DilatingDotsProgressBar) findViewById(R.id.pb_post_bookmark_loading);
-        layoutPostBookmarkLoading = (LinearLayout) findViewById(R.id.layout_post_bookmark_loading);
-        viewPostBookmarkLoading = findViewById(R.id.view_post_bookmark_loading);
-        tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
-        tvUnavailableOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
-        btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
-        btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
-        bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
-        rvPostList = (RecyclerView) findViewById(R.id.rv_post_list);
-        srlPostList = (SwipeRefreshLayout) findViewById(R.id.srl_post_list);
     }
 
     private void setupView() {
