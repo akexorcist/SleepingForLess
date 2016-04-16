@@ -15,23 +15,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class OpenSourceLicensesActivity extends SFLActivity {
-    private Toolbar tbTitle;
-    private RecyclerView rvOpenSourceLicenseList;
+    @Bind(R.id.tb_title)
+    Toolbar tbTitle;
+
+    @Bind(R.id.rv_open_source_license_list)
+    RecyclerView rvOpenSourceLicenseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_source_licenses);
 
-        bindView();
+        ButterKnife.bind(this);
         setupView();
         setToolbar();
-    }
-
-    private void bindView() {
-        tbTitle = (Toolbar) findViewById(R.id.tb_title);
-        rvOpenSourceLicenseList = (RecyclerView) findViewById(R.id.rv_open_source_license_list);
     }
 
     private void setupView() {

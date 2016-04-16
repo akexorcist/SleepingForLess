@@ -54,8 +54,6 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void removeBottomLine(View rootView) {
         ListView list = (ListView) rootView.findViewById(android.R.id.list);
-//        list.setDivider(new ColorDrawable(Color.RED)); // or some other color int
         list.setDividerHeight((0));
-//        list.setVerticalScrollBarEnabled(false);
     }
 }
