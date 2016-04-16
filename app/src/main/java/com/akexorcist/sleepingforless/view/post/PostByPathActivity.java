@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,18 +22,18 @@ import com.akexorcist.sleepingforless.analytic.EventKey;
 import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.akexorcist.sleepingforless.constant.Key;
+import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.database.BookmarkResult;
 import com.akexorcist.sleepingforless.network.blogger.BloggerManager;
 import com.akexorcist.sleepingforless.network.blogger.model.Post;
 import com.akexorcist.sleepingforless.network.blogger.model.PostByPath;
 import com.akexorcist.sleepingforless.network.blogger.model.PostByPathFailure;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
-import com.akexorcist.sleepingforless.database.BookmarkManager;
+import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
+import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.util.content.ContentConverter;
 import com.akexorcist.sleepingforless.util.content.ContentResult;
 import com.akexorcist.sleepingforless.util.content.ContentUtility;
-import com.akexorcist.sleepingforless.util.ExternalBrowserUtility;
-import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
@@ -49,33 +48,66 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostByPathActivity extends SFLActivity implements View.OnClickListener, View.OnTouchListener, PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener, View.OnLongClickListener {
+import butterknife.Bind;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
+
+public class PostByPathActivity extends SFLActivity implements PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final String KEY_IS_BOOKMARKING = "key_is_bookmarking";
     private static final String KEY_POST_PATH = "key_post_path";
     private static final String KEY_POST = "key_post";
     private static final String KEY_POST_LIST = "key_post_list";
 
-    private Toolbar tbTitle;
-    private FloatingActionButton fabMenu;
-    private FooterLayout flMenu;
-    private View viewContentShadow;
-    private DilatingDotsProgressBar pbPostLoading;
-    private DilatingDotsProgressBar pbPostBookmarkLoading;
-    private LinearLayout layoutPostBookmarkLoading;
-    private View viewPostBookmarkLoading;
-    private TextView tvUnavailableDescription;
-    private TextView tvOpenBookmark;
-    private MenuButton btnMenuBookmark;
-    private MenuButton btnMenuShare;
-    private BottomSheetLayout bslMenu;
-    private RecyclerView rvPostList;
-    private SwipeRefreshLayout srlPostList;
-    private PostAdapter adapter;
+    @Bind(R.id.tb_title)
+    Toolbar tbTitle;
 
-    private boolean isBookmarking;
-    private String postPath;
-    private Post post;
-    private List<BasePost> postList;
+    @Bind(R.id.fab_menu)
+    FloatingActionButton fabMenu;
+
+    @Bind(R.id.fl_menu)
+    FooterLayout flMenu;
+
+    @Bind(R.id.view_content_shadow)
+    View viewContentShadow;
+
+    @Bind(R.id.pb_post_loading)
+    DilatingDotsProgressBar pbPostLoading;
+
+    @Bind(R.id.pb_post_bookmark_loading)
+    DilatingDotsProgressBar pbPostBookmarkLoading;
+
+    @Bind(R.id.layout_post_bookmark_loading)
+    LinearLayout layoutPostBookmarkLoading;
+
+    @Bind(R.id.view_post_bookmark_loading)
+    View viewPostBookmarkLoading;
+
+    @Bind(R.id.tv_network_unavailable_description)
+    TextView tvUnavailableDescription;
+
+    @Bind(R.id.tv_network_unavailable_open_bookmark)
+    TextView tvUnavailableOpenBookmark;
+
+    @Bind(R.id.btn_menu_bookmark)
+    MenuButton btnMenuBookmark;
+
+    @Bind(R.id.btn_menu_share)
+    MenuButton btnMenuShare;
+
+    @Bind(R.id.bsl_menu)
+    BottomSheetLayout bslMenu;
+
+    @Bind(R.id.rv_post_list)
+    RecyclerView rvPostList;
+
+    @Bind(R.id.srl_post_list)
+    SwipeRefreshLayout srlPostList;
+
+    PostAdapter adapter;
+    Post post;
+    List<BasePost> postList;
+    String postPath;
+    boolean isBookmarking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +157,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         layoutPostBookmarkLoading = (LinearLayout) findViewById(R.id.layout_post_bookmark_loading);
         viewPostBookmarkLoading = findViewById(R.id.view_post_bookmark_loading);
         tvUnavailableDescription = (TextView) findViewById(R.id.tv_network_unavailable_description);
-        tvOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
+        tvUnavailableOpenBookmark = (TextView) findViewById(R.id.tv_network_unavailable_open_bookmark);
         btnMenuBookmark = (MenuButton) findViewById(R.id.btn_menu_bookmark);
         btnMenuShare = (MenuButton) findViewById(R.id.btn_menu_share);
         bslMenu = (BottomSheetLayout) findViewById(R.id.bsl_menu);
@@ -135,15 +167,6 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
 
     private void setupView() {
         viewContentShadow.setVisibility(View.GONE);
-        viewContentShadow.setOnClickListener(this);
-        fabMenu.setOnClickListener(this);
-        fabMenu.setOnLongClickListener(this);
-        tvOpenBookmark.setOnClickListener(this);
-        btnMenuBookmark.setOnClickListener(this);
-        btnMenuShare.setOnClickListener(this);
-        viewPostBookmarkLoading.setOnClickListener(this);
-        btnMenuBookmark.setOnTouchListener(this);
-        btnMenuShare.setOnTouchListener(this);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         srlPostList.setOnRefreshListener(this);
@@ -166,7 +189,7 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         String title = post.getTitle();
 
         // Easter Egg for April Fool Day
-        if(EasterEggUtility.newInstance().isAprilFoolDay()) {
+        if (EasterEggUtility.newInstance().isAprilFoolDay()) {
             title = title.replaceAll("Android", "iOS");
             title = title.replaceAll("แอนดรอยด์", " iOS ");
         }
@@ -196,41 +219,6 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
     public void onPostFailure(PostByPathFailure failure) {
         pbPostLoading.hideNow();
         showUnavailableMessage();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == fabMenu) {
-            openMenu();
-        } else if (v == viewContentShadow) {
-            closeMenu();
-        } else if (v == btnMenuBookmark) {
-            onMenuBookmarkClick();
-        } else if (v == btnMenuShare) {
-            onMenuShareClick();
-        } else if (v == tvOpenBookmark) {
-            onMenuOpenBookmarkClick();
-        } else if (v == viewPostBookmarkLoading) {
-            closeMenu();
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (v == fabMenu) {
-            rvPostList.smoothScrollToPosition(0);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            scaleMenuButtonUp(v);
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            scaleMenuButtonBack(v);
-        }
-        return false;
     }
 
     @Override
@@ -319,6 +307,12 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         setTitle(post);
     }
 
+    @OnLongClick(R.id.fab_menu)
+    public boolean scrollContentToTop() {
+        rvPostList.smoothScrollToPosition(0);
+        return true;
+    }
+
     private void setBookmarking(boolean isBookmarking) {
         if (isBookmarking) {
             showBookmarkLoadingImmediately();
@@ -351,25 +345,20 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         }
     }
 
+    @OnClick(R.id.fab_menu)
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    private void closeMenu() {
+    @OnClick({R.id.view_content_shadow, R.id.view_post_bookmark_loading})
+    public void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    private void scaleMenuButtonUp(View v) {
-        AnimationUtility.getInstance().scaleUp(v, 200);
-    }
-
-    private void scaleMenuButtonBack(View v) {
-        AnimationUtility.getInstance().scaleBack(v, 200);
-    }
-
-    private void onMenuBookmarkClick() {
+    @OnClick(R.id.btn_menu_bookmark)
+    public void onMenuBookmarkClick() {
         if (isBookmark()) {
             removeBookmark();
         } else {
@@ -378,11 +367,13 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         closeMenu();
     }
 
-    private void onMenuShareClick() {
+    @OnClick(R.id.btn_menu_share)
+    public void onMenuShareClick() {
         sharePost(post.getUrl());
         closeMenu();
     }
 
+    @OnClick(R.id.tv_network_unavailable_open_bookmark)
     public void onMenuOpenBookmarkClick() {
         openActivity(BookmarkActivity.class);
         finish();
@@ -524,9 +515,9 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
         if (BookmarkManager.getInstance().getBookmarkCount() > 0) {
             tvUnavailableDescription.setText(R.string.network_unavailable_with_bookmark);
             AnimationUtility.getInstance().fadeIn(tvUnavailableDescription);
-            AnimationUtility.getInstance().fadeIn(tvOpenBookmark);
+            AnimationUtility.getInstance().fadeIn(tvUnavailableOpenBookmark);
         } else {
-            tvOpenBookmark.setVisibility(View.GONE);
+            tvUnavailableOpenBookmark.setVisibility(View.GONE);
             String message = getString(R.string.network_unavailable_no_bookmark);
             String highlightText = "Bookmark";
             tvUnavailableDescription.setText(highlightText(message, highlightText));
@@ -544,12 +535,12 @@ public class PostByPathActivity extends SFLActivity implements View.OnClickListe
 
     private void hideUnavailableMessage() {
         AnimationUtility.getInstance().fadeOut(tvUnavailableDescription);
-        AnimationUtility.getInstance().fadeOut(tvOpenBookmark);
+        AnimationUtility.getInstance().fadeOut(tvUnavailableOpenBookmark);
     }
 
     private void hideUnavailableMessageImmediately() {
         tvUnavailableDescription.setVisibility(View.GONE);
-        tvOpenBookmark.setVisibility(View.GONE);
+        tvUnavailableOpenBookmark.setVisibility(View.GONE);
     }
 
     // Google Analytics
