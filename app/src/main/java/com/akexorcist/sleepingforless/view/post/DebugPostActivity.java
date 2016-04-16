@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,37 +23,41 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class DebugPostActivity extends SFLActivity implements CompoundButton.OnCheckedChangeListener {
-    private LinearLayout layoutPostContent;
-    private CheckBox cbPlainText;
-    private CheckBox cbHeader;
-    private CheckBox cbImage;
-    private CheckBox cbCode;
-    private CheckBox cbOther;
-    private PostList.Item postItem;
-    private Post post;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+
+public class DebugPostActivity extends SFLActivity {
+    @Bind(R.id.layout_post_content)
+    LinearLayout layoutPostContent;
+
+    @Bind(R.id.cb_plain_text)
+    CheckBox cbPlainText;
+
+    @Bind(R.id.cb_header)
+    CheckBox cbHeader;
+
+    @Bind(R.id.cb_image)
+    CheckBox cbImage;
+
+    @Bind(R.id.cb_code)
+    CheckBox cbCode;
+
+    @Bind(R.id.cb_other)
+    CheckBox cbOther;
+
+    PostList.Item postItem;
+    Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_debug);
 
-        layoutPostContent = (LinearLayout) findViewById(R.id.layout_post_content);
-        cbPlainText = (CheckBox) findViewById(R.id.cb_plain_text);
-        cbHeader = (CheckBox) findViewById(R.id.cb_header);
-        cbImage = (CheckBox) findViewById(R.id.cb_image);
-        cbCode = (CheckBox) findViewById(R.id.cb_code);
-        cbOther = (CheckBox) findViewById(R.id.cb_other);
-
-        cbPlainText.setOnCheckedChangeListener(this);
-        cbHeader.setOnCheckedChangeListener(this);
-        cbImage.setOnCheckedChangeListener(this);
-        cbCode.setOnCheckedChangeListener(this);
-        cbOther.setOnCheckedChangeListener(this);
-
         if (savedInstanceState == null) {
             setupFirstRun();
         }
+        ButterKnife.bind(this);
     }
 
     private void setupFirstRun() {
@@ -109,8 +112,8 @@ public class DebugPostActivity extends SFLActivity implements CompoundButton.OnC
         layoutPostContent.addView(view);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    @OnCheckedChanged({R.id.cb_plain_text, R.id.cb_header, R.id.cb_image, R.id.cb_code, R.id.cb_other})
+    public void contentTypeChanged() {
         setPostContent(post);
     }
 }
