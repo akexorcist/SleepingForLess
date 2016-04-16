@@ -12,21 +12,28 @@ import com.balysv.materialripple.MaterialRippleLayout;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class BookmarkViewHolder extends RecyclerView.ViewHolder {
+    @Bind(R.id.tv_bookmark_title)
     public TextView tvTitle;
+
+    @Bind(R.id.tv_bookmark_label)
     public TextView tvLabel;
+
+    @Bind(R.id.iv_bookmark_title)
     public ImageView ivTitle;
+
+    @Bind(R.id.mrl_bookmark_button)
     public MaterialRippleLayout mrlFeedButton;
 
     public BookmarkViewHolder(View itemView) {
         super(itemView);
-        tvTitle = (TextView) itemView.findViewById(R.id.tv_bookmark_title);
-        tvLabel = (TextView) itemView.findViewById(R.id.tv_bookmark_label);
-        ivTitle = (ImageView) itemView.findViewById(R.id.iv_bookmark_title);
-        mrlFeedButton = (MaterialRippleLayout) itemView.findViewById(R.id.mrl_bookmark_button);
+        ButterKnife.bind(this, itemView);
         ivTitle.setVisibility(View.GONE);
     }
 
