@@ -29,18 +29,28 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.io.File;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by Akexorcist on 3/13/2016 AD.
  */
-public class OfflineImagePostPreviewActivity extends SFLActivity implements View.OnClickListener {
-    private static final String KEY_URL = "key_url";
-    private static final String KEY_POST_ID = "key_post_id";
+public class OfflineImagePostPreviewActivity extends SFLActivity {
+    public static final String KEY_URL = "key_url";
+    public static final String KEY_POST_ID = "key_post_id";
 
-    private SubsamplingScaleImageView ivPreview;
-    private FloatingActionButton fabPreviewClose;
-    private FloatingActionButton fabPreviewDownload;
-    private String url;
-    private String postId;
+    @Bind(R.id.iv_preview)
+    SubsamplingScaleImageView ivPreview;
+
+    @Bind(R.id.fab_preview_close)
+    FloatingActionButton fabPreviewClose;
+
+    @Bind(R.id.fab_preview_download)
+    FloatingActionButton fabPreviewDownload;
+
+    String url;
+    String postId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,25 +60,13 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
         if (savedInstanceState == null) {
             getBundleFromIntent();
         }
+        ButterKnife.bind(this);
         screenTracking();
-        bindView();
-        setupView();
         initRuntimePermissionRequest();
 
         if (savedInstanceState == null) {
             setImagePreview();
         }
-    }
-
-    private void bindView() {
-        fabPreviewClose = (FloatingActionButton) findViewById(R.id.fab_preview_close);
-        fabPreviewDownload = (FloatingActionButton) findViewById(R.id.fab_preview_download);
-        ivPreview = (SubsamplingScaleImageView) findViewById(R.id.iv_preview);
-    }
-
-    private void setupView() {
-        fabPreviewClose.setOnClickListener(this);
-        fabPreviewDownload.setOnClickListener(this);
     }
 
     public void getBundleFromIntent() {
@@ -78,15 +76,6 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
 
     private void initRuntimePermissionRequest() {
         Assent.setActivity(this, this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == fabPreviewClose) {
-            finish();
-        } else if (v == fabPreviewDownload) {
-            downloadImage();
-        }
     }
 
     @Override
@@ -110,6 +99,16 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
         Assent.handleResult(permissions, grantResults);
     }
 
+    @OnClick(R.id.fab_preview_close)
+    public void closePreview() {
+        finish();
+    }
+
+    @OnClick(R.id.fab_preview_download)
+    public void downloadImage() {
+        grantExternalStoragePermission();
+    }
+
     private void setImagePreview() {
         Glide.with(this)
                 .load(BookmarkManager.getInstance().getBookmarkImageFile(postId, url))
@@ -122,10 +121,6 @@ public class OfflineImagePostPreviewActivity extends SFLActivity implements View
                         ivPreview.setImage(ImageSource.bitmap(resource));
                     }
                 });
-    }
-
-    private void downloadImage() {
-        grantExternalStoragePermission();
     }
 
     private void grantExternalStoragePermission() {
