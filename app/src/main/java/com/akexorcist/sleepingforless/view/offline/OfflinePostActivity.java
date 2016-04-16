@@ -225,7 +225,7 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
                 .withDialogAnimation(true, Duration.FAST)
                 .withIconAnimation(true)
                 .setHeaderColor(R.color.colorAccent)
-                .setIcon(R.drawable.vector_ic_warning)
+                .setIcon(R.mipmap.ic_warning)
                 .setPositive(getString(R.string.remove_confirm_yes), new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
