@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_video_thumbnail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,7 +22,7 @@
         android:contentDescription="@null"
         android:padding="@dimen/default_margin_padding"
         android:scaleType="fitCenter"
-        android:src="@drawable/vector_ic_play" />
+        app:srcCompat="@drawable/vector_ic_play" />
 
     <TextView
         android:layout_width="match_parent"
