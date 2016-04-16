@@ -65,6 +65,7 @@ dependencies {
     compile('com.github.afollestad:assent:0.2.0') {
         transitive = true
     }
+    compile 'com.jayway.android.robotium:robotium-solo:5.5.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
