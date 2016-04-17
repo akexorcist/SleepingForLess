@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.view.post.constant.PostType;
+import com.akexorcist.sleepingforless.view.post.holder.BlankPostViewHolder;
 import com.akexorcist.sleepingforless.view.post.holder.CodePostViewHolder;
 import com.akexorcist.sleepingforless.view.post.holder.HeaderPostViewHolder;
 import com.akexorcist.sleepingforless.view.post.holder.ImagePostViewHolder;
@@ -54,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (viewType == PostType.PLAIN_TEXT) {
             return new PlainTextPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_plain_text, parent, false));
         } else if (viewType == PostType.BLANK) {
-            return new PlainTextPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_blank, parent, false));
+            return new BlankPostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_post_content_blank, parent, false));
         }
         return null;
     }
