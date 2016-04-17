@@ -38,5 +38,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/white"
+        android:textIsSelectable="true"
         android:textSize="@dimen/default_text_size_extra_extra_small" />
 </LinearLayout>

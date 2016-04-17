@@ -74,6 +74,7 @@
                     android:paddingRight="@dimen/default_margin_padding_large"
                     android:text="@string/sample"
                     android:textColor="@color/colorPrimaryDark"
+                    android:textIsSelectable="true"
                     android:textSize="@dimen/default_text_size_extra_small" />
 
                 <TextView
@@ -85,6 +86,7 @@
                     android:paddingRight="@dimen/default_margin_padding_large"
                     android:text="@string/sample"
                     android:textColor="@color/dark_gray"
+                    android:textIsSelectable="true"
                     android:textSize="@dimen/default_text_size_small" />
 
                 <TextView
@@ -101,6 +103,7 @@
                     android:paddingTop="@dimen/default_margin_padding_large"
                     android:text="@string/sample"
                     android:textColor="@color/light_gray"
+                    android:textIsSelectable="true"
                     android:textSize="@dimen/default_text_size_extra_small" />
             </LinearLayout>
         </com.balysv.materialripple.MaterialRippleLayout>
