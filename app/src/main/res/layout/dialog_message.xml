@@ -26,7 +26,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textIsSelectable="true"
                 android:textSize="@dimen/default_text_size" />
 
             <LinearLayout
