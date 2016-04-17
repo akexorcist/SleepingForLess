@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -76,6 +77,7 @@ public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListene
     @Bind(R.id.tb_title)
     Toolbar tbTitle;
 
+    @Nullable
     @Bind(R.id.iv_title)
     ImageView ivTitle;
 
