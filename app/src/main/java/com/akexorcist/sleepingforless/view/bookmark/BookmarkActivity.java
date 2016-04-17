@@ -312,7 +312,19 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     private void notifyDataChanged() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+            checkBookmarkChanged();
         }
+    }
+
+    private void checkBookmarkChanged() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (adapter.getItemCount() == 0) {
+                    showContentNotFound();
+                }
+            }
+        }, 500);
     }
 
     private void showSnackbar(int messageResId) {
