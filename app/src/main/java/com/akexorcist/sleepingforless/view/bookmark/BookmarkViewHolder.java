@@ -25,16 +25,12 @@ public class BookmarkViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.tv_bookmark_label)
     public TextView tvLabel;
 
-    @Bind(R.id.iv_bookmark_title)
-    public ImageView ivTitle;
-
     @Bind(R.id.mrl_bookmark_button)
     public MaterialRippleLayout mrlFeedButton;
 
     public BookmarkViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        ivTitle.setVisibility(View.GONE);
     }
 
     public void setTitle(String title) {
