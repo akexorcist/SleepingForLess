@@ -176,6 +176,14 @@ public class BookmarkManager {
         realm.close();
     }
 
+    public void clearBookmark() {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.clear(BookmarkRealm.class);
+        realm.commitTransaction();
+        realm.close();
+    }
+
     public void addBookmark(Post post) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
