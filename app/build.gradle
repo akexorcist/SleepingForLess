@@ -31,6 +31,12 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('src/main/libs/sdk-v1.0.0.jar')
     compile files('src/main/libs/multiwindow-v1.3.1.jar')
+    androidTestCompile 'org.mockito:mockito-core:1.9.5'
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestCompile('junit:junit:4.12') {
+        exclude module: 'hamcrest-core'
+    }
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:cardview-v7:23.2.1'
