@@ -78,7 +78,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     List<Bookmark> bookmarkList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
         ButterKnife.bind(this);
@@ -92,7 +92,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         }
     }
 
-    private void setupView() {
+    public void setupView() {
         viewContentShadow.setVisibility(View.GONE);
         fabMenu.hide();
         btnUpdateAll.setVisibility(View.GONE);
@@ -102,7 +102,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         rvBookmarkList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
     }
 
-    private void setToolbar() {
+    public void setToolbar() {
         setSupportActionBar(tbTitle);
         setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_bookmark_list)));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
@@ -119,18 +119,18 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         getBookmarkFromDatabase();
     }
 
-    private void getBookmarkFromDatabase() {
+    public void getBookmarkFromDatabase() {
         bookmarkList = BookmarkManager.getInstance().getBookmarkList();
         setBookmark(bookmarkList);
     }
 
-    private void checkBookmarkAvailable() {
+    public void checkBookmarkAvailable() {
         if (bookmarkList != null && bookmarkList.size() > 0) {
             fabMenu.show();
         }
     }
 
-    private void setBookmark(List<Bookmark> bookmarkList) {
+    public void setBookmark(List<Bookmark> bookmarkList) {
         if (bookmarkList != null && bookmarkList.size() > 0) {
             adapter = new BookmarkAdapter(bookmarkList);
             adapter.setItemListener(this);
@@ -145,13 +145,13 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         notifyDataChanged();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 
@@ -161,7 +161,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         showSnackbar(R.string.removed_from_bookmark);
     }
 
-    private void notifyRemoveBookmark(String postId) {
+    public void notifyRemoveBookmark(String postId) {
         for (int i = 0; i < bookmarkList.size(); i++) {
             if (bookmarkList.get(i).getPostId().equalsIgnoreCase(postId)) {
                 bookmarkList.remove(i);
@@ -192,13 +192,13 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_BOOKMARK_LIST, Parcels.wrap(bookmarkList));
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         bookmarkList = Parcels.unwrap(savedInstanceState.getParcelable(KEY_BOOKMARK_LIST));
         setBookmark(bookmarkList);
@@ -259,7 +259,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         return true;
     }
 
-    private void removeAllBookmark() {
+    public void removeAllBookmark() {
         if (bookmarkList != null) {
             for (Bookmark bookmark : bookmarkList) {
                 BookmarkManager.getInstance().removeBookmark(bookmark.getPostId());
@@ -274,25 +274,25 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         }
     }
 
-    private void showLoading() {
+    public void showLoading() {
         pbBookmarkList.showNow();
     }
 
-    private void hideLoading() {
+    public void hideLoading() {
         pbBookmarkList.hideNow();
     }
 
-    private void showContentFound() {
+    public void showContentFound() {
         rvBookmarkList.setVisibility(View.VISIBLE);
         tvBookmarkNotFound.setVisibility(View.GONE);
     }
 
-    private void showContentNotFound() {
+    public void showContentNotFound() {
         rvBookmarkList.setVisibility(View.GONE);
         tvBookmarkNotFound.setVisibility(View.VISIBLE);
     }
 
-    private void showWarnOfflineBookmark() {
+    public void showWarnOfflineBookmark() {
         if (ContentPreference.getInstance().shouldWarnOfflineBookmark()) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -309,14 +309,14 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         }
     }
 
-    private void notifyDataChanged() {
+    public void notifyDataChanged() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
             checkBookmarkChanged();
         }
     }
 
-    private void checkBookmarkChanged() {
+    public void checkBookmarkChanged() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -327,16 +327,16 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         }, 500);
     }
 
-    private void showSnackbar(int messageResId) {
+    public void showSnackbar(int messageResId) {
         Snackbar.make(tbTitle, messageResId, Snackbar.LENGTH_SHORT).show();
     }
 
     // Google Analytics
-    private void addScreenTracking() {
+    public void addScreenTracking() {
         EventTracking.getInstance().addScreen(EventKey.Page.BOOKMARK_LIST);
     }
 
-    private void removeBookmarkTracking(String title) {
+    public void removeBookmarkTracking(String title) {
         EventTracking.getInstance().addContentTracking(EventKey.Action.REMOVE_BOOKMARK, title);
     }
 }
