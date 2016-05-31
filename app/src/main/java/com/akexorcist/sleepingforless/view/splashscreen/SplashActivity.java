@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sephiroth.android.library.viewrevealanimator.ViewRevealAnimator;
 
-public class SplashScreenActivity extends SFLActivity {
+public class SplashActivity extends SFLActivity {
     @Bind(R.id.vra_splash_screen)
     ViewRevealAnimator vraSplashScreen;
 
