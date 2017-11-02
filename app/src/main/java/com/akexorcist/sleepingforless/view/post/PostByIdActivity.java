@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -352,17 +353,11 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
 
     private void sharePost(String url) {
         shareContentTracking();
-        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
-        shareIntent.setType("text/plain");
-        IntentPickerSheetView intentPickerSheet = new IntentPickerSheetView(this, shareIntent, "Share via...", new IntentPickerSheetView.OnIntentPickedListener() {
-            @Override
-            public void onIntentPicked(IntentPickerSheetView.ActivityInfo activityInfo) {
-                bslMenu.dismissSheet();
-                startActivity(activityInfo.getConcreteIntent(shareIntent));
-            }
-        });
-        bslMenu.showWithSheetView(intentPickerSheet);
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(R.string.share_via)
+                .setText(url)
+                .startChooser();
     }
 
     private void addBookmark() {

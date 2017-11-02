@@ -36,6 +36,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_open_from_original">Open from Original</string>
     <string name="hint_search">ค้นหา</string>
+    <string name="share_via">แชร์ไปที่…</string>
     <string name="please_accept_write_external_storage_permission">กรุณายอมรับการขอ Permission เพื่อเข้าบันทึกภาพลงในเครื่อง</string>
     <string name="bookmark_not_found">ไม่มีบทความที่ Bookmark ไว้</string>
     <string name="post_not_found">ไม่มีบทความที่ต้องการค้นหา</string>

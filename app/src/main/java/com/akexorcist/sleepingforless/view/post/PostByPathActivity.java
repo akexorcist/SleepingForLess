@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +41,6 @@ import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.flipboard.bottomsheet.commons.IntentPickerSheetView;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -350,29 +350,20 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
 
     private void sharePost(String url) {
         shareContentTracking();
-        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
-        shareIntent.setType("text/plain");
-        IntentPickerSheetView intentPickerSheet = new IntentPickerSheetView(this, shareIntent, "Share via...", new IntentPickerSheetView.OnIntentPickedListener() {
-            @Override
-            public void onIntentPicked(IntentPickerSheetView.ActivityInfo activityInfo) {
-                bslMenu.dismissSheet();
-                startActivity(activityInfo.getConcreteIntent(shareIntent));
-            }
-        });
-        bslMenu.showWithSheetView(intentPickerSheet);
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(R.string.share_via)
+                .setText(url)
+                .startChooser();
     }
 
     private void addBookmark() {
         isBookmarking = true;
         addBookmarkTracking();
         showBookmarkLoading();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                addBookmarkToDatabase();
-                downloadImageToBookmark();
-            }
+        new Handler().postDelayed(() -> {
+            addBookmarkToDatabase();
+            downloadImageToBookmark();
         }, 700);
     }
 
