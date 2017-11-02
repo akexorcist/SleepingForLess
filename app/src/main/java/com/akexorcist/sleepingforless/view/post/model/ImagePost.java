@@ -6,7 +6,7 @@ import org.parceler.Parcel;
  * Created by Akexorcist on 3/13/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class ImagePost extends BasePost {
     String postUrl;
     String fullSizeUrl;

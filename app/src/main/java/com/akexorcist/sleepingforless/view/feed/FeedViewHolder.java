@@ -1,5 +1,7 @@
 package com.akexorcist.sleepingforless.view.feed;
 
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,44 +14,40 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class FeedViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.tv_feed_title)
     public TextView tvTitle;
-
-    @Bind(R.id.tv_feed_label)
     public TextView tvLabel;
-
-    @Bind(R.id.tv_feed_date)
     public TextView tvDate;
-
-    @Bind(R.id.iv_feed_title)
     public ImageView ivTitle;
-
-    @Bind(R.id.iv_feed_bookmark_indicator)
     public ImageView ivBookmarkIndicator;
-
-    @Bind(R.id.mrl_feed_button)
     public MaterialRippleLayout mrlFeedButton;
-
-    @Bind(R.id.pb_feed_image_loading)
     public DilatingDotsProgressBar pbFeedImageLoading;
 
     public FeedViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
+        bindView(itemView);
+    }
+
+    private void bindView(View view) {
+        tvTitle = view.findViewById(R.id.tv_feed_title);
+        tvLabel = view.findViewById(R.id.tv_feed_label);
+        tvDate = view.findViewById(R.id.tv_feed_date);
+        ivTitle = view.findViewById(R.id.iv_feed_title);
+        ivBookmarkIndicator = view.findViewById(R.id.iv_feed_bookmark_indicator);
+        mrlFeedButton = view.findViewById(R.id.mrl_feed_button);
+        pbFeedImageLoading = view.findViewById(R.id.pb_feed_image_loading);
     }
 
     public void setTitle(String title) {
@@ -111,20 +109,20 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void loadItemResource(ImageView ivTitle, String url) {
+        RequestOptions requestOptions = new RequestOptions()
+                .centerCrop()
+                .override(500, 500);
         Glide.with(ivTitle.getContext())
                 .load(url)
-                .crossFade(200)
-                .thumbnail(0.1f)
-                .override(500, 500)
-                .centerCrop()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(requestOptions)
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         pbFeedImageLoading.hideNow();
                         return false;
                     }

@@ -20,27 +20,18 @@ import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.view.feed.FeedActivity;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * Created by Akexorcist on 3/25/2016 AD.
  */
 public class MessageDialogFragment extends DialogFragment {
     private static final String KEY_MESSAGE = "key_message";
 
-    @Bind(R.id.tv_dialog_message)
-    TextView tvDialogMessage;
+    private TextView tvDialogMessage;
+    private FloatingActionButton fabClose;
+    private FloatingActionButton fabOpenApp;
 
-    @Bind(R.id.fab_dialog_close)
-    FloatingActionButton fabClose;
-
-    @Bind(R.id.fab_dialog_open_app)
-    FloatingActionButton fabOpenApp;
-
-    OnDismissListener listener;
-    String message;
+    private OnDismissListener listener;
+    private String message;
 
     public static MessageDialogFragment newInstance(String message) {
         MessageDialogFragment fragment = new MessageDialogFragment();
@@ -73,14 +64,22 @@ public class MessageDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+        bindView(view);
+        setupView(savedInstanceState);
+    }
 
-        if (savedInstanceState == null) {
-            message = getArguments().getString(KEY_MESSAGE);
-        } else {
-            message = savedInstanceState.getString(KEY_MESSAGE);
-        }
+    private void bindView(View view) {
+        tvDialogMessage = view.findViewById(R.id.tv_dialog_message);
+        fabClose = view.findViewById(R.id.fab_dialog_close);
+        fabOpenApp = view.findViewById(R.id.fab_dialog_open_app);
+    }
 
+    private void setupView(Bundle savedInstanceState) {
+        tvDialogMessage.setOnClickListener(view -> copyMessageToClipboard());
+        fabClose.setOnClickListener(view -> closeDialog());
+        fabOpenApp.setOnClickListener(view -> openSFLApp());
+
+        message = ((savedInstanceState == null) ? getArguments() : savedInstanceState).getString(KEY_MESSAGE);
         tvDialogMessage.setText(message);
     }
 
@@ -98,24 +97,15 @@ public class MessageDialogFragment extends DialogFragment {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
-    @OnClick(R.id.tv_dialog_message)
     public void copyMessageToClipboard() {
         Utility.getInstance().copyTextToClipboard("Message", message);
         Snackbar.make(tvDialogMessage, R.string.copy_message_to_clipboard, Snackbar.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.fab_dialog_close)
     public void closeDialog() {
         dismiss();
     }
 
-    @OnClick(R.id.fab_dialog_open_app)
     public void openSFLApp() {
         startActivity(new Intent(getContext(), FeedActivity.class));
         dismiss();

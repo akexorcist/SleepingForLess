@@ -48,67 +48,33 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 public class PostByPathActivity extends SFLActivity implements PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final String KEY_IS_BOOKMARKING = "key_is_bookmarking";
     private static final String KEY_POST_PATH = "key_post_path";
     private static final String KEY_POST = "key_post";
     private static final String KEY_POST_LIST = "key_post_list";
 
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
+    private Toolbar tbTitle;
+    private FloatingActionButton fabMenu;
+    private FooterLayout flMenu;
+    private View viewContentShadow;
+    private DilatingDotsProgressBar pbPostLoading;
+    private DilatingDotsProgressBar pbPostBookmarkLoading;
+    private LinearLayout layoutPostBookmarkLoading;
+    private View viewPostBookmarkLoading;
+    private TextView tvUnavailableDescription;
+    private TextView tvUnavailableOpenBookmark;
+    private MenuButton btnMenuBookmark;
+    private MenuButton btnMenuShare;
+    private BottomSheetLayout bslMenu;
+    private RecyclerView rvPostList;
+    private SwipeRefreshLayout srlPostList;
 
-    @Bind(R.id.fab_menu)
-    FloatingActionButton fabMenu;
-
-    @Bind(R.id.fl_menu)
-    FooterLayout flMenu;
-
-    @Bind(R.id.view_content_shadow)
-    View viewContentShadow;
-
-    @Bind(R.id.pb_post_loading)
-    DilatingDotsProgressBar pbPostLoading;
-
-    @Bind(R.id.pb_post_bookmark_loading)
-    DilatingDotsProgressBar pbPostBookmarkLoading;
-
-    @Bind(R.id.layout_post_bookmark_loading)
-    LinearLayout layoutPostBookmarkLoading;
-
-    @Bind(R.id.view_post_bookmark_loading)
-    View viewPostBookmarkLoading;
-
-    @Bind(R.id.tv_network_unavailable_description)
-    TextView tvUnavailableDescription;
-
-    @Bind(R.id.tv_network_unavailable_open_bookmark)
-    TextView tvUnavailableOpenBookmark;
-
-    @Bind(R.id.btn_menu_bookmark)
-    MenuButton btnMenuBookmark;
-
-    @Bind(R.id.btn_menu_share)
-    MenuButton btnMenuShare;
-
-    @Bind(R.id.bsl_menu)
-    BottomSheetLayout bslMenu;
-
-    @Bind(R.id.rv_post_list)
-    RecyclerView rvPostList;
-
-    @Bind(R.id.srl_post_list)
-    SwipeRefreshLayout srlPostList;
-
-    PostAdapter adapter;
-    Post post;
-    List<BasePost> postList;
-    String postPath;
-    boolean isBookmarking;
+    private PostAdapter adapter;
+    private Post post;
+    private List<BasePost> postList;
+    private String postPath;
+    private boolean isBookmarking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +85,7 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
             restoreIntentData();
         }
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
         setToolbar();
 
@@ -148,7 +114,33 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
         ExternalBrowserUtility.getInstance().unbindService(this);
     }
 
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
+        fabMenu = findViewById(R.id.fab_menu);
+        flMenu = findViewById(R.id.fl_menu);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        pbPostLoading = findViewById(R.id.pb_post_loading);
+        pbPostBookmarkLoading = findViewById(R.id.pb_post_bookmark_loading);
+        layoutPostBookmarkLoading = findViewById(R.id.layout_post_bookmark_loading);
+        viewPostBookmarkLoading = findViewById(R.id.view_post_bookmark_loading);
+        tvUnavailableDescription = findViewById(R.id.tv_network_unavailable_description);
+        tvUnavailableOpenBookmark = findViewById(R.id.tv_network_unavailable_open_bookmark);
+        btnMenuBookmark = findViewById(R.id.btn_menu_bookmark);
+        btnMenuShare = findViewById(R.id.btn_menu_share);
+        bslMenu = findViewById(R.id.bsl_menu);
+        rvPostList = findViewById(R.id.rv_post_list);
+        srlPostList = findViewById(R.id.srl_post_list);
+    }
+
     private void setupView() {
+        fabMenu.setOnClickListener(view -> openMenu());
+        fabMenu.setOnLongClickListener(view -> scrollContentToTop());
+        viewContentShadow.setOnClickListener(view -> closeMenu());
+        viewPostBookmarkLoading.setOnClickListener(view -> closeMenu());
+        btnMenuBookmark.setOnClickListener(view -> onMenuBookmarkClick());
+        btnMenuShare.setOnClickListener(view -> onMenuShareClick());
+        tvUnavailableOpenBookmark.setOnClickListener(view -> onMenuOpenBookmarkClick());
+
         viewContentShadow.setVisibility(View.GONE);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -290,7 +282,6 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
         setTitle(post);
     }
 
-    @OnLongClick(R.id.fab_menu)
     public boolean scrollContentToTop() {
         rvPostList.smoothScrollToPosition(0);
         return true;
@@ -328,19 +319,16 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
         }
     }
 
-    @OnClick(R.id.fab_menu)
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    @OnClick({R.id.view_content_shadow, R.id.view_post_bookmark_loading})
     public void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.btn_menu_bookmark)
     public void onMenuBookmarkClick() {
         if (isBookmark()) {
             removeBookmark();
@@ -350,13 +338,11 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
         closeMenu();
     }
 
-    @OnClick(R.id.btn_menu_share)
     public void onMenuShareClick() {
         sharePost(post.getUrl());
         closeMenu();
     }
 
-    @OnClick(R.id.tv_network_unavailable_open_bookmark)
     public void onMenuOpenBookmarkClick() {
         openActivity(BookmarkActivity.class);
         finish();

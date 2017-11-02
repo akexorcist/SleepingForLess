@@ -12,21 +12,21 @@ import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.post.LinkClickable;
 import com.akexorcist.sleepingforless.view.post.model.PlainTextPost;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class PlainTextPostViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.tv_post_content_plain_text)
     public TextView tvPostContentPlainText;
 
     public LinkClickable.LinkClickListener linkClickListener;
 
     public PlainTextPostViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
+        bindView(itemView);
+    }
+
+    private void bindView(View view) {
+        tvPostContentPlainText = view.findViewById(R.id.tv_post_content_plain_text);
     }
 
     public void setText(PlainTextPost plainTextPost) {

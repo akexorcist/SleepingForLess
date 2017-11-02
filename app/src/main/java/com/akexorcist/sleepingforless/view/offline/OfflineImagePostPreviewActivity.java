@@ -22,16 +22,13 @@ import com.akexorcist.sleepingforless.database.BookmarkManager;
 import com.akexorcist.sleepingforless.util.StorageUtility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.io.File;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Akexorcist on 3/13/2016 AD.
@@ -40,17 +37,12 @@ public class OfflineImagePostPreviewActivity extends SFLActivity {
     public static final String KEY_URL = "key_url";
     public static final String KEY_POST_ID = "key_post_id";
 
-    @Bind(R.id.iv_preview)
-    SubsamplingScaleImageView ivPreview;
+    private SubsamplingScaleImageView ivPreview;
+    private FloatingActionButton fabPreviewClose;
+    private FloatingActionButton fabPreviewDownload;
 
-    @Bind(R.id.fab_preview_close)
-    FloatingActionButton fabPreviewClose;
-
-    @Bind(R.id.fab_preview_download)
-    FloatingActionButton fabPreviewDownload;
-
-    String url;
-    String postId;
+    private String url;
+    private String postId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,8 +52,10 @@ public class OfflineImagePostPreviewActivity extends SFLActivity {
         if (savedInstanceState == null) {
             getBundleFromIntent();
         }
-        ButterKnife.bind(this);
+
         screenTracking();
+        bindView();
+        setupView();
         initRuntimePermissionRequest();
 
         if (savedInstanceState == null) {
@@ -99,25 +93,36 @@ public class OfflineImagePostPreviewActivity extends SFLActivity {
         Assent.handleResult(permissions, grantResults);
     }
 
-    @OnClick(R.id.fab_preview_close)
     public void closePreview() {
         finish();
     }
 
-    @OnClick(R.id.fab_preview_download)
     public void downloadImage() {
         grantExternalStoragePermission();
     }
 
+    private void bindView() {
+        ivPreview = findViewById(R.id.iv_preview);
+        fabPreviewClose = findViewById(R.id.fab_preview_close);
+        fabPreviewDownload = findViewById(R.id.fab_preview_download);
+    }
+
+    private void setupView() {
+        fabPreviewClose.setOnClickListener(view -> closePreview());
+        fabPreviewDownload.setOnClickListener(view -> downloadImage());
+    }
+
     private void setImagePreview() {
+        RequestOptions requestOptions = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
         Glide.with(this)
-                .load(BookmarkManager.getInstance().getBookmarkImageFile(postId, url))
                 .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .thumbnail(0.1f)
+                .load(BookmarkManager.getInstance().getBookmarkImageFile(postId, url))
+                .apply(requestOptions)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         ivPreview.setImage(ImageSource.bitmap(resource));
                     }
                 });
@@ -143,7 +148,7 @@ public class OfflineImagePostPreviewActivity extends SFLActivity {
     private void startDownload() {
         download(BookmarkManager.getInstance().getBookmarkImageFile(postId, url), new SimpleTarget<File>() {
             @Override
-            public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
+            public void onResourceReady(File file, Transition<? super File> transition) {
                 File destinationFile = new File(StorageUtility.getInstance().getDownloadsDirectory(), file.getName().replaceAll(".", "_") + ".jpg");
                 StorageUtility.getInstance().copyToDownloadsDirectory(file, destinationFile);
                 StorageUtility.getInstance().updateImageToMediaScanner(destinationFile);

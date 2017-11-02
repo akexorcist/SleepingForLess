@@ -5,7 +5,7 @@ import org.parceler.Parcel;
 /**
  * Created by Akexorcist on 3/16/2016 AD.
  */
-@Parcel(parcelsIndex = false)
+@Parcel
 public class BookmarkImage {
     public String url;
 

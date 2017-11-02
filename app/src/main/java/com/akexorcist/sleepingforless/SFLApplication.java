@@ -10,7 +10,7 @@ import com.akexorcist.sleepingforless.util.Contextor;
 import com.akexorcist.sleepingforless.util.Utility;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 
-import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
+import cat.ereza.customactivityoncrash.config.CaocConfig;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -40,7 +40,8 @@ public class SFLApplication extends Application {
     }
 
     private void initRealm() {
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+        Realm.init(getApplicationContext());
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
@@ -48,10 +49,11 @@ public class SFLApplication extends Application {
 
     private void initCrashActivity() {
         if (DeveloperConfig.ALLOW_CRASH_ACTIVITY) {
-            CustomActivityOnCrash.install(this);
-            CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_force_close);
-            CustomActivityOnCrash.setShowErrorDetails(true);
-            CustomActivityOnCrash.setEnableAppRestart(true);
+            CaocConfig.Builder.create()
+                    .errorDrawable(R.mipmap.ic_force_close)
+                    .showErrorDetails(true)
+                    .showRestartButton(true)
+                    .apply();
         }
     }
 

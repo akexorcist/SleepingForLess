@@ -23,31 +23,16 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-
 public class DebugPostActivity extends SFLActivity {
-    @Bind(R.id.layout_post_content)
-    LinearLayout layoutPostContent;
+    private LinearLayout layoutPostContent;
+    private CheckBox cbPlainText;
+    private CheckBox cbHeader;
+    private CheckBox cbImage;
+    private CheckBox cbCode;
+    private CheckBox cbOther;
 
-    @Bind(R.id.cb_plain_text)
-    CheckBox cbPlainText;
-
-    @Bind(R.id.cb_header)
-    CheckBox cbHeader;
-
-    @Bind(R.id.cb_image)
-    CheckBox cbImage;
-
-    @Bind(R.id.cb_code)
-    CheckBox cbCode;
-
-    @Bind(R.id.cb_other)
-    CheckBox cbOther;
-
-    PostList.Item postItem;
-    Post post;
+    private PostList.Item postItem;
+    private Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +42,30 @@ public class DebugPostActivity extends SFLActivity {
         if (savedInstanceState == null) {
             setupFirstRun();
         }
-        ButterKnife.bind(this);
+        bindView();
+        setupView();
     }
 
     private void setupFirstRun() {
         postItem = Parcels.unwrap(getIntent().getParcelableExtra(Key.POST_ITEM));
         BloggerManager.getInstance().getPostById(postItem.getId());
+    }
+
+    private void bindView() {
+        layoutPostContent = findViewById(R.id.layout_post_content);
+        cbPlainText = findViewById(R.id.cb_plain_text);
+        cbHeader = findViewById(R.id.cb_header);
+        cbImage = findViewById(R.id.cb_image);
+        cbCode = findViewById(R.id.cb_code);
+        cbOther = findViewById(R.id.cb_other);
+    }
+
+    private void setupView() {
+        cbPlainText.setOnCheckedChangeListener((checkBox, isChecked) -> contentTypeChanged());
+        cbHeader.setOnCheckedChangeListener((checkBox, isChecked) -> contentTypeChanged());
+        cbImage.setOnCheckedChangeListener((checkBox, isChecked) -> contentTypeChanged());
+        cbCode.setOnCheckedChangeListener((checkBox, isChecked) -> contentTypeChanged());
+        cbOther.setOnCheckedChangeListener((checkBox, isChecked) -> contentTypeChanged());
     }
 
     @Subscribe
@@ -112,7 +115,6 @@ public class DebugPostActivity extends SFLActivity {
         layoutPostContent.addView(view);
     }
 
-    @OnCheckedChanged({R.id.cb_plain_text, R.id.cb_header, R.id.cb_image, R.id.cb_code, R.id.cb_other})
     public void contentTypeChanged() {
         setPostContent(post);
     }

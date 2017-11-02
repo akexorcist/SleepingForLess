@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class Post {
     String kind;
     String id;
@@ -79,7 +79,7 @@ public class Post {
         return labels;
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Blog {
         String id;
 
@@ -91,7 +91,7 @@ public class Post {
         }
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Author {
         String id;
         String displayName;
@@ -112,7 +112,7 @@ public class Post {
             return url;
         }
 
-        @Parcel(parcelsIndex = false)
+        @Parcel
         public static class Image {
             String url;
 
@@ -125,7 +125,7 @@ public class Post {
         }
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Reply {
         String totalItems;
         String selfLink;

@@ -11,18 +11,13 @@ import com.akexorcist.sleepingforless.config.FirstLaunchPreference;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedActivity;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import it.sephiroth.android.library.viewrevealanimator.ViewRevealAnimator;
 
 public class SplashScreenActivity extends SFLActivity {
-    @Bind(R.id.vra_splash_screen)
-    ViewRevealAnimator vraSplashScreen;
+    private ViewRevealAnimator vraSplashScreen;
+    private ImageView ivLogo;
 
-    @Bind(R.id.iv_logo)
-    ImageView ivLogo;
-
-    boolean isScreenShowing;
+    private boolean isScreenShowing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +47,14 @@ public class SplashScreenActivity extends SFLActivity {
 
     private void setupScreenAndSplash() {
         setContentView(R.layout.activity_splash_screen);
-        ButterKnife.bind(this);
         isScreenShowing = true;
+        bindView();
         setupView();
+    }
+
+    private void bindView() {
+        vraSplashScreen = findViewById(R.id.vra_splash_screen);
+        ivLogo = findViewById(R.id.iv_logo);
     }
 
     private void setupView() {

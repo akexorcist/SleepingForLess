@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Akexorcist on 3/13/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class VideoPost extends BasePost {
     public static final String TYPE_YOUTUBE = "type_youtube";
     public static final String TYPE_VIMEO = "type_vimeo";

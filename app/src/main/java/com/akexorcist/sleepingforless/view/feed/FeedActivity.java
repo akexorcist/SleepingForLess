@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -61,10 +60,6 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 import it.sephiroth.android.library.tooltip.Tooltip;
 
 public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, FloatingActionButtonBehavior.FabVisibilityChangeListener {
@@ -74,71 +69,35 @@ public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListene
 
     private static final int TOOLTIPS_ID = 1;
 
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
+    private Toolbar tbTitle;
+    private ImageView ivTitle;
+    private AppBarLayout ablTitle;
+    private CollapsingToolbarLayout ctlTitle;
+    private DilatingDotsProgressBar pbFeedListLoading;
+    private RecyclerView rvFeedList;
+    private SwipeRefreshLayout srlFeedList;
+    private FloatingActionButton fabMenu;
+    private FooterLayout flMenu;
+    private View viewContentShadow;
+    private TextView tvUnavailableDescription;
+    private TextView tvUnavailableOpenBookmark;
+    private MenuButton btnMenuBookmark;
+    private MenuButton btnMenuRefresh;
+    private MenuButton btnMenuSearch;
+    private MenuButton btnMenuSort;
+    private MenuButton btnMenuSettings;
+    private BottomSheetLayout bslMenu;
 
-    @Nullable
-    @Bind(R.id.iv_title)
-    ImageView ivTitle;
-
-    @Bind(R.id.abl_title)
-    AppBarLayout ablTitle;
-
-    @Bind(R.id.ctl_title)
-    CollapsingToolbarLayout ctlTitle;
-
-    @Bind(R.id.pb_feed_list_loading)
-    DilatingDotsProgressBar pbFeedListLoading;
-
-    @Bind(R.id.rv_feed_list)
-    RecyclerView rvFeedList;
-
-    @Bind(R.id.srl_feed_list)
-    SwipeRefreshLayout srlFeedList;
-
-    @Bind(R.id.fab_menu)
-    FloatingActionButton fabMenu;
-
-    @Bind(R.id.fl_menu)
-    FooterLayout flMenu;
-
-    @Bind(R.id.view_content_shadow)
-    View viewContentShadow;
-
-    @Bind(R.id.tv_network_unavailable_description)
-    TextView tvUnavailableDescription;
-
-    @Bind(R.id.tv_network_unavailable_open_bookmark)
-    TextView tvUnavailableOpenBookmark;
-
-    @Bind(R.id.btn_menu_bookmark)
-    MenuButton btnMenuBookmark;
-
-    @Bind(R.id.btn_menu_refresh)
-    MenuButton btnMenuRefresh;
-
-    @Bind(R.id.btn_menu_search)
-    MenuButton btnMenuSearch;
-
-    @Bind(R.id.btn_menu_sort)
-    MenuButton btnMenuSort;
-
-    @Bind(R.id.btn_menu_settings)
-    MenuButton btnMenuSettings;
-
-    @Bind(R.id.bsl_menu)
-    BottomSheetLayout bslMenu;
-
-    FeedAdapter adapter;
-    PostList postList;
-    String sortType = BloggerManager.SORT_PUBLISHED_DATE;
+    private FeedAdapter adapter;
+    private PostList postList;
+    private String sortType = BloggerManager.SORT_PUBLISHED_DATE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
         setToolbar();
 
@@ -156,7 +115,38 @@ public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListene
         }
     }
 
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
+        ivTitle = findViewById(R.id.iv_title);
+        ablTitle = findViewById(R.id.abl_title);
+        ctlTitle = findViewById(R.id.ctl_title);
+        pbFeedListLoading = findViewById(R.id.pb_feed_list_loading);
+        rvFeedList = findViewById(R.id.rv_feed_list);
+        srlFeedList = findViewById(R.id.srl_feed_list);
+        fabMenu = findViewById(R.id.fab_menu);
+        flMenu = findViewById(R.id.fl_menu);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        tvUnavailableDescription = findViewById(R.id.tv_network_unavailable_description);
+        tvUnavailableOpenBookmark = findViewById(R.id.tv_network_unavailable_open_bookmark);
+        btnMenuBookmark = findViewById(R.id.btn_menu_bookmark);
+        btnMenuRefresh = findViewById(R.id.btn_menu_refresh);
+        btnMenuSearch = findViewById(R.id.btn_menu_search);
+        btnMenuSort = findViewById(R.id.btn_menu_sort);
+        btnMenuSettings = findViewById(R.id.btn_menu_settings);
+        bslMenu = findViewById(R.id.bsl_menu);
+    }
+
     private void setupView() {
+        fabMenu.setOnClickListener(view -> openMenu());
+        fabMenu.setOnLongClickListener(view -> scrollContentToTop());
+        viewContentShadow.setOnClickListener(view -> closeMenu());
+        btnMenuBookmark.setOnClickListener(view -> onMenuBookmarkClick());
+        btnMenuRefresh.setOnClickListener(view -> onMenuRefreshClick());
+        btnMenuSearch.setOnClickListener(view -> onMenuSearchClick());
+        btnMenuSort.setOnClickListener(view -> onMenuSortClick());
+        btnMenuSettings.setOnClickListener(view -> onMenuSettingsClick());
+        tvUnavailableOpenBookmark.setOnClickListener(view -> onMenuOpenBookmarkClick());
+
         btnMenuRefresh.setVisibility(View.GONE);
         viewContentShadow.setVisibility(View.GONE);
         srlFeedList.setOnRefreshListener(this);
@@ -343,54 +333,45 @@ public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListene
         }
     }
 
-    @OnClick(R.id.fab_menu)
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.view_content_shadow)
     public void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.btn_menu_bookmark)
     public void onMenuBookmarkClick() {
         closeMenu();
         openActivityDelayed(BookmarkActivity.class);
     }
 
-    @OnClick(R.id.btn_menu_refresh)
     public void onMenuRefreshClick() {
         callService();
         closeMenu();
     }
 
-    @OnClick(R.id.btn_menu_search)
     public void onMenuSearchClick() {
         closeMenu();
         openActivityDelayed(SearchActivity.class);
     }
 
-    @OnClick(R.id.btn_menu_sort)
     public void onMenuSortClick() {
         showSortBottomDialog();
         closeMenu();
     }
 
-    @OnClick(R.id.btn_menu_settings)
     public void onMenuSettingsClick() {
         closeMenu();
         openActivityDelayed(SettingsActivity.class);
     }
 
-    @OnClick(R.id.tv_network_unavailable_open_bookmark)
     public void onMenuOpenBookmarkClick() {
         openActivity(BookmarkActivity.class);
     }
 
-    @OnLongClick(R.id.fab_menu)
     public boolean scrollContentToTop() {
         rvFeedList.smoothScrollToPosition(0);
         return true;

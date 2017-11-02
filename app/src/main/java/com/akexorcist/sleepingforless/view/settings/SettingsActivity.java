@@ -11,12 +11,8 @@ import com.akexorcist.sleepingforless.analytic.EventKey;
 import com.akexorcist.sleepingforless.analytic.EventTracking;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 public class SettingsActivity extends SFLActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
+    private Toolbar tbTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +23,7 @@ public class SettingsActivity extends SFLActivity implements SharedPreferences.O
             addSettingsFragment();
         }
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
         setToolbar();
 
@@ -40,6 +36,10 @@ public class SettingsActivity extends SFLActivity implements SharedPreferences.O
         getFragmentManager().beginTransaction()
                 .replace(R.id.layout_settings_container, new SettingsFragment())
                 .commit();
+    }
+
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
     }
 
     private void setupView() {
