@@ -33,6 +33,7 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -60,6 +61,7 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
     private BottomSheetLayout bslMenu;
     private RecyclerView rvPostList;
 
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
     private OfflinePostAdapter adapter;
 
     private Bookmark bookmark;
@@ -97,6 +99,12 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
         ExternalBrowserUtility.getInstance().unbindService(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvPostList.removeOnScrollListener(fabRecyclerViewScrollHelper);
+    }
+
     private void bindView() {
         tbTitle = findViewById(R.id.tb_title);
         fabMenu = findViewById(R.id.fab_menu);
@@ -122,6 +130,8 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
         btnMenuUpdate.setVisibility(View.GONE);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvPostList.addOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     private void setToolbar() {

@@ -38,6 +38,7 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -70,6 +71,7 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
     private RecyclerView rvPostList;
     private SwipeRefreshLayout srlPostList;
 
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
     private PostAdapter adapter;
     private Post post;
     private List<BasePost> postList;
@@ -144,6 +146,8 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
         viewContentShadow.setVisibility(View.GONE);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvPostList.addOnScrollListener(fabRecyclerViewScrollHelper);
         srlPostList.setOnRefreshListener(this);
         srlPostList.setColorSchemeResources(R.color.colorAccent);
         hideBookmarkLoadingImmediately();
@@ -194,6 +198,12 @@ public class PostByPathActivity extends SFLActivity implements PostAdapter.PostC
     public void onPostFailure(PostByPathFailure failure) {
         pbPostLoading.hideNow();
         showUnavailableMessage();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvPostList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     @Override

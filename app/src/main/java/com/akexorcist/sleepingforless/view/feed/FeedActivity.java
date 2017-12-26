@@ -48,6 +48,7 @@ import com.akexorcist.sleepingforless.view.search.SearchActivity;
 import com.akexorcist.sleepingforless.view.search.SearchRequest;
 import com.akexorcist.sleepingforless.view.search.SearchResultActivity;
 import com.akexorcist.sleepingforless.view.settings.SettingsActivity;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.FloatingActionButtonBehavior;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
@@ -88,6 +89,7 @@ public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListene
     private MenuButton btnMenuSettings;
     private BottomSheetLayout bslMenu;
 
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
     private FeedAdapter adapter;
     private PostList postList;
     private String sortType = BloggerManager.SORT_PUBLISHED_DATE;
@@ -163,12 +165,20 @@ public class FeedActivity extends SFLActivity implements FeedAdapter.ItemListene
         layoutManager.setMeasurementCacheEnabled(true);
         rvFeedList.setLayoutManager(layoutManager);
         rvFeedList.setAdapter(adapter);
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvFeedList.addOnScrollListener(fabRecyclerViewScrollHelper);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             ablTitle.setExpanded(false, false);
         }
 
         setFabForScrollToTopToolTips();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvFeedList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     private void callService() {

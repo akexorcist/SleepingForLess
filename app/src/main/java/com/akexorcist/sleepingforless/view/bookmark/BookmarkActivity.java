@@ -25,6 +25,7 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.offline.OfflinePostActivity;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
@@ -49,6 +50,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     private MenuButton btnRemoveAll;
     private MenuButton btnInfo;
 
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
     private BookmarkAdapter adapter;
     private List<Bookmark> bookmarkList;
 
@@ -96,6 +98,8 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         flMenu.setFab(fabMenu);
         int columnCount = getResources().getInteger(R.integer.bookmark_column_count);
         rvBookmarkList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvBookmarkList.addOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     private void setToolbar() {
@@ -149,6 +153,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     @Override
     public void onDestroy() {
         super.onDestroy();
+        rvBookmarkList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     @Subscribe

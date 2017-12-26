@@ -21,6 +21,7 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.feed.FeedViewHolder;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -39,6 +40,7 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
     private TextView tvUnavailableDescription;
     private TextView tvUnavailableOpenBookmark;
 
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
     private FeedAdapter adapter;
     private PostList postList;
     private SearchRequest request;
@@ -92,6 +94,8 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
         int columnCount = getResources().getInteger(R.integer.search_result_column_count);
         rvSearchResultList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
         rvSearchResultList.setAdapter(adapter);
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvSearchResultList.addOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     private void setToolbar() {
@@ -119,6 +123,12 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
 
     private void searchMorePost(String nextPageToken) {
         BloggerManager.getInstance().getNextPostList(nextPageToken, false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvSearchResultList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     @Override
