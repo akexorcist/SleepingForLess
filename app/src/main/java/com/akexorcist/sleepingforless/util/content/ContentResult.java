@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Akexorcist on 3/24/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class ContentResult {
     List<BasePost> basePostList;
 

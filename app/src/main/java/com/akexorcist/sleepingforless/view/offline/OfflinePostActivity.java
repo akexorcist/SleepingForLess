@@ -33,6 +33,7 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
@@ -45,49 +46,26 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapter.PostClickListener {
     private static final String KEY_BOOKMARK = "key_bookmark";
     private static final String KEY_POST_LIST = "key_post_list";
 
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
+    private Toolbar tbTitle;
+    private FloatingActionButton fabMenu;
+    private FooterLayout flMenu;
+    private View viewContentShadow;
+    private DilatingDotsProgressBar pbPostLoading;
+    private MenuButton btnMenuUpdate;
+    private MenuButton btnMenuDelete;
+    private MenuButton btnMenuOpenFromOriginal;
+    private BottomSheetLayout bslMenu;
+    private RecyclerView rvPostList;
 
-    @Bind(R.id.fab_menu)
-    FloatingActionButton fabMenu;
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
+    private OfflinePostAdapter adapter;
 
-    @Bind(R.id.fl_menu)
-    FooterLayout flMenu;
-
-    @Bind(R.id.view_content_shadow)
-    View viewContentShadow;
-
-    @Bind(R.id.pb_offline_post_loading)
-    DilatingDotsProgressBar pbPostLoading;
-
-    @Bind(R.id.btn_menu_update)
-    MenuButton btnMenuUpdate;
-
-    @Bind(R.id.btn_menu_delete)
-    MenuButton btnMenuDelete;
-
-    @Bind(R.id.btn_menu_open_from_original)
-    MenuButton btnMenuOpenFromOriginal;
-
-    @Bind(R.id.bsl_menu)
-    BottomSheetLayout bslMenu;
-
-    @Bind(R.id.rv_offline_post_list)
-    RecyclerView rvPostList;
-
-    OfflinePostAdapter adapter;
-
-    Bookmark bookmark;
-    List<BasePost> postList;
+    private Bookmark bookmark;
+    private List<BasePost> postList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +76,7 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
             restoreIntentData();
         }
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
         setToolbar();
 
@@ -121,11 +99,39 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
         ExternalBrowserUtility.getInstance().unbindService(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvPostList.removeOnScrollListener(fabRecyclerViewScrollHelper);
+    }
+
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
+        fabMenu = findViewById(R.id.fab_menu);
+        flMenu = findViewById(R.id.fl_menu);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        pbPostLoading = findViewById(R.id.pb_offline_post_loading);
+        btnMenuUpdate = findViewById(R.id.btn_menu_update);
+        btnMenuDelete = findViewById(R.id.btn_menu_delete);
+        btnMenuOpenFromOriginal = findViewById(R.id.btn_menu_open_from_original);
+        bslMenu = findViewById(R.id.bsl_menu);
+        rvPostList = findViewById(R.id.rv_offline_post_list);
+    }
+
     private void setupView() {
+        btnMenuUpdate.setOnClickListener(view -> onMenuUpdateClick());
+        btnMenuDelete.setOnClickListener(view -> onMenuDeleteClick());
+        btnMenuOpenFromOriginal.setOnClickListener(view -> onMenuOpenInOnlineClick());
+        fabMenu.setOnClickListener(view -> openMenu());
+        fabMenu.setOnLongClickListener(view -> scrollContentToTop());
+        viewContentShadow.setOnClickListener(view -> closeMenu());
+
         viewContentShadow.setVisibility(View.GONE);
         btnMenuUpdate.setVisibility(View.GONE);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvPostList.addOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     private void setToolbar() {
@@ -211,12 +217,10 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
         setPostList(postList);
     }
 
-    @OnClick(R.id.btn_menu_update)
     public void onMenuUpdateClick() {
         // TODO update offline bookmark
     }
 
-    @OnClick(R.id.btn_menu_delete)
     public void onMenuDeleteClick() {
         new MaterialStyledDialog(this)
                 .setCancelable(true)
@@ -243,13 +247,11 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
         closeMenu();
     }
 
-    @OnClick(R.id.btn_menu_open_from_original)
     public void onMenuOpenInOnlineClick() {
         ExternalBrowserUtility.getInstance().open(this, bookmark.getUrl());
         closeMenu();
     }
 
-    @OnLongClick(R.id.fab_menu)
     public boolean scrollContentToTop() {
         rvPostList.smoothScrollToPosition(0);
         return true;
@@ -284,13 +286,11 @@ public class OfflinePostActivity extends SFLActivity implements OfflinePostAdapt
         hideLoading();
     }
 
-    @OnClick(R.id.fab_menu)
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.view_content_shadow)
     public void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);

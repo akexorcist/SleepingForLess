@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Akexorcist on 3/22/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class OpenSourceLicense {
     @SerializedName("data")
     public List<License> licenseList;
@@ -19,7 +19,7 @@ public class OpenSourceLicense {
         return licenseList;
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class License {
         @SerializedName("library_name")
         public String libraryName;

@@ -6,7 +6,7 @@ import org.parceler.Parcel;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class Blog {
     String kind;
     String id;
@@ -67,7 +67,7 @@ public class Blog {
         return locale;
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Post {
         int totalItems;
         String selfLink;
@@ -84,7 +84,7 @@ public class Blog {
         }
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Page {
         int totalItems;
         String selfLink;
@@ -101,7 +101,7 @@ public class Blog {
         }
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Locale {
         String language;
         String country;

@@ -269,9 +269,10 @@ public class ContentUtility {
     }
 
     public CodePost convertCodePost(String headerContent) {
-        Matcher matcher = getMatcher(headerContent, "<code:(java|markup)>");
+        Matcher matcher = getMatcher(headerContent, "<code:(.+)>");
         if (matcher.find()) {
-            return new CodePost(headerContent, headerContent.replaceAll("<code:(java|markup)>", ""), matcher.group(1));
+            String language = matcher.group(1);
+            return new CodePost(headerContent, headerContent.replaceAll("<code:.+>", ""), language);
         }
         return null;
     }

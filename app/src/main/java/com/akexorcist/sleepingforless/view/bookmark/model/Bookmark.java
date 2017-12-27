@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Akexorcist on 3/15/2016 AD.
  */
-@Parcel(parcelsIndex = false)
+@Parcel
 public class Bookmark {
     public String postId;
     public String published;

@@ -8,19 +8,19 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class HeaderPostViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.tv_post_content_header)
     public TextView tvPostContentHeader;
 
     public HeaderPostViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
+        bindView(itemView);
+    }
+
+    private void bindView(View view) {
+        tvPostContentHeader = view.findViewById(R.id.tv_post_content_header);
     }
 
     public void setHeaderText(String text) {

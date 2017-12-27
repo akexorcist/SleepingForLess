@@ -21,17 +21,14 @@ import com.akexorcist.sleepingforless.constant.Key;
 import com.akexorcist.sleepingforless.util.StorageUtility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.io.File;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Akexorcist on 3/13/2016 AD.
@@ -39,19 +36,12 @@ import butterknife.OnClick;
 public class ImagePostPreviewActivity extends SFLActivity {
     private static final String KEY_FULL_URL = "key_full_url";
 
-    @Bind(R.id.iv_preview)
-    SubsamplingScaleImageView ivPreview;
+    private SubsamplingScaleImageView ivPreview;
+    private FloatingActionButton fabClose;
+    private FloatingActionButton fabDownload;
+    private DilatingDotsProgressBar pbImagePreviewLoading;
 
-    @Bind(R.id.fab_preview_close)
-    FloatingActionButton fabClose;
-
-    @Bind(R.id.fab_preview_download)
-    FloatingActionButton fabDownload;
-
-    @Bind(R.id.pb_image_preview_loading)
-    DilatingDotsProgressBar pbImagePreviewLoading;
-
-    String fullUrl;
+    private String fullUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +51,9 @@ public class ImagePostPreviewActivity extends SFLActivity {
         if (savedInstanceState == null) {
             getBundleFromIntent();
         }
-        ButterKnife.bind(this);
+
         screenTracking();
+        bindView();
         setupView();
         initRuntimePermissionRequest();
 
@@ -71,7 +62,17 @@ public class ImagePostPreviewActivity extends SFLActivity {
         }
     }
 
+    private void bindView() {
+        ivPreview = findViewById(R.id.iv_preview);
+        fabClose = findViewById(R.id.fab_preview_close);
+        fabDownload = findViewById(R.id.fab_preview_download);
+        pbImagePreviewLoading = findViewById(R.id.pb_image_preview_loading);
+    }
+
     private void setupView() {
+        fabDownload.setOnClickListener(view -> downloadImage());
+        fabClose.setOnClickListener(view -> closePreview());
+
         pbImagePreviewLoading.showNow();
     }
 
@@ -102,25 +103,25 @@ public class ImagePostPreviewActivity extends SFLActivity {
         Assent.handleResult(permissions, grantResults);
     }
 
-    @OnClick(R.id.fab_preview_download)
     public void downloadImage() {
         grantExternalStoragePermission();
     }
 
-    @OnClick(R.id.fab_preview_close)
     public void closePreview() {
         finish();
     }
 
     private void downloadImageToPreview() {
+        RequestOptions requestOptions = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(this)
-                .load(fullUrl)
                 .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.1f)
+                .load(fullUrl)
+                .apply(requestOptions)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         pbImagePreviewLoading.hideNow();
                         ivPreview.setImage(ImageSource.bitmap(resource));
                     }
@@ -147,9 +148,9 @@ public class ImagePostPreviewActivity extends SFLActivity {
     private void startDownload() {
         download(fullUrl, new SimpleTarget<File>() {
             @Override
-            public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
-                File destinationFile = new File(StorageUtility.getInstance().getDownloadsDirectory(), file.getName().replaceAll("\\.", "_") + ".jpg");
-                StorageUtility.getInstance().copyToDownloadsDirectory(file, destinationFile);
+            public void onResourceReady(File resource, Transition<? super File> transition) {
+                File destinationFile = new File(StorageUtility.getInstance().getDownloadsDirectory(), resource.getName().replaceAll("\\.", "_") + ".jpg");
+                StorageUtility.getInstance().copyToDownloadsDirectory(resource, destinationFile);
                 StorageUtility.getInstance().updateImageToMediaScanner(destinationFile);
                 showSavedMessage(destinationFile);
             }
@@ -158,8 +159,9 @@ public class ImagePostPreviewActivity extends SFLActivity {
 
     private void download(String url, SimpleTarget<File> simpleTarget) {
         Glide.with(this)
+                .downloadOnly()
                 .load(url)
-                .downloadOnly(simpleTarget);
+                .into(simpleTarget);
     }
 
     private void showSavedMessage(final File file) {

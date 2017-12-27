@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,10 +39,10 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.util.content.EasterEggUtility;
 import com.akexorcist.sleepingforless.view.bookmark.BookmarkActivity;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.flipboard.bottomsheet.commons.IntentPickerSheetView;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
@@ -49,67 +50,34 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 public class PostByIdActivity extends SFLActivity implements PostAdapter.PostClickListener, BookmarkManager.DownloadCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final String KEY_IS_BOOKMARKING = "key_is_bookmarking";
     private static final String KEY_POST_ITEM = "key_post_item";
     private static final String KEY_POST = "key_post";
     private static final String KEY_POST_LIST = "key_post_list";
 
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
+    private Toolbar tbTitle;
+    private FloatingActionButton fabMenu;
+    private FooterLayout flMenu;
+    private View viewContentShadow;
+    private DilatingDotsProgressBar pbPostLoading;
+    private DilatingDotsProgressBar pbPostBookmarkLoading;
+    private LinearLayout layoutPostBookmarkLoading;
+    private View viewPostBookmarkLoading;
+    private TextView tvUnavailableDescription;
+    private TextView tvUnavailableOpenBookmark;
+    private MenuButton btnMenuBookmark;
+    private MenuButton btnMenuShare;
+    private BottomSheetLayout bslMenu;
+    private RecyclerView rvPostList;
+    private SwipeRefreshLayout srlPostList;
 
-    @Bind(R.id.fab_menu)
-    FloatingActionButton fabMenu;
-
-    @Bind(R.id.fl_menu)
-    FooterLayout flMenu;
-
-    @Bind(R.id.view_content_shadow)
-    View viewContentShadow;
-
-    @Bind(R.id.pb_post_loading)
-    DilatingDotsProgressBar pbPostLoading;
-
-    @Bind(R.id.pb_post_bookmark_loading)
-    DilatingDotsProgressBar pbPostBookmarkLoading;
-
-    @Bind(R.id.layout_post_bookmark_loading)
-    LinearLayout layoutPostBookmarkLoading;
-
-    @Bind(R.id.view_post_bookmark_loading)
-    View viewPostBookmarkLoading;
-
-    @Bind(R.id.tv_network_unavailable_description)
-    TextView tvUnavailableDescription;
-
-    @Bind(R.id.tv_network_unavailable_open_bookmark)
-    TextView tvUnavailableOpenBookmark;
-
-    @Bind(R.id.btn_menu_bookmark)
-    MenuButton btnMenuBookmark;
-
-    @Bind(R.id.btn_menu_share)
-    MenuButton btnMenuShare;
-
-    @Bind(R.id.bsl_menu)
-    BottomSheetLayout bslMenu;
-
-    @Bind(R.id.rv_post_list)
-    RecyclerView rvPostList;
-
-    @Bind(R.id.srl_post_list)
-    SwipeRefreshLayout srlPostList;
-
-    PostAdapter adapter;
-    PostList.Item postItem;
-    Post post;
-    List<BasePost> postList;
-    boolean isBookmarking;
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
+    private PostAdapter adapter;
+    private PostList.Item postItem;
+    private Post post;
+    private List<BasePost> postList;
+    private boolean isBookmarking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +88,7 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
             restoreIntentData();
         }
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
         setToolbar();
 
@@ -152,10 +120,38 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
         ExternalBrowserUtility.getInstance().unbindService(this);
     }
 
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
+        fabMenu = findViewById(R.id.fab_menu);
+        flMenu = findViewById(R.id.fl_menu);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        pbPostLoading = findViewById(R.id.pb_post_loading);
+        pbPostBookmarkLoading = findViewById(R.id.pb_post_bookmark_loading);
+        layoutPostBookmarkLoading = findViewById(R.id.layout_post_bookmark_loading);
+        viewPostBookmarkLoading = findViewById(R.id.view_post_bookmark_loading);
+        tvUnavailableDescription = findViewById(R.id.tv_network_unavailable_description);
+        tvUnavailableOpenBookmark = findViewById(R.id.tv_network_unavailable_open_bookmark);
+        btnMenuBookmark = findViewById(R.id.btn_menu_bookmark);
+        btnMenuShare = findViewById(R.id.btn_menu_share);
+        bslMenu = findViewById(R.id.bsl_menu);
+        rvPostList = findViewById(R.id.rv_post_list);
+        srlPostList = findViewById(R.id.srl_post_list);
+    }
+
     private void setupView() {
+        fabMenu.setOnClickListener(view -> openMenu());
+        fabMenu.setOnLongClickListener(view -> scrollContentToTop());
+        viewContentShadow.setOnClickListener(view -> closeMenu());
+        viewPostBookmarkLoading.setOnClickListener(view -> closeMenu());
+        btnMenuBookmark.setOnClickListener(view -> onMenuBookmarkClick());
+        btnMenuShare.setOnClickListener(view -> onMenuShareClick());
+        tvUnavailableOpenBookmark.setOnClickListener(view -> onMenuOpenBookmarkClick());
+
         viewContentShadow.setVisibility(View.GONE);
         flMenu.setFab(fabMenu);
         rvPostList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvPostList.addOnScrollListener(fabRecyclerViewScrollHelper);
         srlPostList.setOnRefreshListener(this);
         srlPostList.setColorSchemeResources(R.color.colorAccent);
         hideBookmarkLoadingImmediately();
@@ -205,6 +201,12 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
     public void onPostFailure(PostByIdFailure failure) {
         pbPostLoading.hideNow();
         showUnavailableMessage();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvPostList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     @Override
@@ -293,19 +295,16 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
         setTitle(postItem);
     }
 
-    @OnClick(R.id.fab_menu)
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    @OnClick({R.id.view_content_shadow, R.id.view_post_bookmark_loading})
     public void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.btn_menu_bookmark)
     public void onMenuBookmarkClick() {
         if (isBookmark()) {
             removeBookmark();
@@ -315,19 +314,16 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
         closeMenu();
     }
 
-    @OnClick(R.id.btn_menu_share)
     public void onMenuShareClick() {
         sharePost(postItem.getUrl());
         closeMenu();
     }
 
-    @OnClick(R.id.tv_network_unavailable_open_bookmark)
     public void onMenuOpenBookmarkClick() {
         openActivity(BookmarkActivity.class);
         finish();
     }
 
-    @OnLongClick(R.id.fab_menu)
     public boolean scrollContentToTop() {
         rvPostList.smoothScrollToPosition(0);
         return true;
@@ -366,17 +362,11 @@ public class PostByIdActivity extends SFLActivity implements PostAdapter.PostCli
 
     private void sharePost(String url) {
         shareContentTracking();
-        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
-        shareIntent.setType("text/plain");
-        IntentPickerSheetView intentPickerSheet = new IntentPickerSheetView(this, shareIntent, "Share via...", new IntentPickerSheetView.OnIntentPickedListener() {
-            @Override
-            public void onIntentPicked(IntentPickerSheetView.ActivityInfo activityInfo) {
-                bslMenu.dismissSheet();
-                startActivity(activityInfo.getConcreteIntent(shareIntent));
-            }
-        });
-        bslMenu.showWithSheetView(intentPickerSheet);
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(R.string.share_via)
+                .setText(url)
+                .startChooser();
     }
 
     private void addBookmark() {

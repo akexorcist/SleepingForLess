@@ -9,34 +9,32 @@ import com.akexorcist.sleepingforless.bus.BusProvider;
 import com.akexorcist.sleepingforless.common.SFLActivity;
 import com.mypopsy.widget.FloatingSearchView;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class SearchActivity extends SFLActivity implements FloatingSearchView.OnSearchListener {
-    @Bind(R.id.sfv_post_search)
-    FloatingSearchView sfvPostSearch;
-
-    @Bind(R.id.layout_post_search)
-    FrameLayout layoutPostSearch;
-
-    boolean finish = false;
+    private FloatingSearchView sfvPostSearch;
+    private FrameLayout layoutPostSearch;
+    private boolean finish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
     }
 
+    private void bindView() {
+        sfvPostSearch = findViewById(R.id.sfv_post_search);
+        layoutPostSearch = findViewById(R.id.layout_post_search);
+    }
+
     private void setupView() {
+        layoutPostSearch.setOnClickListener(view -> onPostSearchClick());
+
         sfvPostSearch.setActivated(true);
         sfvPostSearch.setOnSearchListener(this);
     }
 
-    @OnClick(R.id.layout_post_search)
     public void onPostSearchClick() {
         finish();
     }

@@ -21,47 +21,29 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.feed.FeedAdapter;
 import com.akexorcist.sleepingforless.view.feed.FeedViewHolder;
 import com.akexorcist.sleepingforless.view.post.PostByIdActivity;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.squareup.otto.Subscribe;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 public class SearchResultActivity extends SFLActivity implements FeedAdapter.ItemListener, FeedAdapter.LoadMoreListener {
     private static final String KEY_POST_LIST = "key_post_list";
     private static final String KEY_SEARCH_REQUEST = "key_search_request";
 
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
+    private Toolbar tbTitle;
+    private FloatingActionButton fabMenu;
+    private DilatingDotsProgressBar pbSearchResultList;
+    private RecyclerView rvSearchResultList;
+    private View viewContentShadow;
+    private TextView tvSearchResultNotFound;
+    private TextView tvUnavailableDescription;
+    private TextView tvUnavailableOpenBookmark;
 
-    @Bind(R.id.fab_menu)
-    FloatingActionButton fabMenu;
-
-    @Bind(R.id.pb_search_result_list_loading)
-    DilatingDotsProgressBar pbSearchResultList;
-
-    @Bind(R.id.rv_search_result_list)
-    RecyclerView rvSearchResultList;
-
-    @Bind(R.id.view_content_shadow)
-    View viewContentShadow;
-
-    @Bind(R.id.tv_search_result_not_found)
-    TextView tvSearchResultNotFound;
-
-    @Bind(R.id.tv_network_unavailable_description)
-    TextView tvUnavailableDescription;
-
-    @Bind(R.id.tv_network_unavailable_open_bookmark)
-    TextView tvUnavailableOpenBookmark;
-
-    FeedAdapter adapter;
-    PostList postList;
-    SearchRequest request;
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
+    private FeedAdapter adapter;
+    private PostList postList;
+    private SearchRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +54,7 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
             restoreIntentData();
         }
 
-        ButterKnife.bind(this);
+        bindView();
         setupView();
         setToolbar();
 
@@ -89,7 +71,21 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
         searchPost(request.getKeyword());
     }
 
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
+        fabMenu = findViewById(R.id.fab_menu);
+        pbSearchResultList = findViewById(R.id.pb_search_result_list_loading);
+        rvSearchResultList = findViewById(R.id.rv_search_result_list);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        tvSearchResultNotFound = findViewById(R.id.tv_search_result_not_found);
+        tvUnavailableDescription = findViewById(R.id.tv_network_unavailable_description);
+        tvUnavailableOpenBookmark = findViewById(R.id.tv_network_unavailable_open_bookmark);
+    }
+
     private void setupView() {
+        fabMenu.setOnClickListener(view -> onMenuSearchClick());
+        fabMenu.setOnLongClickListener(view -> scrollContentToTop());
+
         viewContentShadow.setVisibility(View.GONE);
         tvUnavailableOpenBookmark.setVisibility(View.GONE);
         adapter = new FeedAdapter();
@@ -98,6 +94,8 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
         int columnCount = getResources().getInteger(R.integer.search_result_column_count);
         rvSearchResultList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
         rvSearchResultList.setAdapter(adapter);
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvSearchResultList.addOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     private void setToolbar() {
@@ -125,6 +123,12 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
 
     private void searchMorePost(String nextPageToken) {
         BloggerManager.getInstance().getNextPostList(nextPageToken, false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rvSearchResultList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     @Override
@@ -192,12 +196,10 @@ public class SearchResultActivity extends SFLActivity implements FeedAdapter.Ite
         setTitle(request);
     }
 
-    @OnClick(R.id.fab_menu)
     public void onMenuSearchClick() {
         openActivity(SearchActivity.class);
     }
 
-    @OnLongClick(R.id.fab_menu)
     public boolean scrollContentToTop() {
         rvSearchResultList.smoothScrollToPosition(0);
         return true;

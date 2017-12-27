@@ -6,7 +6,7 @@ import org.parceler.Parcel;
  * Created by Akexorcist on 3/14/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class SearchRequest {
     String keyword;
 

@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Akexorcist on 3/13/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class PlainTextPost extends BasePost {
     String text;
     List<Highlight> highlightList;
@@ -44,7 +44,7 @@ public class PlainTextPost extends BasePost {
         return linkList != null && !highlightList.isEmpty();
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Highlight {
         int start;
         int end;
@@ -72,7 +72,7 @@ public class PlainTextPost extends BasePost {
         }
     }
 
-    @Parcel(parcelsIndex = false)
+    @Parcel
     public static class Link {
         int start;
         int end;

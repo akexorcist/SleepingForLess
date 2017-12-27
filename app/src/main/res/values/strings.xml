@@ -36,6 +36,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_open_from_original">Open from Original</string>
     <string name="hint_search">Search</string>
+    <string name="share_via">Share via…</string>
     <string name="please_accept_write_external_storage_permission">Please accept permission to write image into external storage.</string>
     <string name="bookmark_not_found">Empty bookmark</string>
     <string name="post_not_found">Result not found.\nPlease try another keyword.</string>

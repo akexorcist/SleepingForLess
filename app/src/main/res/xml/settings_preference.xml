@@ -51,13 +51,6 @@
         <com.jenzz.materialpreference.Preference
             android:key="@string/settings_key_app_version"
             android:summary="@string/settings_loading"
-            android:title="@string/settings_app_version">
-
-            <intent
-                android:action="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity.ACTION_CLEAR_CACHE"
-                android:targetClass="com.akexorcist.sleepingforless.view.settings.SettingsActionActivity"
-                android:targetPackage="com.akexorcist.sleepingforless" />
-
-        </com.jenzz.materialpreference.Preference>
+            android:title="@string/settings_app_version" />
     </com.jenzz.materialpreference.PreferenceCategory>
 </PreferenceScreen>

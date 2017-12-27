@@ -6,7 +6,7 @@ import org.parceler.Parcel;
  * Created by Akexorcist on 3/10/2016 AD.
  */
 
-@Parcel(parcelsIndex = false)
+@Parcel
 public class PostByPathFailure extends PostFailure {
     public PostByPathFailure() {
     }

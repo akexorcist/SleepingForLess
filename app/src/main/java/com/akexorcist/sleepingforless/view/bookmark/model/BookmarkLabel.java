@@ -5,7 +5,7 @@ import org.parceler.Parcel;
 /**
  * Created by Akexorcist on 3/15/2016 AD.
  */
-@Parcel(parcelsIndex = false)
+@Parcel
 public class BookmarkLabel {
     public String label;
 

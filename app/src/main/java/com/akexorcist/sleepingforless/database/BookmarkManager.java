@@ -11,8 +11,8 @@ import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkLabel;
 import com.akexorcist.sleepingforless.view.post.model.BasePost;
 import com.akexorcist.sleepingforless.view.post.model.ImagePost;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,7 +51,7 @@ public class BookmarkManager {
                     final String url = imagePost.getPostUrl();
                     BookmarkManager.getInstance().downloadImage(url, new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                             saveBookmarkImageBitmap(resource, postId, url);
                             bookmarkImageCount--;
                             if (bookmarkImageCount <= 0) {
@@ -86,8 +86,8 @@ public class BookmarkManager {
 
     private void downloadImage(String url, SimpleTarget<Bitmap> targetCallback) {
         Glide.with(Contextor.getContext())
-                .load(url)
                 .asBitmap()
+                .load(url)
                 .into(targetCallback);
     }
 
@@ -179,7 +179,7 @@ public class BookmarkManager {
     public void clearBookmark() {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        realm.clear(BookmarkRealm.class);
+        realm.delete(BookmarkRealm.class);
         realm.commitTransaction();
         realm.close();
     }

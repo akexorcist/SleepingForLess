@@ -10,30 +10,31 @@ import android.widget.TextView;
 import com.akexorcist.sleepingforless.R;
 import com.akexorcist.sleepingforless.util.AnimationUtility;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnTouch;
-
 /**
  * Created by Akexorcist on 3/10/2016 AD.
  */
 public class VideoPostViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.iv_youtube_play)
     public ImageView ivYouTubePlay;
-
-    @Bind(R.id.layout_video_thumbnail)
     public LinearLayout layoutVideoThumbnail;
-
-    @Bind(R.id.tv_video_thumbnail)
     public TextView tvVideoThumbnail;
 
     public VideoPostViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this, itemView);
+        bindView(itemView);
+        setupView();
     }
 
-    @OnTouch(R.id.layout_video_thumbnail)
-    public boolean onVideoThumbnailTouch(View v, MotionEvent event) {
+    private void bindView(View view) {
+        ivYouTubePlay = view.findViewById(R.id.iv_youtube_play);
+        layoutVideoThumbnail = view.findViewById(R.id.layout_video_thumbnail);
+        tvVideoThumbnail = view.findViewById(R.id.tv_video_thumbnail);
+    }
+
+    private void setupView() {
+        layoutVideoThumbnail.setOnTouchListener(this::onVideoThumbnailTouch);
+    }
+
+    private boolean onVideoThumbnailTouch(View view, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             scaleMenuButtonUp(ivYouTubePlay);
         } else if (event.getAction() == MotionEvent.ACTION_UP ||

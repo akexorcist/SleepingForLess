@@ -25,6 +25,7 @@ import com.akexorcist.sleepingforless.util.content.ContentUtility;
 import com.akexorcist.sleepingforless.view.bookmark.model.Bookmark;
 import com.akexorcist.sleepingforless.view.bookmark.model.BookmarkRemoveEvent;
 import com.akexorcist.sleepingforless.view.offline.OfflinePostActivity;
+import com.akexorcist.sleepingforless.widget.FabRecyclerViewScrollHelper;
 import com.akexorcist.sleepingforless.widget.MenuButton;
 import com.bowyer.app.fabtransitionlayout.FooterLayout;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
@@ -36,52 +37,29 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
-
 public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.ItemListener {
     private static final String KEY_BOOKMARK_LIST = "key_bookmark_list";
+    private Toolbar tbTitle;
+    private FloatingActionButton fabMenu;
+    private FooterLayout flMenu;
+    private DilatingDotsProgressBar pbBookmarkList;
+    private RecyclerView rvBookmarkList;
+    private View viewContentShadow;
+    private TextView tvBookmarkNotFound;
+    private MenuButton btnUpdateAll;
+    private MenuButton btnRemoveAll;
+    private MenuButton btnInfo;
 
-    @Bind(R.id.tb_title)
-    Toolbar tbTitle;
-
-    @Bind(R.id.fab_menu)
-    FloatingActionButton fabMenu;
-
-    @Bind(R.id.fl_menu)
-    FooterLayout flMenu;
-
-    @Bind(R.id.pb_bookmark_list_loading)
-    DilatingDotsProgressBar pbBookmarkList;
-
-    @Bind(R.id.rv_bookmark_list)
-    RecyclerView rvBookmarkList;
-
-    @Bind(R.id.view_content_shadow)
-    View viewContentShadow;
-
-    @Bind(R.id.tv_bookmark_not_found)
-    TextView tvBookmarkNotFound;
-
-    @Bind(R.id.btn_menu_update_all)
-    MenuButton btnUpdateAll;
-
-    @Bind(R.id.btn_menu_remove_all)
-    MenuButton btnRemoveAll;
-
-    @Bind(R.id.btn_menu_info)
-    MenuButton btnInfo;
-
-    BookmarkAdapter adapter;
-    List<Bookmark> bookmarkList;
+    private FabRecyclerViewScrollHelper fabRecyclerViewScrollHelper;
+    private BookmarkAdapter adapter;
+    private List<Bookmark> bookmarkList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
-        ButterKnife.bind(this);
+
+        bindView();
         setupView();
         setToolbar();
 
@@ -92,7 +70,27 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         }
     }
 
-    public void setupView() {
+    private void bindView() {
+        tbTitle = findViewById(R.id.tb_title);
+        fabMenu = findViewById(R.id.fab_menu);
+        flMenu = findViewById(R.id.fl_menu);
+        pbBookmarkList = findViewById(R.id.pb_bookmark_list_loading);
+        rvBookmarkList = findViewById(R.id.rv_bookmark_list);
+        viewContentShadow = findViewById(R.id.view_content_shadow);
+        tvBookmarkNotFound = findViewById(R.id.tv_bookmark_not_found);
+        btnUpdateAll = findViewById(R.id.btn_menu_update_all);
+        btnRemoveAll = findViewById(R.id.btn_menu_remove_all);
+        btnInfo = findViewById(R.id.btn_menu_info);
+    }
+
+    private void setupView() {
+        btnUpdateAll.setOnClickListener(view -> onMenuUpdateAllClick());
+        btnRemoveAll.setOnClickListener(view -> onMenuDeleteAllClick());
+        btnInfo.setOnClickListener(view -> onMenuInfoClick());
+        fabMenu.setOnClickListener(view -> openMenu());
+        fabMenu.setOnLongClickListener(view -> scrollContentToTop());
+        viewContentShadow.setOnClickListener(view -> closeMenu());
+
         viewContentShadow.setVisibility(View.GONE);
         fabMenu.hide();
         btnUpdateAll.setVisibility(View.GONE);
@@ -100,9 +98,11 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         flMenu.setFab(fabMenu);
         int columnCount = getResources().getInteger(R.integer.bookmark_column_count);
         rvBookmarkList.setLayoutManager(new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL));
+        fabRecyclerViewScrollHelper = new FabRecyclerViewScrollHelper(fabMenu);
+        rvBookmarkList.addOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
-    public void setToolbar() {
+    private void setToolbar() {
         setSupportActionBar(tbTitle);
         setTitle(ContentUtility.getInstance().removeLabelFromTitle(getString(R.string.title_bookmark_list)));
         tbTitle.setNavigationIcon(R.drawable.vector_ic_back);
@@ -114,23 +114,23 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         });
     }
 
-    public void callDatabase() {
+    private void callDatabase() {
         showLoading();
         getBookmarkFromDatabase();
     }
 
-    public void getBookmarkFromDatabase() {
+    private void getBookmarkFromDatabase() {
         bookmarkList = BookmarkManager.getInstance().getBookmarkList();
         setBookmark(bookmarkList);
     }
 
-    public void checkBookmarkAvailable() {
+    private void checkBookmarkAvailable() {
         if (bookmarkList != null && bookmarkList.size() > 0) {
             fabMenu.show();
         }
     }
 
-    public void setBookmark(List<Bookmark> bookmarkList) {
+    private void setBookmark(List<Bookmark> bookmarkList) {
         if (bookmarkList != null && bookmarkList.size() > 0) {
             adapter = new BookmarkAdapter(bookmarkList);
             adapter.setItemListener(this);
@@ -153,6 +153,7 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
     @Override
     public void onDestroy() {
         super.onDestroy();
+        rvBookmarkList.removeOnScrollListener(fabRecyclerViewScrollHelper);
     }
 
     @Subscribe
@@ -204,12 +205,10 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         setBookmark(bookmarkList);
     }
 
-    @OnClick(R.id.btn_menu_update_all)
     public void onMenuUpdateAllClick() {
         // TODO Update all bookmark content
     }
 
-    @OnClick(R.id.btn_menu_remove_all)
     public void onMenuDeleteAllClick() {
         new MaterialStyledDialog(this)
                 .setCancelable(true)
@@ -236,24 +235,20 @@ public class BookmarkActivity extends SFLActivity implements BookmarkAdapter.Ite
         closeMenu();
     }
 
-    @OnClick(R.id.btn_menu_info)
     public void onMenuInfoClick() {
         // TODO Show bookmark info
     }
 
-    @OnClick(R.id.fab_menu)
     public void openMenu() {
         flMenu.expandFab();
         AnimationUtility.getInstance().fadeIn(viewContentShadow, 200);
     }
 
-    @OnClick(R.id.view_content_shadow)
     public void closeMenu() {
         flMenu.contractFab();
         AnimationUtility.getInstance().fadeOut(viewContentShadow, 200);
     }
 
-    @OnLongClick(R.id.fab_menu)
     public boolean scrollContentToTop() {
         rvBookmarkList.smoothScrollToPosition(0);
         return true;
