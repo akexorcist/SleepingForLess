@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <integer name="feed_column_count">2</integer>
-    <integer name="bookmark_column_count">2</integer>
-    <integer name="search_result_column_count">2</integer>
-
-</resources>
