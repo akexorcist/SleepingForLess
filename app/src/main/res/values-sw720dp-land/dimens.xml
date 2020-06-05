@@ -1,7 +1,0 @@
-<resources>
-
-    <dimen name="app_bar_layout_height">130dp</dimen>
-    <dimen name="bookmark_item_width">@dimen/match_parent</dimen>
-    <dimen name="post_content_width">900dp</dimen>
-
-</resources>

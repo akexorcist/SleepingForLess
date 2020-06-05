@@ -1,28 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009491</color>
-    <color name="colorPrimaryDark">#00837e</color>
-    <color name="colorAccent">#f45145</color>
-    <color name="transparent">#00000000</color>
-    <color name="white">#FFFFFF</color>
-    <color name="alpha_white">#70FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="dark_alpha_black">#E0000000</color>
-    <color name="alpha_black">#A0000000</color>
-    <color name="light_alpha_black">#80000000</color>
-    <color name="extra_light_alpha_black">#40000000</color>
-    <color name="gray">#555555</color>
-    <color name="alpha_gray">#70555555</color>
-    <color name="dark_gray">#222222</color>
-    <color name="light_gray">#999999</color>
-    <color name="extra_light_gray">#DDDDDD</color>
-    <color name="extra_extra_light_gray">#FAFAFA</color>
-    <color name="alpha_dark_gray">#DD222222</color>
+    <color name="colorPrimary">#208690</color>
+    <color name="colorPrimaryDark">#208690</color>
+    <color name="colorAccent">#f7af15</color>
 
-    <color name="text_header">#3D85C6</color>
-    <color name="text_body">#383838</color>
-    <color name="text_link">#ED6400</color>
-    <color name="text_offline">#f9d802</color>
-
-    <color name="alpha_black_background">#90000000</color>
+    <color name="statusBarColor">@color/colorPrimary</color>
+    <color name="navigationBarColor">@color/colorPrimary</color>
+    <color name="splashScreenBackgroundColor">@color/colorPrimary</color>
 </resources>
