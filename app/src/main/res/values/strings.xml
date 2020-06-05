@@ -1,72 +1,11 @@
 <resources>
-    <string name="app_name">Sleeping For Less</string>
-    <string name="sample">Sample</string>
-    <string name="download_image_successful">Saved image to Downloads directory.</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="action_view">View</string>
-    <string name="action_open_bookmark">Open Bookmarks</string>
-    <string name="action_dont_warn">Don\'t Warn</string>
-    <string name="published_date">Published %1$s/%2$s/%3$s</string>
-    <string name="updated_date">Updated %1$s/%2$s/%3$s</string>
-    <string name="title_offline">[Offline] %1$s</string>
-    <string name="title_bookmark_list">Bookmark List</string>
-    <string name="title_sort_by">Sort by&#8230;</string>
-    <string name="title_search_result">Search Result : %1$s</string>
-    <string name="title_new_blog_post_available">New Blog Post Available</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_open_source_licenses">Open Source Licenses</string>
-    <string name="copy_image_url_to_clipboard">Copy image URL to clipboard.</string>
-    <string name="copy_message_to_clipboard">Copy message to clipboard.</string>
-    <string name="removed_from_bookmark">Removed from bookmark.</string>
-    <string name="removed_all_bookmark">Removed all bookmark.</string>
-    <string name="added_to_bookmark">Added to bookmark.</string>
-    <string name="menu_add_bookmark">Add Bookmark</string>
-    <string name="menu_remove_bookmark">Remove Bookmark</string>
-    <string name="menu_update_all">Update All</string>
-    <string name="menu_remove_all">Remove All</string>
-    <string name="menu_bookmark">Bookmark</string>
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_sort">Sort</string>
-    <string name="menu_settings">Settings</string>
-    <string name="menu_info">Info</string>
-    <string name="menu_update">Update</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_open_from_original">Open from Original</string>
-    <string name="hint_search">Search</string>
-    <string name="share_via">Share via…</string>
-    <string name="please_accept_write_external_storage_permission">Please accept permission to write image into external storage.</string>
-    <string name="bookmark_not_found">Empty bookmark</string>
-    <string name="post_not_found">Result not found.\nPlease try another keyword.</string>
-    <string name="bookmark_downloading">Downloading&#8230;\nSave this post to bookmark.</string>
-    <string name="click_to_watch_video">Click to watch video from</string>
-    <string name="tooltips_go_to_top_hint">Tips : Press &amp; hold for scroll to top</string>
-    <string name="network_unavailable">Internet unavailable.</string>
-    <string name="network_unavailable_with_bookmark">Internet unavailable.\nBut you can read any post from bookmark.</string>
-    <string name="network_unavailable_no_bookmark">Internet unavailable.\nTry to bookmark any post to read in offline mode.</string>
-    <string name="warn_offline_bookmark">Bookmark is a post that available in offline mode.</string>
-    <string name="remove_confirm_title">Delete this bookmark?</string>
-    <string name="remove_all_confirm_title">Delete all bookmarks?</string>
-    <string name="remove_all_confirm_description">This can\'t be undone.</string>
-    <string name="remove_confirm_yes">Yes, I\'m sure.</string>
-    <string name="remove_confirm_no">Noooo~</string>
-    <string name="settings_push_notification_title">Push Notification</string>
-    <string name="settings_push_notification_detail">Enable/Disable push notification.</string>
-    <string name="settings_clear_app_cache">Clear App Cache</string>
-    <string name="settings_about_me">About Me</string>
-    <string name="settings_loading">&#8230;</string>
-    <string name="settings_app_version">App Version</string>
-    <string name="settings_open_source_licenses_title">Open Source Licenses</string>
-    <string name="settings_open_source_licenses_detail">License details for open source software</string>
-    <string name="settings_key_push_notification" translatable="false">key_push_notification</string>
-    <string name="settings_key_clear_app_cache" translatable="false">key_clear_app_cache</string>
-    <string name="settings_key_about_me" translatable="false">key_about_me</string>
-    <string name="settings_key_app_version" translatable="false">key_app_version</string>
-    <string name="settings_category_notification">Notifications</string>
-    <string name="settings_category_storage">Storage</string>
-    <string name="settings_category_other">Other</string>
-    <string name="splash_screen_sfl_description" translatable="false">Android Developer for Android Developers</string>
-    <string name="splash_screen_sfl_title" translatable="false">Sleeping For Less</string>
+    <string name="app_name">SleepingForLess</string>
+    <string name="asset_statements">
+        [{
+            \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+            \"target\": {
+                \"namespace\": \"web\",
+                \"site\": \"https://akexorcist.dev/\"}
+        }]
+    </string>
 </resources>

@@ -1,1 +1,2 @@
-include ':app', ':fabtransitionlayout'
+include ':app'
+rootProject.name = "SleepingForLess"
