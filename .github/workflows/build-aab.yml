@@ -29,10 +29,10 @@ jobs:
 
       - name: Prepare Keystore variables
         run: |
-          echo "keystore_path=${GITHUB_WORKSPACE}/keystore/keystore.jks"
-          echo "keystore_password=${KEYSTORE_PASSWORD}"
-          echo "keystore_key_alias=${KEYSTORE_KEY_ALIAS}"
-          echo "keystore_key_password=${KEYSTORE_KEY_PASSWORD}"
+          echo "keystore_path=${GITHUB_WORKSPACE}/keystore/keystore.jks" &>> local.properties
+          echo "keystore_password=${secrets.KEYSTORE_PASSWORD}" &>> local.properties
+          echo "keystore_key_alias=${secrets.KEYSTORE_KEY_ALIAS}" &>> local.properties
+          echo "keystore_key_password=${secrets.KEYSTORE_KEY_PASSWORD}" &>> local.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
