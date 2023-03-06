@@ -22,10 +22,7 @@ jobs:
           cache: gradle
 
       - name: Prepare Keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'keystore/keystore.jks'
-          encodedString: ${{secrets.BASE64_KEYSTORE}}
+        run: echo ${{secrets.BASE64_KEYSTORE}} | base64 -di > "${GITHUB_WORKSPACE}"/keystore/keystore.jks
 
       - name: Prepare Keystore variables
         run: |
