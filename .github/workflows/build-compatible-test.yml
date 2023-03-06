@@ -1,4 +1,4 @@
-name: Android CI
+name: Build Compatible Test
 
 on:
   push:
@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -23,4 +21,4 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew buildDebug
