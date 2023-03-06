@@ -19,7 +19,8 @@ jobs:
       - name: Prepare Keystore
         run: |
           mkdir "${GITHUB_WORKSPACE}"/keystore
-          echo ${{secrets.BASE64_KEYSTORE}} | base64 -di > "${GITHUB_WORKSPACE}"/keystore/keystore.jks
+          echo "${{secrets.KEYSTORE}}" > keystore/keystore.asc
+          gpg -d --passphrase "${{secrets.KEYSTORE_PASSPHRASE}}" --batch keystore/keystore.asc > keystore/keystore.jks
 
       - name: Prepare Keystore variables
         run: |
@@ -50,6 +51,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: release-app-bundle
+
       - name: Upload Android Release to Play Store
         uses: r0adkll/upload-google-play@v1
         with:
