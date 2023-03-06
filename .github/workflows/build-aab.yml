@@ -38,6 +38,8 @@ jobs:
         run: chmod +x gradlew
       - name: Build AAB with Gradle
         run: ./gradlew :app:bundleRelease
+      - name: Update AAB to artifactory
+        uses: actions/upload-artifact@v3
         with:
           name: AAB
           path: app/build/outputs/
