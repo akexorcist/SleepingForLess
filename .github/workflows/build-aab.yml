@@ -22,7 +22,9 @@ jobs:
           cache: gradle
 
       - name: Prepare Keystore
-        run: echo ${{secrets.BASE64_KEYSTORE}} | base64 -di > "${GITHUB_WORKSPACE}"/keystore/keystore.jks
+        run: |
+          mkdir "${GITHUB_WORKSPACE}"/keystore
+          echo ${{secrets.BASE64_KEYSTORE}} | base64 -di > "${GITHUB_WORKSPACE}"/keystore/keystore.jks
 
       - name: Prepare Keystore variables
         run: |
