@@ -30,8 +30,10 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
       - name: Build AAB with Gradle
         run: ./gradlew :app:bundleRelease
+
       - name: Update AAB to artifactory
         uses: actions/upload-artifact@v3
         with:

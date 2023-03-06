@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-debug:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +18,15 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Prepare Keystore variables
+        run: |
+          echo "keystore_path=foo" &>> local.properties
+          echo "keystore_password=foo" &>> local.properties
+          echo "keystore_key_alias=foo" &>> local.properties
+          echo "keystore_key_password=foo" &>> local.properties
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
       - name: Build with Gradle
         run: ./gradlew buildDebug
