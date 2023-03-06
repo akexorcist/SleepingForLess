@@ -1,4 +1,4 @@
-name: Build AAB
+name: Publish App to Google Play
 
 on:
   #  workflow_dispatch
@@ -9,9 +9,8 @@ on:
 
 jobs:
   build:
-
+    name: Build AAB
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -40,5 +39,25 @@ jobs:
       - name: Update AAB to artifactory
         uses: actions/upload-artifact@v3
         with:
-          name: AAB
+          name: release-app-bundle
           path: app/build/outputs/
+          retention-days: 1
+
+  publish:
+    name: Publish to Google Play
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: release-app-bundle
+      - name: Upload Android Release to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${secrets.SERVICE_ACCOUNT_JSON}
+          releaseFiles: bundle/release/app-release.aab
+          packageName: com.akexorcist.sleepingforless
+          track: production
+          userFraction: 1.0
+          mappingFile: mapping/release/mapping.txt
