@@ -47,7 +47,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download math result for job 1
+      - name: Download build output from build job
         uses: actions/download-artifact@v3
         with:
           name: release-app-bundle
