@@ -9,13 +9,13 @@ if (rootProject.file("local.properties").exists()) {
 
 android {
     namespace 'com.akexorcist.sleepingforless'
-    compileSdkVersion 33
-    buildToolsVersion "33.0.2"
+    compileSdk 34
+    buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "com.akexorcist.sleepingforless"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 34
         versionCode 211
         versionName "2.2.0"
 
