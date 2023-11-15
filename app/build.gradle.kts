@@ -13,8 +13,8 @@ android {
         applicationId = "com.akexorcist.sleepingforless"
         minSdk = 21
         targetSdk = 34
-        versionCode = 211
-        versionName = "2.2.0"
+        versionCode = 212
+        versionName = "2.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
