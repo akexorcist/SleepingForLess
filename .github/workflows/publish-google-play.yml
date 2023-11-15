@@ -59,4 +59,3 @@ jobs:
           releaseFiles: bundle/release/app-release.aab
           packageName: com.akexorcist.sleepingforless
           track: production
-          mappingFile: mapping/release/mapping.txt
