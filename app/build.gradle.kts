@@ -1,8 +1,8 @@
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -55,12 +55,12 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.constraintlayout)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.junit.ext)
+    androidTestImplementation(libs.espresso.core)
 
-    implementation("com.google.androidbrowserhelper:androidbrowserhelper:2.5.0")
+    implementation(libs.androidbrowserhelper)
 }
